@@ -36,7 +36,8 @@ type Action =
   | { type: 'TOGGLE_ELIMINATED'; questionId: number; letter: OptionLetter }
   | { type: 'GOTO'; index: number }
   | { type: 'SUBMIT' }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'SHIFT_START'; deltaMs: number };
 
 function sessionReducer(state: SessionState, action: Action): SessionState {
   switch (action.type) {
@@ -83,6 +84,10 @@ function sessionReducer(state: SessionState, action: Action): SessionState {
       };
     case 'SUBMIT':
       return { ...state, status: 'submitted', results: computeResults(state.questions, state.answers) };
+    case 'SHIFT_START':
+      return state.startTimestamp == null
+        ? state
+        : { ...state, startTimestamp: state.startTimestamp + action.deltaMs };
     case 'RESET':
       return {
         ...state,
@@ -109,6 +114,7 @@ interface SessionContextValue {
   goto: (index: number) => void;
   submitTest: () => Promise<void>;
   resetTest: () => void;
+  shiftStart: (deltaMs: number) => void;
 }
 
 const SessionContext = createContext<SessionContextValue | null>(null);
@@ -158,6 +164,7 @@ export function SessionProvider({
         await clearProgress(subject);
       },
       resetTest: () => dispatch({ type: 'RESET' }),
+      shiftStart: (deltaMs) => dispatch({ type: 'SHIFT_START', deltaMs }),
     }),
     [state, subject]
   );

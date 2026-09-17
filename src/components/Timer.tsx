@@ -10,8 +10,8 @@ export function Timer({ remainingMs }: TimerProps) {
   const low = remainingMs <= 5 * 60 * 1000;
 
   return (
-    <View className="items-center border-b border-neutral-200 bg-white py-3 dark:border-neutral-800 dark:bg-black">
-      <Text className={`text-2xl font-bold ${low ? 'text-red-600' : 'text-black dark:text-white'}`}>
+    <View className="items-center py-3">
+      <Text className={`text-2xl font-bold ${low ? 'text-red-400' : 'text-white'}`}>
         {formatRemainingTime(remainingMs)}
       </Text>
     </View>

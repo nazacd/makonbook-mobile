@@ -16,5 +16,7 @@
 @import "nativewind/theme";
 
 @theme {
-  --color-brand: #530163;
+  --color-brand: #01000f;
+  --color-surface: #16141d;
+  --color-accent: #8b5cf6;
 }

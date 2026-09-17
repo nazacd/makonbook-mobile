@@ -11,9 +11,9 @@ export function GridInInput({ value, onChange }: GridInInputProps) {
       value={value}
       onChangeText={onChange}
       placeholder="Enter a number or fraction (e.g. 1/2)"
-      placeholderTextColor="#9ca3af"
+      placeholderTextColor="#6b7280"
       keyboardType={Platform.OS === 'ios' ? 'numbers-and-punctuation' : 'default'}
-      className="rounded-xl border border-neutral-300 px-4 py-3 text-base text-black dark:border-neutral-700 dark:text-white"
+      className="rounded-xl border border-white/10 bg-surface px-4 py-3 text-base text-white"
     />
   );
 }
