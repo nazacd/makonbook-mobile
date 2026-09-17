@@ -1,0 +1,854 @@
+{
+  "english": [
+    {
+      "id": 1,
+      "level": "easy",
+      "question": "Task: Rewrite the sentence so that the verb “analyzed” is replaced by its noun form (analysis).",
+      "content": {
+        "text": "Read the sentence below.\n“The scientist analyzed the data with great care.”",
+        "image": null
+      },
+      "options": {
+        "A": "The scientist's analysis of the data was very careful.",
+        "B": "The scientist analyzing the data was very careful.",
+        "C": "The data's analyzed by the scientist was very careful.",
+        "D": "The scientist was very careful about analyzing the data."
+      },
+      "correct": "A",
+      "explanation": "“Analysis” is the noun form of the verb “analyze.” The correct rewrite uses the possessive “scientist's analysis” as the subject, matching the task's instruction to convert the verb into its noun form. The other options either keep a verb (-ing) form instead of the true noun, or create an ungrammatical structure."
+    },
+    {
+      "id": 2,
+      "level": "easy",
+      "question": "Task: Expand it into a complete, detailed sentence by adding (a) an adjective describing the subject and (b) an adverb of time.",
+      "content": {
+        "text": "Begin with the bare sentence below.\n“Birds migrate.”",
+        "image": null
+      },
+      "options": {
+        "A": "Birds migrate every autumn.",
+        "B": "Migratory birds migrate every autumn.",
+        "C": "Migratory birds migrate.",
+        "D": "Migrate birds migratory every autumn."
+      },
+      "correct": "B",
+      "explanation": "The task requires both an adjective describing the subject (‘migratory’) and an adverb of time (‘every autumn’). The correct answer includes both elements in proper order. The other choices are missing one of the two required elements or contain a grammatical error."
+    },
+    {
+      "id": 3,
+      "level": "easy",
+      "question": "Task: Rewrite it in the present simple to describe her daily routine (use the time expression “every day”).",
+      "content": {
+        "text": "Read the sentence below.\n“Right now, she is walking to school.”",
+        "image": null
+      },
+      "options": {
+        "A": "She is walking to school every day.",
+        "B": "She walked to school every day.",
+        "C": "She walks to school every day.",
+        "D": "She will walk to school every day."
+      },
+      "correct": "C",
+      "explanation": "Describing a daily routine requires the present simple tense (‘walks’), not the present continuous, past, or future. Only the correct choice uses the base form + ‘-s’ needed for third-person singular present simple."
+    },
+    {
+      "id": 4,
+      "level": "medium",
+      "question": "Task: Combine them into ONE sentence using the past perfect to show that the train’s departure happened first.",
+      "content": {
+        "text": "Read the two sentences below.\n“The train left. We arrived at the station.”",
+        "image": null
+      },
+      "options": {
+        "A": "The train left before we had arrived at the station.",
+        "B": "The train has left before we arrived at the station.",
+        "C": "The train left before we arrive at the station.",
+        "D": "The train had left before we arrived at the station."
+      },
+      "correct": "D",
+      "explanation": "Past perfect (‘had left’) is used for the earlier of two past actions — the train's departure happened before we arrived. Only the correct choice puts ‘had’ on the earlier event; the others misplace it, use the wrong perfect tense, or mix tenses."
+    },
+    {
+      "id": 5,
+      "level": "easy",
+      "question": "Task: Write a one-sentence prediction based on this present evidence, using the “going to” future.",
+      "content": {
+        "text": "Read the situation below.\n“Look at those dark clouds gathering overhead.”",
+        "image": null
+      },
+      "options": {
+        "A": "It is going to rain.",
+        "B": "It will rain.",
+        "C": "It rains.",
+        "D": "It is raining."
+      },
+      "correct": "A",
+      "explanation": "‘Going to’ is used for predictions based on present evidence (the dark clouds). ‘Will’ expresses future without present evidence, and the present simple/continuous forms don't express a future prediction at all."
+    },
+    {
+      "id": 6,
+      "level": "medium",
+      "question": "Task: Rewrite it to correct the dangling modifier so that it is clear who was walking.",
+      "content": {
+        "text": "Read the sentence below.\n“Walking to the store, the rain soaked my jacket.”",
+        "image": null
+      },
+      "options": {
+        "A": "Walking to the store, the rain soaked my jacket.",
+        "B": "Walking to the store, I got my jacket soaked.",
+        "C": "The rain, walking to the store, soaked my jacket.",
+        "D": "Walking to the store, my jacket was soaked by the rain."
+      },
+      "correct": "B",
+      "explanation": "The introductory phrase ‘Walking to the store’ must modify the person doing the walking. Only the correct choice puts ‘I’ immediately after the comma as the one walking; the other options leave the modifier attached to something (the rain, the jacket) that cannot walk."
+    },
+    {
+      "id": 7,
+      "level": "medium",
+      "question": "Task: Combine them into one complex sentence using a dependent clause beginning with “Although.”",
+      "content": {
+        "text": "Read the two sentences below.\n“The team practiced hard. They lost the final.”",
+        "image": null
+      },
+      "options": {
+        "A": "The team practiced hard, although they lost the final.",
+        "B": "Although the team lost the final, they practiced hard.",
+        "C": "Although the team practiced hard, they lost the final.",
+        "D": "The team practiced hard, but although they lost the final."
+      },
+      "correct": "C",
+      "explanation": "‘Although’ introduces the fact that is conceded — here, that the team practiced hard — leading to a result that seems surprising given that concession (losing). The distractors either reverse which fact is being conceded or incorrectly combine two concessive connectors in one sentence."
+    },
+    {
+      "id": 8,
+      "level": "hard",
+      "question": "Task: Rewrite it in reported (indirect) speech, beginning with “She said that…”",
+      "content": {
+        "text": "Read the direct quotation below.\nShe said, “I will finish the project tomorrow.”",
+        "image": null
+      },
+      "options": {
+        "A": "She said that she will finish the project tomorrow.",
+        "B": "She said I would finish the project the next day.",
+        "C": "She said that she would finish the project the next week.",
+        "D": "She said that she would finish the project the next day."
+      },
+      "correct": "D",
+      "explanation": "Reported speech requires backshifting the modal (‘will’ → ‘would’), the pronoun (‘I’ → ‘she’), and the time expression (‘tomorrow’ → ‘the next day’). Each distractor fails to make one of these three necessary shifts correctly."
+    },
+    {
+      "id": 9,
+      "level": "medium",
+      "question": "Task: Rewrite the sentence so that it begins with a gerund phrase acting as the subject.",
+      "content": {
+        "text": "Read the sentence below.\n“It is healthy to exercise every morning.”",
+        "image": null
+      },
+      "options": {
+        "A": "Exercising every morning is healthy.",
+        "B": "To exercise every morning is healthy.",
+        "C": "It is healthy that you exercise every morning.",
+        "D": "Exercise every morning is healthy."
+      },
+      "correct": "A",
+      "explanation": "A gerund phrase acting as a subject uses the ‘-ing’ form of the verb (e.g., ‘Exercising’). The distractors instead use an infinitive phrase, an entirely different sentence structure, or the bare verb form without ‘-ing.’"
+    },
+    {
+      "id": 10,
+      "level": "medium",
+      "question": "Task: Combine them into one sentence using an infinitive of purpose.",
+      "content": {
+        "text": "Read the two sentences below.\n“She studies hard. She wants to pass the exam.”",
+        "image": null
+      },
+      "options": {
+        "A": "She studies hard for passing the exam.",
+        "B": "She studies hard to pass the exam.",
+        "C": "She studies hard and she wants to pass the exam.",
+        "D": "She studies hard, passing the exam."
+      },
+      "correct": "B",
+      "explanation": "An infinitive of purpose (‘to pass the exam’) explains why an action is done. The distractors instead use a gerund with a preposition, keep the sentences as separate clauses, or use a participial phrase — none of which is the infinitive-of-purpose structure the task asks for."
+    },
+    {
+      "id": 11,
+      "level": "medium",
+      "question": "Task: Complete the sentence using the correct verb form for a real future possibility.",
+      "content": {
+        "text": "Complete the first conditional sentence below in a logical way.\n“If it rains tomorrow, …”",
+        "image": null
+      },
+      "options": {
+        "A": "If it rains tomorrow, we would cancel the picnic.",
+        "B": "If it will rain tomorrow, we will cancel the picnic.",
+        "C": "If it rains tomorrow, we will cancel the picnic.",
+        "D": "If it rained tomorrow, we will cancel the picnic."
+      },
+      "correct": "C",
+      "explanation": "The first conditional (real future possibility) uses present simple in the if-clause and ‘will’ in the main clause: ‘If it rains…, we will….’ The distractors each break this pattern by mixing in ‘would,’ ‘will’ inside the if-clause, or a past-tense if-clause."
+    },
+    {
+      "id": 12,
+      "level": "hard",
+      "question": "Task: Rewrite it as a third conditional to express a hypothetical past.",
+      "content": {
+        "text": "Read the sentence below.\n“He didn’t study, so he failed the test.”",
+        "image": null
+      },
+      "options": {
+        "A": "If he studied, he would not fail the test.",
+        "B": "If he had studied, he would not fail the test.",
+        "C": "If he studies, he will not fail the test.",
+        "D": "If he had studied, he would not have failed the test."
+      },
+      "correct": "D",
+      "explanation": "The third conditional describes a hypothetical past situation using ‘if + past perfect’ in the if-clause and ‘would have + past participle’ in the result clause. The distractors instead use second- or first-conditional forms, or mismatch the two clauses' tenses."
+    },
+    {
+      "id": 13,
+      "level": "medium",
+      "question": "Task: Add the correct question tag.",
+      "content": {
+        "text": "Read the statement below.\n“You haven’t finished your homework, ______?”",
+        "image": null
+      },
+      "options": {
+        "A": "Have you?",
+        "B": "Haven't you?",
+        "C": "Did you?",
+        "D": "Are you?"
+      },
+      "correct": "A",
+      "explanation": "A negative statement takes a positive tag question, and the tag must repeat the same auxiliary verb as the statement. Since the statement uses ‘haven't,’ the correct tag is the positive ‘have you?’ The distractors either keep the tag negative or use a mismatched auxiliary."
+    },
+    {
+      "id": 14,
+      "level": "medium",
+      "question": "Task: Rewrite it as a polite indirect question beginning with “Could you tell me…”",
+      "content": {
+        "text": "Read the direct question below.\n“Where is the train station?”",
+        "image": null
+      },
+      "options": {
+        "A": "Could you tell me where is the train station?",
+        "B": "Could you tell me where the train station is?",
+        "C": "Could you tell me where the train station was?",
+        "D": "Could you tell me the train station is where?"
+      },
+      "correct": "B",
+      "explanation": "In an indirect (embedded) question, the word order returns to normal subject-verb order (‘where the train station is’), unlike the inverted order of a direct question (‘where is the train station?’). The distractors keep the inverted order, change the tense unnecessarily, or scramble the word order."
+    },
+    {
+      "id": 15,
+      "level": "hard",
+      "question": "Task: Rewrite it in the passive voice.",
+      "content": {
+        "text": "Read the active-voice sentence below.\n“The committee will announce the results on Friday.”",
+        "image": null
+      },
+      "options": {
+        "A": "The committee will be announced the results on Friday.",
+        "B": "The results will announce by the committee on Friday.",
+        "C": "The results will be announced by the committee on Friday.",
+        "D": "The results are announced by the committee on Friday."
+      },
+      "correct": "C",
+      "explanation": "Passive voice moves the object of the active sentence (‘the results’) into the subject position and requires ‘will be + past participle.’ The distractors either misplace the subject, drop the required ‘be,’ or change the tense."
+    },
+    {
+      "id": 16,
+      "level": "medium",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "Marie Tharp’s maps of the ocean floor revealed the vast Mid-Atlantic Ridge ______ this discovery helped confirm the theory of plate tectonics.",
+        "image": null
+      },
+      "options": {
+        "A": "Ridge,",
+        "B": "Ridge",
+        "C": "Ridge being",
+        "D": "Ridge;"
+      },
+      "correct": "D",
+      "explanation": "Both parts of the sentence are independent clauses, so they need a semicolon (or a period) between them, not just a comma. Choice B correctly separates the clauses; a comma alone would create a comma splice, and ‘Ridge being’ produces an ungrammatical fragment."
+    },
+    {
+      "id": 17,
+      "level": "easy",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "The college’s collection of rare manuscripts, including several fragile medieval texts, ______ stored in a climate-controlled archive.",
+        "image": null
+      },
+      "options": {
+        "A": "is",
+        "B": "are",
+        "C": "were",
+        "D": "have been being"
+      },
+      "correct": "A",
+      "explanation": "The sentence's subject is the singular noun ‘collection’ — the phrase ‘including several fragile medieval texts’ is a nonessential aside and doesn't change the subject's number. The singular verb ‘is’ correctly agrees with ‘collection’; ‘are’ and ‘were’ incorrectly treat the subject as plural."
+    },
+    {
+      "id": 18,
+      "level": "easy",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "The physicist ______ developed the theory of general relativity also made foundational contributions to quantum mechanics.",
+        "image": null
+      },
+      "options": {
+        "A": ", who",
+        "B": "who",
+        "C": ", which",
+        "D": "which"
+      },
+      "correct": "B",
+      "explanation": "The clause identifying which physicist is essential to the sentence's meaning, so no comma is needed, and since it refers to a person, the correct relative pronoun is ‘who’ (not ‘which’). Adding a comma before ‘who’ would incorrectly treat the clause as nonessential."
+    },
+    {
+      "id": 19,
+      "level": "medium",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "The novel, ______ in 1962, explores the fragile nature of memory.",
+        "image": null
+      },
+      "options": {
+        "A": "it was written",
+        "B": "which written",
+        "C": "written",
+        "D": "was written"
+      },
+      "correct": "C",
+      "explanation": "The phrase between the commas is a reduced relative clause modifying ‘novel’; the past participle ‘written’ (short for ‘which was written’) is the correct, concise form. The other choices either create a run-on or use faulty grammar."
+    },
+    {
+      "id": 20,
+      "level": "hard",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "______ remains among the most analyzed paintings in the world, drawing millions of visitors each year.",
+        "image": null
+      },
+      "options": {
+        "A": "The Mona Lisa a portrait by Leonardo da Vinci",
+        "B": "The Mona Lisa, a portrait by Leonardo da Vinci",
+        "C": "The Mona Lisa a portrait by Leonardo da Vinci,",
+        "D": "The Mona Lisa, a portrait by Leonardo da Vinci,"
+      },
+      "correct": "D",
+      "explanation": "‘a portrait by Leonardo da Vinci’ is a nonessential appositive describing ‘The Mona Lisa’ and needs a comma both before and after it. The other choices are missing one or both of the required commas."
+    },
+    {
+      "id": 21,
+      "level": "medium",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "Although the museum renovated several of its galleries last spring, ______ remained closed to the public for nearly two years.",
+        "image": null
+      },
+      "options": {
+        "A": "it",
+        "B": "they",
+        "C": "those",
+        "D": "which"
+      },
+      "correct": "A",
+      "explanation": "The pronoun refers back to a singular antecedent, so the singular pronoun ‘it’ is correct. ‘They’ and ‘those’ incorrectly treat the antecedent as plural."
+    },
+    {
+      "id": 22,
+      "level": "easy",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "The expedition faced a series of daunting obstacles. ______ severe weather, repeated equipment failures, and rapidly dwindling supplies.",
+        "image": null
+      },
+      "options": {
+        "A": "Including",
+        "B": "These included",
+        "C": "Included",
+        "D": "To include"
+      },
+      "correct": "B",
+      "explanation": "The second sentence needs a subject and a finite verb to be a complete sentence. ‘These included’ supplies both; ‘Including,’ ‘Included,’ and ‘To include’ leave the sentence as a fragment without a proper finite verb."
+    },
+    {
+      "id": 23,
+      "level": "medium",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "The internship emphasizes reading technical manuals, ______ laboratory simulations, and analyzing experimental data.",
+        "image": null
+      },
+      "options": {
+        "A": "to run",
+        "B": "having run",
+        "C": "running",
+        "D": "the running of"
+      },
+      "correct": "C",
+      "explanation": "The sentence lists three parallel activities joined by ‘and’: ‘reading,’ [blank], and ‘analyzing.’ For parallel structure, the blank must also be a gerund — ‘running’ — matching the other two items in the list."
+    },
+    {
+      "id": 24,
+      "level": "easy",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "The new conservation policy is intended not only to reduce industrial waste ______ to lower long-term energy costs.",
+        "image": null
+      },
+      "options": {
+        "A": "and likewise",
+        "B": "as well",
+        "C": "yet still",
+        "D": "but also"
+      },
+      "correct": "D",
+      "explanation": "‘Not only’ must be paired with its correlative partner ‘but also’ to correctly join the two purposes. The other choices don't form a grammatically correct correlative pair with ‘not only.’"
+    },
+    {
+      "id": 25,
+      "level": "hard",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "Critics have argued that the poetry of Emily Dickinson is every bit as innovative as ______.",
+        "image": null
+      },
+      "options": {
+        "A": "that of Walt Whitman",
+        "B": "Walt Whitman",
+        "C": "Walt Whitman’s",
+        "D": "Walt Whitman wrote his"
+      },
+      "correct": "A",
+      "explanation": "The sentence compares Dickinson's poetry to something else, so for a logical, parallel comparison, that ‘something else’ must also be poetry — expressed as ‘that of Walt Whitman’ (meaning ‘the poetry of Walt Whitman’). Comparing poetry directly to a person, as the other choices do, is illogical."
+    },
+    {
+      "id": 26,
+      "level": "medium",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "The glacier has retreated dramatically over the past century ______ scientists attribute this change largely to rising regional temperatures.",
+        "image": null
+      },
+      "options": {
+        "A": "and,",
+        "B": ", and",
+        "C": ",",
+        "D": "; and,"
+      },
+      "correct": "B",
+      "explanation": "Two independent clauses are being joined here, which correctly requires a comma followed by a coordinating conjunction like ‘and.’ The other choices either misplace the comma, create a comma splice, or use unnecessary/incorrect punctuation."
+    },
+    {
+      "id": 27,
+      "level": "hard",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "______ under infrared light, the ancient manuscript revealed previously invisible details about the empire’s trade routes.",
+        "image": null
+      },
+      "options": {
+        "A": "Having examined it",
+        "B": "When researchers examined",
+        "C": "Examined",
+        "D": "The researchers examined it"
+      },
+      "correct": "C",
+      "explanation": "The introductory phrase must modify ‘the ancient manuscript,’ the thing that was examined. The past participle ‘Examined’ correctly creates this modifying phrase; the other choices either introduce a different, dangling subject or don't fit the sentence grammatically."
+    },
+    {
+      "id": 28,
+      "level": "easy",
+      "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "content": {
+        "text": "The chef’s signature dish relies on three unusual ingredients ______ saffron, sumac, and dried Persian lime.",
+        "image": null
+      },
+      "options": {
+        "A": ",",
+        "B": ";",
+        "C": "—being",
+        "D": ":"
+      },
+      "correct": "D",
+      "explanation": "A colon is used to introduce a list after a complete independent clause (‘…relies on three unusual ingredients’). A comma or semicolon isn't appropriate here, and ‘—being’ is not idiomatic or grammatically standard."
+    },
+    {
+      "id": 29,
+      "level": "medium",
+      "question": "Which choice completes the text with the most logical transition?",
+      "content": {
+        "text": "For decades, astronomers assumed that distant planetary systems would broadly resemble our own. ______ the discovery of “hot Jupiters”—gas giants orbiting extremely close to their stars—directly contradicted that expectation.",
+        "image": null
+      },
+      "options": {
+        "A": "However,",
+        "B": "Therefore,",
+        "C": "Likewise,",
+        "D": "For example,"
+      },
+      "correct": "A",
+      "explanation": "The second sentence contradicts the expectation described in the first, so a contrast transition is needed. ‘However’ correctly signals this contrast; the other choices suggest a conclusion, similarity, or example, none of which fits."
+    },
+    {
+      "id": 30,
+      "level": "easy",
+      "question": "Which choice completes the text with the most logical transition?",
+      "content": {
+        "text": "The factory installed a closed-loop system that captures and recycles nearly all of its wastewater. ______ its consumption of fresh water fell by more than 80 percent within a single year.",
+        "image": null
+      },
+      "options": {
+        "A": "Nevertheless,",
+        "B": "As a result,",
+        "C": "In contrast,",
+        "D": "Similarly,"
+      },
+      "correct": "B",
+      "explanation": "The drop in water consumption is a direct effect of installing the closed-loop system, so a cause-and-effect transition is needed. ‘As a result’ fits; the others incorrectly suggest contrast or similarity."
+    },
+    {
+      "id": 31,
+      "level": "easy",
+      "question": "Which choice completes the text with the most logical transition?",
+      "content": {
+        "text": "Some animals possess remarkable regenerative abilities. ______ the axolotl, a Mexican salamander, can regrow entire limbs, complete with bone, muscle, and nerve tissue.",
+        "image": null
+      },
+      "options": {
+        "A": "Consequently,",
+        "B": "On the other hand,",
+        "C": "For instance,",
+        "D": "In conclusion,"
+      },
+      "correct": "C",
+      "explanation": "The axolotl is offered as a specific example of an animal with remarkable regenerative ability, so an example transition like ‘For instance’ is needed. The other choices suggest a conclusion or contrast, which don't fit."
+    },
+    {
+      "id": 32,
+      "level": "medium",
+      "question": "The student wants to emphasize the historical significance of the Antikythera mechanism.\nWhich choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "content": {
+        "text": "While researching a topic, a student has taken the following notes:\n  • The Antikythera mechanism is an ancient Greek device recovered from a shipwreck in 1901.\n  • It dates to roughly the 2nd century BCE.\n  • It contained at least 30 interlocking bronze gears.\n  • It was used to predict astronomical positions and eclipses.\n  • Researchers regard it as the earliest known analog computer.",
+        "image": null
+      },
+      "options": {
+        "A": "The Antikythera mechanism, recovered from a shipwreck in 1901, contained at least 30 bronze gears.",
+        "B": "The Antikythera mechanism was recovered from a shipwreck near the Greek island of Antikythera in 1901.",
+        "C": "The Antikythera mechanism was used to predict astronomical positions and eclipses.",
+        "D": "Dating to the 2nd century BCE, the Antikythera mechanism is regarded by researchers as the earliest known analog computer."
+      },
+      "correct": "D",
+      "explanation": "The goal is to emphasize historical significance. Choice B highlights both its age and its status as ‘the earliest known analog computer’ — the most significant claim in the notes. The other choices mention true but less significant details, like the number of gears or where it was found."
+    },
+    {
+      "id": 33,
+      "level": "medium",
+      "question": "The student wants to introduce the concept of bioluminescence to an audience unfamiliar with it. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "content": {
+        "text": "While researching a topic, a student has taken the following notes:\n  • Bioluminescence is the production of light by living organisms.\n  • It results from a chemical reaction involving a molecule called luciferin.\n  • Many deep-sea creatures use it to lure prey.\n  • Fireflies use it to attract mates.\n  • Some species of fungi use it to help disperse their spores.",
+        "image": null
+      },
+      "options": {
+        "A": "Bioluminescence—the production of light by living organisms—results from a chemical reaction involving a molecule called luciferin.",
+        "B": "Fireflies use bioluminescence to attract mates, while certain fungi use it to disperse spores.",
+        "C": "Many deep-sea creatures rely on bioluminescence to lure their prey.",
+        "D": "Bioluminescence results from a chemical reaction involving the molecule luciferin."
+      },
+      "correct": "A",
+      "explanation": "To introduce an unfamiliar audience to a concept, a clear definition is most effective. Choice B defines bioluminescence and briefly explains its chemical basis. The other choices jump straight to specific examples without first explaining what bioluminescence actually is."
+    },
+    {
+      "id": 34,
+      "level": "easy",
+      "question": "According to the text, what does the duration of a honeybee’s waggle indicate?",
+      "content": {
+        "text": "Read the following passage.\nWhen a foraging honeybee returns to the hive after locating a rich source of nectar, it performs a movement known as the waggle dance. The bee runs in a straight line while rapidly shaking its abdomen, then loops back to repeat the motion. The angle of the straight run relative to vertical communicates the direction of the food in relation to the sun, while the duration of the waggle indicates the distance. Fellow foragers crowd around the dancer, interpreting these signals before flying out to the source.",
+        "image": null
+      },
+      "options": {
+        "A": "The direction of the food source",
+        "B": "The distance to the food source",
+        "C": "The richness of the nectar",
+        "D": "The position of the sun"
+      },
+      "correct": "B",
+      "explanation": "The text states directly that ‘the duration of the waggle indicates the distance’ to the food source. The angle, not the duration, indicates direction, and the passage doesn't say duration reflects nectar richness or the sun's position."
+    },
+    {
+      "id": 35,
+      "level": "medium",
+      "question": "Which choice best states the main idea of the text?",
+      "content": {
+        "text": "Read the following passage.\nThe card catalog was once the heart of every library, organizing millions of books through handwritten or typed cards stored in rows of wooden drawers. To find a book, a patron searched alphabetically by author, title, or subject. Although the system was reliable, it was slow and demanded enormous physical space. By the late twentieth century, most libraries had replaced their card catalogs with electronic databases, which allowed users to search instantly and from remote locations.",
+        "image": null
+      },
+      "options": {
+        "A": "Card catalogs were organized by author, title, and subject.",
+        "B": "Electronic databases let users search libraries from remote locations.",
+        "C": "The card catalog was a reliable but limited system that was eventually replaced by electronic databases.",
+        "D": "Libraries once stored catalog cards in wooden drawers."
+      },
+      "correct": "C",
+      "explanation": "The passage describes what card catalogs were, acknowledges they were reliable but slow and space-consuming, and explains that they were eventually replaced by electronic databases — which is exactly what this choice summarizes. The other choices describe only a single supporting detail, not the passage's overall main idea."
+    },
+    {
+      "id": 36,
+      "level": "easy",
+      "question": "According to the text, rock paintings from the humid period depict",
+      "content": {
+        "text": "Read the following passage.\nThe Sahara was not always a desert. Geological and fossil evidence shows that between roughly 11,000 and 5,000 years ago, the region experienced a humid period during which lakes, rivers, and grasslands covered much of what is now barren sand. Rock paintings from this era depict hippopotamuses, crocodiles, and herds of cattle—animals that could not survive in today’s arid climate. Scientists attribute this “Green Sahara” to subtle shifts in Earth’s orbit that altered seasonal rainfall.",
+        "image": null
+      },
+      "options": {
+        "A": "barren sand dunes",
+        "B": "shifts in Earth’s orbit",
+        "C": "ancient cities and roads",
+        "D": "animals such as hippopotamuses and cattle"
+      },
+      "correct": "D",
+      "explanation": "The text states that rock paintings from this era ‘depict hippopotamuses, crocodiles, and herds of cattle.’ The other choices describe things mentioned elsewhere in the passage, not what the paintings themselves depict."
+    },
+    {
+      "id": 37,
+      "level": "medium",
+      "question": "The main purpose of the text is to",
+      "content": {
+        "text": "Read the following passage.\nMany people assume that goldfish have a memory span of only a few seconds. In fact, studies have shown that goldfish can retain information for months. Researchers trained goldfish to push a small lever in exchange for food, and the fish continued to perform the task even after long breaks. Other experiments have demonstrated that goldfish can learn to navigate simple mazes and can recognize the time of day at which they are usually fed.",
+        "image": null
+      },
+      "options": {
+        "A": "correct a common misconception about goldfish memory",
+        "B": "explain how to train a pet goldfish",
+        "C": "describe the design of a lever experiment",
+        "D": "compare goldfish with other species of fish"
+      },
+      "correct": "A",
+      "explanation": "The passage opens by stating a common assumption (‘goldfish have a memory span of only a few seconds’) and then presents evidence disproving it — the classic structure of correcting a misconception. The other choices describe specific supporting details, not the passage's overall purpose."
+    },
+    {
+      "id": 38,
+      "level": "easy",
+      "question": "According to the text, critics of the four-day workweek warn that it could",
+      "content": {
+        "text": "Read the following passage.\nSupporters of a four-day workweek argue that shorter weeks raise productivity, because well-rested employees concentrate more effectively, and they also claim that less commuting lowers carbon emissions. Critics, however, respond that not every industry can compress its schedule, and they warn that some employers may simply demand the same output in fewer hours, increasing stress rather than relieving it.",
+        "image": null
+      },
+      "options": {
+        "A": "lower carbon emissions",
+        "B": "increase stress for some workers",
+        "C": "improve employees’ ability to concentrate",
+        "D": "succeed equally well in every industry"
+      },
+      "correct": "B",
+      "explanation": "The text states critics warn employers might ‘demand the same output in fewer hours, increasing stress rather than relieving it.’ The other choices describe claims made by supporters, not the warning raised by critics."
+    },
+    {
+      "id": 39,
+      "level": "easy",
+      "question": "According to the text, what gives sourdough bread its tangy flavor?",
+      "content": {
+        "text": "Read the following passage.\nSourdough bread relies on a “starter,” a simple mixture of flour and water left to ferment. Wild yeasts and bacteria naturally present in the environment colonize the starter, producing the carbon dioxide that makes the dough rise and the acids that give sourdough its characteristic tang. Unlike commercial baker’s yeast, which works quickly, a sourdough starter must be fed regularly with fresh flour to stay active, and the fermentation it drives can take many hours.",
+        "image": null
+      },
+      "options": {
+        "A": "Commercial baker’s yeast",
+        "B": "The carbon dioxide that makes the dough rise",
+        "C": "Acids produced by wild yeasts and bacteria",
+        "D": "Fresh flour added to feed the starter"
+      },
+      "correct": "C",
+      "explanation": "The text states directly that the wild yeasts and bacteria produce ‘the acids that give sourdough its characteristic tang.’ Carbon dioxide is credited with making the dough rise, not with the tangy flavor."
+    },
+    {
+      "id": 40,
+      "level": "hard",
+      "question": "Which choice best states the main idea of the text?",
+      "content": {
+        "text": "Read the following passage.\nThe Voyager 1 spacecraft, launched in 1977, was originally designed to study the outer planets. Having long since completed that mission, it has continued traveling outward, and in 2012 it became the first human-made object to enter interstellar space. Although its instruments are gradually being shut down to conserve power, Voyager 1 still transmits faint signals across billions of miles, offering scientists a rare window into the space between the stars.",
+        "image": null
+      },
+      "options": {
+        "A": "Voyager 1 was launched in 1977 to study the outer planets.",
+        "B": "Voyager 1’s instruments are being shut down to conserve power.",
+        "C": "Voyager 1 is now billions of miles away from Earth.",
+        "D": "Long past its original mission, Voyager 1 has become a pioneering probe of interstellar space."
+      },
+      "correct": "D",
+      "explanation": "The passage's overall focus is that Voyager 1 has gone far beyond its original mission to become a pioneering explorer of interstellar space. The other choices state true but narrower supporting details rather than the passage's main idea."
+    },
+    {
+      "id": 41,
+      "level": "hard",
+      "question": "Which choice best states the central idea of the text?",
+      "content": {
+        "text": "Read the following passage.\nCities are typically several degrees warmer than the surrounding countryside, a phenomenon known as the urban heat island effect. Dark asphalt and concrete absorb solar radiation during the day and release it slowly at night, while the scarcity of vegetation reduces the cooling that would otherwise occur as water evaporates from leaves. Tall buildings further trap heat by limiting airflow. Increasingly, urban planners counter these effects by installing reflective “cool roofs,” expanding tree cover, and adding green spaces—measures that can lower local temperatures by several degrees.",
+        "image": null
+      },
+      "options": {
+        "A": "The urban heat island effect arises from several features of cities and can be reduced through deliberate design.",
+        "B": "Tall buildings are the single most important cause of the urban heat island effect.",
+        "C": "Reflective cool roofs are the most effective method of cooling a city.",
+        "D": "Vegetation cools the countryside through the evaporation of water."
+      },
+      "correct": "A",
+      "explanation": "The passage explains multiple causes of the urban heat island effect (asphalt, lack of vegetation, tall buildings) and then describes deliberate design solutions. The other choices overstate a single cause or a single solution as if it were the whole picture."
+    },
+    {
+      "id": 42,
+      "level": "easy",
+      "question": "Which choice best describes the function of sentence 2 in the overall structure of the text?",
+      "content": {
+        "text": "Consider the numbered sentences in the text below.\n[1] The common belief that lightning never strikes the same place twice is simply false. [2] The Empire State Building, for instance, is struck roughly twenty-five times each year. [3] Tall, isolated, conductive structures are in fact especially likely to be struck repeatedly, which is why engineers fit them with lightning rods that channel the current safely into the ground.",
+        "image": null
+      },
+      "options": {
+        "A": "It introduces a new topic unrelated to the claim in sentence 1.",
+        "B": "It provides a concrete example that supports the claim made in sentence 1.",
+        "C": "It proposes a solution to a problem raised in sentence 1.",
+        "D": "It casts doubt on the reliability of sentence 1."
+      },
+      "correct": "B",
+      "explanation": "Sentence 1 makes the general claim that lightning can strike the same place repeatedly; sentence 2 backs this up with a specific, concrete example (the Empire State Building). That's a supporting-example function, not a new topic, a solution, or a doubt-casting statement."
+    },
+    {
+      "id": 43,
+      "level": "hard",
+      "question": "Which choice best describes the overall structure of the text?",
+      "content": {
+        "text": "Read the following passage.\nEarly theories held that the dinosaurs died out gradually as the global climate slowly cooled, and this view dominated paleontology for decades. In 1980, however, the discovery of a worldwide layer of iridium—an element rare in Earth’s crust but abundant in asteroids—prompted a radical alternative: that a massive impact triggered a sudden mass extinction. The later discovery of an enormous buried crater off the coast of Mexico lent powerful support to this hypothesis, which is now widely accepted.",
+        "image": null
+      },
+      "options": {
+        "A": "It presents a single theory and supplies evidence confirming it.",
+        "B": "It compares two theories that scientists accept equally today.",
+        "C": "It traces a shift from an older explanation to a newer, better-supported one.",
+        "D": "It argues that the true cause of the extinction remains unknown."
+      },
+      "correct": "C",
+      "explanation": "The passage begins with the older gradual-cooling theory, then introduces the newer asteroid-impact theory and the evidence supporting it, ending with that theory now being widely accepted — a clear shift from an older to a newer, better-supported explanation."
+    },
+    {
+      "id": 44,
+      "level": "hard",
+      "question": "Based on the texts, how would the author of Text 2 most likely respond to the point about education raised in Text 1?",
+      "content": {
+        "text": "Read the following pair of texts, then answer the two questions that follow.\n\nTEXT 1\nModern zoos play a vital role in conservation. Through carefully managed breeding programs, they have helped pull species such as the California condor back from the brink of extinction. Zoos also fund field research and educate millions of visitors a year, building the public support on which the protection of wildlife ultimately depends.\n\nTEXT 2\nWhatever their conservation programs, zoos still confine animals to enclosures that cannot reproduce the range and complexity of natural habitats. Critics observe that many captive animals show clear signs of chronic stress, and they question how much genuine education a visitor gains from watching a listless, pacing creature.",
+        "image": null
+      },
+      "options": {
+        "A": "By agreeing that zoos successfully educate millions of visitors each year.",
+        "B": "By recommending that zoos expand their breeding programs.",
+        "C": "By denying that any species has ever been saved from extinction.",
+        "D": "By arguing that watching stressed captive animals offers little real educational value."
+      },
+      "correct": "D",
+      "explanation": "Text 2 specifically questions ‘how much genuine education a visitor gains from watching a listless, pacing creature,’ directly challenging Text 1's claim about education. The other choices either misrepresent Text 2's stance or attribute a claim it doesn't make."
+    },
+    {
+      "id": 45,
+      "level": "hard",
+      "question": "Which choice best describes a difference in how the two texts characterize zoos?",
+      "content": {
+        "text": "Read the following pair of texts, then answer the two questions that follow.\n\nTEXT 1\nModern zoos play a vital role in conservation. Through carefully managed breeding programs, they have helped pull species such as the California condor back from the brink of extinction. Zoos also fund field research and educate millions of visitors a year, building the public support on which the protection of wildlife ultimately depends.\n\nTEXT 2\nWhatever their conservation programs, zoos still confine animals to enclosures that cannot reproduce the range and complexity of natural habitats. Critics observe that many captive animals show clear signs of chronic stress, and they question how much genuine education a visitor gains from watching a listless, pacing creature.",
+        "image": null
+      },
+      "options": {
+        "A": "Text 1 stresses zoos’ conservation benefits, whereas Text 2 stresses their costs to animal welfare.",
+        "B": "Text 1 criticizes zoos, whereas Text 2 defends them.",
+        "C": "Both texts conclude that zoos should be permanently closed.",
+        "D": "Text 1 discusses education, whereas Text 2 avoids the subject entirely."
+      },
+      "correct": "A",
+      "explanation": "Text 1 focuses on the benefits of zoos (conservation, education), while Text 2 focuses on the costs to animal welfare (confinement, stress) — exactly the contrast this choice describes. The other choices either misstate one text's position or invent a claim neither text makes."
+    },
+    {
+      "id": 46,
+      "level": "hard",
+      "question": "Which finding, if true, would most strengthen the biologists’ hypothesis?",
+      "content": {
+        "text": "Read the following passage.\nA team of biologists hypothesized that the bright coloration of certain tropical frogs evolved chiefly as a warning signal advertising to predators that the frogs are toxic. To test this idea, the researchers sought evidence linking how vivid a frog’s coloration is to how toxic it actually is.",
+        "image": null
+      },
+      "options": {
+        "A": "Brightly colored frogs are found across a wider range of habitats than dull-colored frogs.",
+        "B": "The most vividly colored frog species also carry the most potent toxins, and predators consistently avoid them.",
+        "C": "A few entirely non-toxic frog species are also brightly colored.",
+        "D": "A frog’s coloration is determined largely by its diet rather than its genes."
+      },
+      "correct": "B",
+      "explanation": "The hypothesis is that bright coloration warns predators of toxicity. A finding that the most vividly colored frogs are also the most toxic, and are avoided by predators, directly supports this link between coloration and toxicity. The other choices are irrelevant or would actually weaken the hypothesis."
+    },
+    {
+      "id": 47,
+      "level": "hard",
+      "question": "Which choice is best supported by the text?",
+      "content": {
+        "text": "Read the following passage.\nIn linguistics, a “dead” language is one that has no living native speakers, whereas an “extinct” language is one that has left no descendants at all. Latin, although it has no native speakers today, gave rise to French, Spanish, Italian, and the other Romance languages, all of which preserve and transform its grammar and vocabulary. The Etruscan language of ancient Italy, by contrast, vanished without producing any successor tongue.",
+        "image": null
+      },
+      "options": {
+        "A": "Latin is properly classified as extinct rather than dead.",
+        "B": "French, Spanish, and Italian today have no living native speakers.",
+        "C": "Etruscan qualifies as an extinct language, whereas Latin does not.",
+        "D": "Every dead language eventually gives rise to new languages."
+      },
+      "correct": "C",
+      "explanation": "The text defines an extinct language as one that leaves no descendants, and states that Etruscan ‘vanished without producing any successor tongue’ — matching the definition of extinct. Latin, by contrast, gave rise to the Romance languages, so it is dead but not extinct."
+    },
+    {
+      "id": 48,
+      "level": "medium",
+      "question": "It can most reasonably be inferred from the text that a worker whose nominal wages rise more slowly than prices will",
+      "content": {
+        "text": "Read the following passage.\nEconomists distinguish between nominal wages—the amount of money a worker is paid—and real wages, which adjust that figure for the prices of goods and services. If nominal wages rise by five percent in a year while prices also rise by five percent, a worker’s purchasing power is unchanged. Only when nominal wages climb faster than prices do real wages, and therefore living standards, actually improve.",
+        "image": null
+      },
+      "options": {
+        "A": "enjoy an increase in purchasing power",
+        "B": "earn exactly the same real wage as before",
+        "C": "see nominal and real wages rise by equal amounts",
+        "D": "experience a decline in real wages"
+      },
+      "correct": "D",
+      "explanation": "The text states real wages improve only when nominal wages rise faster than prices. If nominal wages rise more slowly than prices, purchasing power — and therefore real wages — must fall."
+    },
+    {
+      "id": 49,
+      "level": "medium",
+      "question": "As used in the text, which choice most nearly fits the blank?",
+      "content": {
+        "text": "Read the following sentence.\nIn her review, the critic singled out the novel’s ______ prose for praise, observing that its plain, unadorned sentences let the emotional weight of the story come through without distraction.",
+        "image": null
+      },
+      "options": {
+        "A": "spare",
+        "B": "ornate",
+        "C": "rambling",
+        "D": "ambiguous"
+      },
+      "correct": "A",
+      "explanation": "The sentence describes ‘plain, unadorned sentences,’ which matches the meaning of ‘spare’ (simple, without excess). ‘Ornate’ and ‘rambling’ describe the opposite qualities, and ‘ambiguous’ doesn't fit the description of plainness at all."
+    },
+    {
+      "id": 50,
+      "level": "hard",
+      "question": "As used in the text, which choice most nearly fits the blank?",
+      "content": {
+        "text": "Read the following sentence.\nThe veteran negotiator was admired for her ______ manner: again and again she found common ground among rival factions that had appeared hopelessly opposed, coaxing each side into small concessions for the sake of a larger agreement.",
+        "image": null
+      },
+      "options": {
+        "A": "indifferent",
+        "B": "conciliatory",
+        "C": "combative",
+        "D": "inflexible"
+      },
+      "correct": "B",
+      "explanation": "The sentence describes someone who repeatedly found common ground between opposing sides and coaxed concessions — behavior that matches ‘conciliatory’ (aiming to placate or reconcile). The other choices describe the opposite kind of manner."
+    }
+  ]
+}

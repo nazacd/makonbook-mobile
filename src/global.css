@@ -14,3 +14,7 @@
 @import "tailwindcss/utilities.css";
 
 @import "nativewind/theme";
+
+@theme {
+  --color-brand: #530163;
+}

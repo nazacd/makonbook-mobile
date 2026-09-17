@@ -3,19 +3,772 @@
     {
       "id": 1,
       "level": "easy",
-      "question": "Which value of x satisfies the equation?",
+      "question": "What is the simplified form of the expression above?",
       "content": {
-        "text": "3x + 5 = 20",
+        "text": "\\(2^3 \\cdot 2^4\\)",
         "image": null
       },
       "options": {
-        "A": "3",
-        "B": "5",
-        "C": "10",
-        "D": "15"
+        "A": "\\(2^7\\)",
+        "B": "\\(2^{12}\\)",
+        "C": "\\(4^7\\)",
+        "D": "\\(4^{12}\\)"
+      },
+      "correct": "A",
+      "explanation": "When multiplying powers with the same base, add the exponents: 2^3 · 2^4 = 2^{3+4} = 2^7."
+    },
+    {
+      "id": 2,
+      "level": "easy",
+      "question": "What is the value of the expression above?",
+      "content": {
+        "text": "\\((3^2)^3\\)",
+        "image": null
+      },
+      "options": null,
+      "correct": 729,
+      "explanation": "When raising a power to a power, multiply the exponents: (3^2)^3 = 3^{2×3} = 3^6 = 729."
+    },
+    {
+      "id": 3,
+      "level": "easy",
+      "question": "What is the simplified form of the expression above?",
+      "content": {
+        "text": "\\(\\dfrac{x^5}{x^2}\\), where \\(x \\ne 0\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x^7\\)",
+        "B": "\\(x^3\\)",
+        "C": "\\(x^{2.5}\\)",
+        "D": "\\(x^{10}\\)"
       },
       "correct": "B",
-      "explanation": "Subtract 5 from both sides, then divide by 3: x = 5."
+      "explanation": "When dividing powers with the same base, subtract the exponents: x^5 / x^2 = x^{5-2} = x^3."
+    },
+    {
+      "id": 4,
+      "level": "easy",
+      "question": "What is the value of the expression above?",
+      "content": {
+        "text": "\\(5^0 + 2^{-2}\\)",
+        "image": null
+      },
+      "options": null,
+      "correct": 1.25,
+      "explanation": "Any nonzero number raised to the 0 power is 1, so 5^0 = 1. A negative exponent means a reciprocal: 2^{-2} = 1/2^2 = 1/4 = 0.25. Adding: 1 + 0.25 = 1.25."
+    },
+    {
+      "id": 5,
+      "level": "easy",
+      "question": "What is the value of the expression above?",
+      "content": {
+        "text": "\\(\\dfrac{2}{3} + \\dfrac{1}{6}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(\\dfrac{1}{2}\\)",
+        "B": "\\(\\dfrac{3}{9}\\)",
+        "C": "\\(\\dfrac{5}{6}\\)",
+        "D": "1"
+      },
+      "correct": "C",
+      "explanation": "Rewrite 2/3 with a denominator of 6: 2/3 = 4/6. Adding: 4/6 + 1/6 = 5/6."
+    },
+    {
+      "id": 6,
+      "level": "easy",
+      "question": "What is the value of the expression above?",
+      "content": {
+        "text": "\\(\\dfrac{3}{4} \\times \\dfrac{2}{5}\\)",
+        "image": null
+      },
+      "options": null,
+      "correct": 0.3,
+      "explanation": "Multiply numerators and denominators: (3×2)/(4×5) = 6/20 = 3/10 = 0.3."
+    },
+    {
+      "id": 7,
+      "level": "easy",
+      "question": "What is the value of the expression above?",
+      "content": {
+        "text": "\\(\\dfrac{5}{6} \\div \\dfrac{1}{3}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(\\dfrac{5}{18}\\)",
+        "B": "\\(\\dfrac{6}{5}\\)",
+        "C": "\\(\\dfrac{3}{2}\\)",
+        "D": "\\(\\dfrac{5}{2}\\)"
+      },
+      "correct": "D",
+      "explanation": "Dividing by a fraction means multiplying by its reciprocal: 5/6 × 3/1 = 15/6 = 5/2."
+    },
+    {
+      "id": 8,
+      "level": "easy",
+      "question": "How many cups of sugar do you need?",
+      "content": {
+        "text": "A recipe calls for 3/4 cup of sugar. You want to make half of the recipe.",
+        "image": null
+      },
+      "options": null,
+      "correct": 0.375,
+      "explanation": "Making half the recipe means multiplying every ingredient by 1/2: 3/4 × 1/2 = 3/8 = 0.375 cup."
+    },
+    {
+      "id": 9,
+      "level": "easy",
+      "question": "What is the value of x?",
+      "content": {
+        "text": "\\(2x + 5 = 17\\)",
+        "image": null
+      },
+      "options": {
+        "A": "6",
+        "B": "11",
+        "C": "8.5",
+        "D": "5"
+      },
+      "correct": "A",
+      "explanation": "Subtract 5 from both sides: 2x = 12. Divide by 2: x = 6."
+    },
+    {
+      "id": 10,
+      "level": "easy",
+      "question": "What is the value of x?",
+      "content": {
+        "text": "\\(3(x - 2) = 15\\)",
+        "image": null
+      },
+      "options": {
+        "A": "5",
+        "B": "7",
+        "C": "9",
+        "D": "3"
+      },
+      "correct": "B",
+      "explanation": "Distribute: 3x - 6 = 15. Add 6: 3x = 21. Divide by 3: x = 7."
+    },
+    {
+      "id": 11,
+      "level": "easy",
+      "question": "What is the value of x?",
+      "content": {
+        "text": "\\(5x - 3 = 2x + 9\\)",
+        "image": null
+      },
+      "options": {
+        "A": "2",
+        "B": "6",
+        "C": "4",
+        "D": "-4"
+      },
+      "correct": "C",
+      "explanation": "Subtract 2x from both sides: 3x - 3 = 9. Add 3: 3x = 12. Divide by 3: x = 4."
+    },
+    {
+      "id": 12,
+      "level": "easy",
+      "question": "What is the value of x?",
+      "content": {
+        "text": "\\(\\dfrac{x}{4} + 3 = 7\\)",
+        "image": null
+      },
+      "options": {
+        "A": "4",
+        "B": "28",
+        "C": "1",
+        "D": "16"
+      },
+      "correct": "D",
+      "explanation": "Subtract 3 from both sides: x/4 = 4. Multiply both sides by 4: x = 16."
+    },
+    {
+      "id": 13,
+      "level": "easy",
+      "question": "Which of the following represents the solution to the system of inequalities above?",
+      "content": {
+        "text": "\\(\\begin{cases}x+3>5\\\\x-2<4\\end{cases}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(2<x<6\\)",
+        "B": "\\(x>2\\)",
+        "C": "\\(x<6\\)",
+        "D": "\\(x<2 \\text{ or } x>6\\)"
+      },
+      "correct": "A",
+      "explanation": "The first inequality simplifies to x > 2. The second simplifies to x < 6. Combining both conditions gives 2 < x < 6."
+    },
+    {
+      "id": 14,
+      "level": "easy",
+      "question": "Which of the following represents the solution to the system of inequalities above?",
+      "content": {
+        "text": "\\(\\begin{cases}2x-1\\ge 3\\\\3x+2\\le 11\\end{cases}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x\\ge 2\\)",
+        "B": "\\(2\\le x\\le 3\\)",
+        "C": "\\(x\\le 3\\)",
+        "D": "\\(x<2 \\text{ or } x>3\\)"
+      },
+      "correct": "B",
+      "explanation": "The first inequality simplifies to x ≥ 2. The second simplifies to x ≤ 3. Combining both conditions gives 2 ≤ x ≤ 3."
+    },
+    {
+      "id": 15,
+      "level": "easy",
+      "question": "Which of the following represents the solution to the system of inequalities above?",
+      "content": {
+        "text": "\\(\\begin{cases}x-4<1\\\\2x+3>7\\end{cases}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x<5\\)",
+        "B": "\\(x>2\\)",
+        "C": "\\(2<x<5\\)",
+        "D": "\\(x<2 \\text{ or } x>5\\)"
+      },
+      "correct": "C",
+      "explanation": "The first inequality simplifies to x < 5. The second simplifies to x > 2. Combining both conditions gives 2 < x < 5."
+    },
+    {
+      "id": 16,
+      "level": "easy",
+      "question": "Which of the following represents the solution to the system of inequalities above?",
+      "content": {
+        "text": "\\(\\begin{cases}3x+1\\le 10\\\\x-5\\ge -8\\end{cases}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x\\le 3\\)",
+        "B": "\\(x\\ge -3\\)",
+        "C": "\\(x<-3 \\text{ or } x>3\\)",
+        "D": "\\(-3\\le x\\le 3\\)"
+      },
+      "correct": "D",
+      "explanation": "The first inequality simplifies to x ≤ 3. The second simplifies to x ≥ -3. Combining both conditions gives -3 ≤ x ≤ 3."
+    },
+    {
+      "id": 17,
+      "level": "easy",
+      "question": "What is the value of the expression above?",
+      "content": {
+        "text": "\\(3 + 4 \\times (6 - 2) \\div 2\\)",
+        "image": null
+      },
+      "options": null,
+      "correct": 11,
+      "explanation": "Following order of operations: first the parentheses (6-2=4), then multiplication and division left to right (4×4=16, then 16÷2=8), then addition: 3 + 8 = 11."
+    },
+    {
+      "id": 18,
+      "level": "easy",
+      "question": "What is the value of \\(2x^2 - y\\)?",
+      "content": {
+        "text": "\\(x=3\\) and \\(y=-2\\)",
+        "image": null
+      },
+      "options": null,
+      "correct": 20,
+      "explanation": "Substituting the given values: 2(3)^2 - (-2) = 2(9) + 2 = 18 + 2 = 20."
+    },
+    {
+      "id": 19,
+      "level": "easy",
+      "question": "What is 35% of 80?",
+      "content": {
+        "text": null,
+        "image": null
+      },
+      "options": null,
+      "correct": 28,
+      "explanation": "“Of” means multiply: 0.35 × 80 = 28."
+    },
+    {
+      "id": 20,
+      "level": "easy",
+      "question": "What is the simplified form of the expression above?",
+      "content": {
+        "text": "\\(4x + 7 - 2x + 3\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(2x + 10\\)",
+        "B": "\\(2x + 4\\)",
+        "C": "\\(6x + 10\\)",
+        "D": "\\(2x + 3\\)"
+      },
+      "correct": "A",
+      "explanation": "Combine the x-terms: 4x - 2x = 2x. Combine the constants: 7 + 3 = 10. The simplified expression is 2x + 10."
+    },
+    {
+      "id": 21,
+      "level": "easy",
+      "question": "What is the value of the expression above?",
+      "content": {
+        "text": "\\(\\dfrac{LCM(12, 18)}{GCD(24, 36)}+0,(3)+\\dfrac{5}{6}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(3\\frac{5}{6}\\)",
+        "B": "\\(4\\frac{1}{6}\\)",
+        "C": "\\(4\\)",
+        "D": "\\(4\\frac{1}{3}\\)"
+      },
+      "correct": "B",
+      "explanation": "LCM(12,18) = 36 and GCD(24,36) = 12, so the first term is 36/12 = 3. The repeating decimal 0,(3) equals 1/3. Adding: 3 + 1/3 + 5/6 = 3 + 2/6 + 5/6 = 3 + 7/6 = 4 1/6."
+    },
+    {
+      "id": 22,
+      "level": "medium",
+      "question": "What is the simplified form of the expression above?",
+      "content": {
+        "text": "\\((-2)^3\\cdot(\\dfrac{-x^{-2}}{x^{-3}})-4(-x)\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(4x\\)",
+        "B": "\\(-4x\\)",
+        "C": "\\(12x\\)",
+        "D": "\\(8x\\)"
+      },
+      "correct": "C",
+      "explanation": "(-2)^3 = -8. Simplifying the fraction: -x^{-2}/x^{-3} = -x^{-2-(-3)} = -x^{1} = -x. So the first term is -8 × (-x) = 8x. The second term, -4(-x), equals 4x. Adding: 8x + 4x = 12x."
+    },
+    {
+      "id": 23,
+      "level": "medium",
+      "question": "What is the solution to the equation above?",
+      "content": {
+        "text": "\\(\\dfrac{x + 3}{x} = 4\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x=-1\\)",
+        "B": "\\(x=3\\)",
+        "C": "\\(x=-3\\)",
+        "D": "\\(x=1\\)"
+      },
+      "correct": "D",
+      "explanation": "Multiplying both sides by x gives x + 3 = 4x, so 3 = 3x, and x = 1. Checking x = 1 in the original equation (and confirming x ≠ 0) verifies this is valid."
+    },
+    {
+      "id": 24,
+      "level": "hard",
+      "question": "What is the simplified form of the expression above?",
+      "content": {
+        "text": "\\((x - 3)(x + 3)(x^2 + 9) - (x^2 - 9)^2\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(18(𝑥^2 − 9)\\)",
+        "B": "\\(18𝑥^2\\)",
+        "C": "\\(9(𝑥^2 − 9)\\)",
+        "D": "0"
+      },
+      "correct": "A",
+      "explanation": "(x-3)(x+3) = x^2 - 9, so the first term becomes (x^2-9)(x^2+9) = x^4 - 81. Expanding (x^2-9)^2 = x^4 - 18x^2 + 81. Subtracting: (x^4 - 81) - (x^4 - 18x^2 + 81) = 18x^2 - 162 = 18(x^2 - 9)."
+    },
+    {
+      "id": 25,
+      "level": "hard",
+      "question": "What is the solution to the equation above?",
+      "content": {
+        "text": "\\((x - 1)(x + 2) = x^2 + x - 2\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x=0\\)",
+        "B": "All real numbers",
+        "C": "\\(x=1\\)",
+        "D": "No solution"
+      },
+      "correct": "B",
+      "explanation": "Expanding the left side: (x-1)(x+2) = x^2 + x - 2, which is identical to the right side for every value of x. Since both sides are always equal, the equation is an identity true for all real numbers, not just a single value."
+    },
+    {
+      "id": 26,
+      "level": "medium",
+      "question": "What is the solution (x, y) to the system of equations above?",
+      "content": {
+        "text": "\\(\\begin{cases}\\dfrac{x+1}{2}+\\dfrac{y-1}{3}=4\\\\2x-y=3\\end{cases}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\((4,5)\\)",
+        "B": "\\((\\frac{37}{7}),(\\frac{29}{7})\\)",
+        "C": "\\((\\frac{29}{7}),(\\frac{37}{7})\\)",
+        "D": "\\((3,3)\\)"
+      },
+      "correct": "C",
+      "explanation": "Multiplying the first equation by 6 clears denominators: 3(x+1) + 2(y-1) = 24, which simplifies to 3x + 2y = 23. Substituting y = 2x - 3 from the second equation gives 3x + 2(2x-3) = 23, so 7x = 29 and x = 29/7. Then y = 2(29/7) - 3 = 37/7."
+    },
+    {
+      "id": 27,
+      "level": "medium",
+      "question": "Which of the following represents the solution to the system of inequalities above?",
+      "content": {
+        "text": "\\(\\begin{cases}3x-5\\le 2x+1\\\\2(x-1)>x+3\\end{cases}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x<5\\)",
+        "B": "\\(5≤x<6\\)",
+        "C": "\\(x>6\\)",
+        "D": "\\(5<x≤6\\)"
+      },
+      "correct": "D",
+      "explanation": "The first inequality simplifies to x ≤ 6. The second simplifies to 2x - 2 > x + 3, so x > 5. Combining both conditions gives 5 < x ≤ 6."
+    },
+    {
+      "id": 28,
+      "level": "hard",
+      "question": "What is the solution to the equation above?",
+      "content": {
+        "text": "\\(|2x - 1| = x + 3\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x=4,-\\frac{2}{3}\\)",
+        "B": "\\(x=4\\)",
+        "C": "\\(x=-2\\)",
+        "D": "\\(x=4,-2\\)"
+      },
+      "correct": "A",
+      "explanation": "This splits into two cases. Case 1: 2x - 1 = x + 3, giving x = 4. Case 2: 2x - 1 = -(x+3), giving 3x = -2, so x = -2/3. Both solutions check out in the original equation (the right side, x + 3, stays non-negative for both)."
+    },
+    {
+      "id": 29,
+      "level": "medium",
+      "question": "Which of the following represents the solution to the inequality above?",
+      "content": {
+        "text": "\\(|x - 4| > 2\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x>6\\)",
+        "B": "\\(x<2 \\text{ or } x>6\\)",
+        "C": "\\(x<2\\)",
+        "D": "\\(2<x<6\\)"
+      },
+      "correct": "B",
+      "explanation": "An absolute value inequality of the form |x - a| > b splits into x - a > b or x - a < -b. Here that gives x - 4 > 2 (so x > 6) or x - 4 < -2 (so x < 2)."
+    },
+    {
+      "id": 30,
+      "level": "easy",
+      "question": "What is the simplified form of the expression above?",
+      "content": {
+        "text": "\\(\\sqrt{50} - \\sqrt8 + \\sqrt{18}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(5\\sqrt2\\)",
+        "B": "\\(8\\sqrt2\\)",
+        "C": "\\(6\\sqrt2\\)",
+        "D": "\\(7\\sqrt2\\)"
+      },
+      "correct": "C",
+      "explanation": "Simplify each radical: √50 = 5√2, √8 = 2√2, √18 = 3√2. Combining: 5√2 - 2√2 + 3√2 = 6√2."
+    },
+    {
+      "id": 31,
+      "level": "medium",
+      "question": "What are the solutions to the quadratic equation above?",
+      "content": {
+        "text": "\\(2x^2 - 7x + 3 = 0\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x=1,3\\)",
+        "B": "\\(x=1,\\frac{3}{2}\\)",
+        "C": "\\(x=\\frac{3}{2},1\\)",
+        "D": "\\(x=\\frac{1}{2},3\\)"
+      },
+      "correct": "D",
+      "explanation": "Factoring: 2x^2 - 7x + 3 = (2x - 1)(x - 3) = 0, so x = 1/2 or x = 3."
+    },
+    {
+      "id": 32,
+      "level": "hard",
+      "question": "What are the solutions to the equation above?",
+      "content": {
+        "text": "\\(x^4 - 10x^2 + 9 = 0\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x=±1,±3\\)",
+        "B": "\\(x=±3\\)",
+        "C": "\\(x=±1\\)",
+        "D": "No solution"
+      },
+      "correct": "A",
+      "explanation": "Letting u = x^2 turns this into u^2 - 10u + 9 = 0, which factors as (u-1)(u-9) = 0, so u = 1 or u = 9. Substituting back, x^2 = 1 gives x = ±1, and x^2 = 9 gives x = ±3."
+    },
+    {
+      "id": 33,
+      "level": "medium",
+      "question": "Which of the following represents the solution to the inequality above?",
+      "content": {
+        "text": "\\(x^2 - x - 6 > 0\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(x>3\\)",
+        "B": "\\(x<-2 \\text{ or } x>3\\)",
+        "C": "\\(-2<x<3\\)",
+        "D": "\\(x<-2\\)"
+      },
+      "correct": "B",
+      "explanation": "Factoring gives (x-3)(x+2) > 0, which is true when both factors are positive (x > 3) or both are negative (x < -2). So the solution is x < -2 or x > 3."
+    },
+    {
+      "id": 34,
+      "level": "hard",
+      "question": "For which values of a does the equation above have a positive solution for x?",
+      "content": {
+        "text": "\\((a - 1)x = 3\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(a < 1\\)",
+        "B": "\\(a ≠ 1\\)",
+        "C": "\\(a > 1\\)",
+        "D": "All real values"
+      },
+      "correct": "C",
+      "explanation": "Solving for x gives x = 3/(a-1), provided a ≠ 1. For x to be positive, the denominator (a-1) must be positive as well, since the numerator 3 is already positive. That requires a > 1."
+    },
+    {
+      "id": 35,
+      "level": "hard",
+      "question": "For which values of a does the system of equations above have exactly one solution?",
+      "content": {
+        "text": "\\(\\begin{cases}ax+y=2\\\\x+ay=2\\end{cases}\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(a≠1\\)",
+        "B": "\\(a≠-1\\)",
+        "C": "All real values",
+        "D": "\\(a≠±1\\)"
+      },
+      "correct": "D",
+      "explanation": "This system has a unique solution whenever its coefficient determinant is nonzero: a·a - 1·1 = a^2 - 1 ≠ 0, which means a ≠ 1 and a ≠ -1, i.e., a ≠ ±1."
+    },
+    {
+      "id": 36,
+      "level": "hard",
+      "question": "For which values of a does the equation above have two distinct positive roots?",
+      "content": {
+        "text": "\\(x^2 - ax + (a - 1) = 0\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(a>1,a≠2\\)",
+        "B": "\\(𝑎 > 1\\)",
+        "C": "\\(a≥1,a≠2\\)",
+        "D": "\\(a≥2\\)"
+      },
+      "correct": "A",
+      "explanation": "The equation factors as (x-1)(x-(a-1)) = 0, giving roots x = 1 and x = a - 1. For two distinct roots, a - 1 ≠ 1, so a ≠ 2. For both roots to be positive, a - 1 > 0, so a > 1. Combining: a > 1 and a ≠ 2."
+    },
+    {
+      "id": 37,
+      "level": "medium",
+      "question": "Which of the following could be an equation for the function f?",
+      "content": {
+        "text": "For the linear function \\(f\\), \\(f(4) = -12\\) and \\(f(-2) = 24\\).",
+        "image": null
+      },
+      "options": {
+        "A": "\\(𝑓(𝑥) = −6𝑥 + 18\\)",
+        "B": "\\(𝑓(𝑥) = -6𝑥+12\\)",
+        "C": "\\(𝑓(𝑥) = 6𝑥 -36 \\)",
+        "D": "\\(𝑓(𝑥) = 6𝑥-12\\)"
+      },
+      "correct": "B",
+      "explanation": "The slope is (24 - (-12)) / (-2 - 4) = 36 / (-6) = -6. Using point-slope form with f(4) = -12: f(x) = -6(x - 4) - 12 = -6x + 24 - 12 = -6x + 12."
+    },
+    {
+      "id": 38,
+      "level": "easy",
+      "question": "What is the slope of the line?",
+      "content": {
+        "text": "A line passes through the points \\((10, -8)\\) and \\((18, 22)\\).",
+        "image": null
+      },
+      "options": null,
+      "correct": 3.75,
+      "explanation": "Slope = (change in y) / (change in x) = (22 - (-8)) / (18 - 10) = 30 / 8 = 15/4."
+    },
+    {
+      "id": 39,
+      "level": "medium",
+      "question": "In the xy-plane, the graph of which of the following equations is perpendicular to the graph of the equation above?",
+      "content": {
+        "text": "\\(-5x + 4y = 10\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(4x-5y=10\\)",
+        "B": "\\(5x+4y=10\\)",
+        "C": "\\(4x+5y=10\\)",
+        "D": "\\(5x-4y=10\\)"
+      },
+      "correct": "C",
+      "explanation": "Rewriting in slope-intercept form: y = (5/4)x + 5/2, so the slope is 5/4. A perpendicular line has a slope that is the negative reciprocal, -4/5. Rewriting choice A (4x + 5y = 10) as y = -(4/5)x + 2 shows it has slope -4/5, the perpendicular slope."
+    },
+    {
+      "id": 40,
+      "level": "medium",
+      "question": "The graph of y = f(x) is shown above. If function g is parallel to function f, what is the slope of function g?",
+      "content": {
+        "text": null,
+        "image": "math_20"
+      },
+      "options": null,
+      "correct": 5.0,
+      "explanation": "Parallel lines have equal slopes. The slope of f can be read directly from the graph as the rise over run between two clearly marked points on the line; function g, being parallel to f, must have that same slope."
+    },
+    {
+      "id": 41,
+      "level": "easy",
+      "question": "How many blue items are in the collection?",
+      "content": {
+        "text": "In a collection of items, 10% are red, 25% are green, 35% are blue, and 30% are yellow. There are 40 green items in the collection.",
+        "image": null
+      },
+      "options": null,
+      "correct": 56.0,
+      "explanation": "Since 25% of the collection equals 40 items, the total collection size is 40 / 0.25 = 160 items. Blue items make up 35% of the total: 0.35 × 160 = 56."
+    },
+    {
+      "id": 42,
+      "level": "medium",
+      "question": "What was the final price of the laptop in 2022?",
+      "content": {
+        "text": "The price of a laptop was $620 in 2020. In 2021, the price increased by 30% from its 2020 price, and in 2022 it increased by 50% from its 2021 price.",
+        "image": null
+      },
+      "options": null,
+      "correct": 1209.0,
+      "explanation": "The 2021 price was 620 × 1.30 = $806. The 2022 price was 806 × 1.50 = $1,209."
+    },
+    {
+      "id": 43,
+      "level": "hard",
+      "question": "Which function P gives the expected number of bacteria in the growth medium t hours after the observation began?",
+      "content": {
+        "text": "The number of bacteria in a growth medium is expected to increase by 170% every hour during a period of observation. The number of bacteria was estimated to be 5,000 when the period of observation began.",
+        "image": null
+      },
+      "options": {
+        "A": "\\(P(𝑡) = 5000(1.70)^t\\)",
+        "B": "\\(P(𝑡) = 5000+170t\\)",
+        "C": "\\(P(𝑡) = 5000+3500t\\)",
+        "D": "\\(P(𝑡) = 5000(2.7)^t\\)"
+      },
+      "correct": "D",
+      "explanation": "An increase of 170% each hour means the population is multiplied by (1 + 1.70) = 2.70 every hour, not by 1.70 — a 170% increase means the new amount is the original amount plus 170% more of it. Starting from 5,000, the function is P(t) = 5000(2.7)^t."
+    },
+    {
+      "id": 44,
+      "level": "hard",
+      "question": "If the equation above has infinitely many solutions, what is the value of c?",
+      "content": {
+        "text": "\\(6x + 18 - \\dfrac{c}{15} = d(x - 2)\\), where c and d are constants and c > 0.",
+        "image": null
+      },
+      "options": null,
+      "correct": 450.0,
+      "explanation": "For infinitely many solutions, both sides must be identical expressions. Matching the x-coefficients gives d = 6. Matching the constant terms: 18 - c/15 = d(-2) = -12, so c/15 = 30, meaning c = 450."
+    },
+    {
+      "id": 45,
+      "level": "medium",
+      "question": "What is the vertex form of the equation above?",
+      "content": {
+        "text": "\\(y = 2x^2 - 12x + 22\\)",
+        "image": null
+      },
+      "options": {
+        "A": "\\(𝑦 = 2(𝑥 - 3)^2 + 4\\)",
+        "B": "\\(𝑦 = 2(𝑥 + 3)^2 + 4\\)",
+        "C": "\\(𝑦 = 2(𝑥 - 3)^2 - 4\\)",
+        "D": "\\(𝑦 = 2(𝑥 + 3)^2 - 4\\)"
+      },
+      "correct": "A",
+      "explanation": "Completing the square: y = 2(x^2 - 6x) + 22 = 2(x^2 - 6x + 9 - 9) + 22 = 2(x-3)^2 - 18 + 22 = 2(x-3)^2 + 4."
+    },
+    {
+      "id": 46,
+      "level": "medium",
+      "question": "What is the maximum value of y in the equation above?",
+      "content": {
+        "text": "\\(y = -3x^2 + 18x + 42\\)",
+        "image": null
+      },
+      "options": null,
+      "correct": 69.0,
+      "explanation": "Since the coefficient of x^2 is negative, the parabola opens downward and its vertex gives the maximum. The vertex's x-coordinate is -b/(2a) = -18/(2×-3) = 3. Substituting: y = -3(9) + 18(3) + 42 = -27 + 54 + 42 = 69."
+    },
+    {
+      "id": 47,
+      "level": "easy",
+      "question": "What is the total number of boys and girls in the class?",
+      "content": {
+        "text": "The ratio of boys to girls in a class is 7 to 3. There are 21 girls in the class.",
+        "image": null
+      },
+      "options": null,
+      "correct": 70.0,
+      "explanation": "Since 3 parts correspond to 21 girls, each part equals 7. Boys make up 7 parts: 7 × 7 = 49 boys. Total = 49 + 21 = 70."
+    },
+    {
+      "id": 48,
+      "level": "medium",
+      "question": "If one of the students in the seventh grade is selected at random, what is the probability that the student is on the green team?",
+      "content": {
+        "text": "For a school competition, each student in the sixth, seventh, and eighth grades is assigned to either the red team or the green team. The table shows the distribution of grade and team for the students in the school.",
+        "image": "math_28"
+      },
+      "options": null,
+      "correct": 0.4235294118,
+      "explanation": "The probability is the number of seventh-grade students on the green team divided by the total number of seventh-grade students, both read directly from the table."
+    },
+    {
+      "id": 49,
+      "level": "easy",
+      "question": "What is the arithmetic mean (average) of data set A?",
+      "content": {
+        "text": "Data set A: 12, 13, 14, 17, 18, 20, 24, 28",
+        "image": null
+      },
+      "options": null,
+      "correct": 18.25,
+      "explanation": "The mean is the sum of all values divided by the count: (12+13+14+17+18+20+24+28) / 8 = 146 / 8 = 18.25."
+    },
+    {
+      "id": 50,
+      "level": "medium",
+      "question": "Which of the following could be the median height of these objects?",
+      "content": {
+        "text": "The table below shows the distribution of height, in centimeters, of 25 objects.",
+        "image": "math_30"
+      },
+      "options": {
+        "A": "20",
+        "B": "25",
+        "C": "30",
+        "D": "35"
+      },
+      "correct": "B",
+      "explanation": "With 25 objects, the median is the 13th value once the heights are arranged in order. Using the frequency table, count up through the height groups to find which group contains the 13th object."
     }
   ]
 }
