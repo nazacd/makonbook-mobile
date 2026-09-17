@@ -1,0 +1,21 @@
+{
+  "math": [
+    {
+      "id": 1,
+      "level": "easy",
+      "question": "Which value of x satisfies the equation?",
+      "content": {
+        "text": "3x + 5 = 20",
+        "image": null
+      },
+      "options": {
+        "A": "3",
+        "B": "5",
+        "C": "10",
+        "D": "15"
+      },
+      "correct": "B",
+      "explanation": "Subtract 5 from both sides, then divide by 3: x = 5."
+    }
+  ]
+}

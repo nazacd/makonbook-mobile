@@ -1,0 +1,195 @@
+{
+    "english": {
+        "module_1": [
+            {
+                "id": 1,
+                "question": "Which choice most percisely fit in this blank?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": {
+                    "A": "option1",
+                    "B": "option2",
+                    "C": "option3",
+                    "D": "option4"
+                },
+                "correct": "A",
+                "explanation": "The reason why is it option A\n\n The reason why it's not B. The reason why it's not C. The reason why it's not D"
+            },
+            {
+                "id": 2,
+                "question": "Which choice most percisely fit in this blank?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": {
+                    "A": "option1",
+                    "B": "option2",
+                    "C": "option3",
+                    "D": "option4"
+                },
+                "correct": "A",
+                "explanation": "The reason why is it option A\n\n The reason why it's not B. The reason why it's not C. The reason why it's not D"
+            }
+        ],
+        "module_2_easy": [
+            {
+                "id": 1,
+                "question": "Which choice most percisely fit in this blank?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": {
+                    "A": "option1",
+                    "B": "option2",
+                    "C": "option3",
+                    "D": "option4"
+                },
+                "correct": "A",
+                "explanation": "The reason why is it option A\n\n The reason why it's not B. The reason why it's not C. The reason why it's not D"
+            },
+            {
+                "id": 2,
+                "question": "Which choice most percisely fit in this blank?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": {
+                    "A": "option1",
+                    "B": "option2",
+                    "C": "option3",
+                    "D": "option4"
+                },
+                "correct": "A",
+                "explanation": "The reason why is it option A\n\n The reason why it's not B. The reason why it's not C. The reason why it's not D"
+            }
+        ],
+        "module_2_hard": [
+            {
+                "id": 1,
+                "question": "Which choice most percisely fit in this blank?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": {
+                    "A": "option1",
+                    "B": "option2",
+                    "C": "option3",
+                    "D": "option4"
+                },
+                "correct": "A",
+                "explanation": "The reason why is it option A\n\n The reason why it's not B. The reason why it's not C. The reason why it's not D"
+            },
+            {
+                "id": 2,
+                "question": "Which choice most percisely fit in this blank?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": {
+                    "A": "option1",
+                    "B": "option2",
+                    "C": "option3",
+                    "D": "option4"
+                },
+                "correct": "A",
+                "explanation": "The reason why is it option A\n\n The reason why it's not B. The reason why it's not C. The reason why it's not D"
+            }
+        ]
+    },
+    "math": {
+        "module_1": [
+            {
+                "id": 1,
+                "question": "Which choice most is correct?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": {
+                    "A": "option1",
+                    "B": "option2",
+                    "C": "option3",
+                    "D": "option4"
+                },
+                "correct": "A",
+                "explanation": "The reason why is it option A\n\n The reason why it's not B. The reason why it's not C. The reason why it's not D"
+            },
+            {
+                "id": 2,
+                "question": "What is the value of a?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": null,
+                "correct": 20,
+                "explanation": "The reason why is it 20."
+            }
+        ],
+        "module_2_easy": [
+            {
+                "id": 1,
+                "question": "Which choice most percisely fit in this blank?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": {
+                    "A": "option1",
+                    "B": "option2",
+                    "C": "option3",
+                    "D": "option4"
+                },
+                "correct": "A",
+                "explanation": "The reason why is it option A\n\n The reason why it's not B. The reason why it's not C. The reason why it's not D"
+            },
+            {
+                "id": 2,
+                "question": "What is the value of a?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": null,
+                "correct": 10,
+                "explanation": "The reason why is it 10."
+            }
+        ],
+        "module_2_hard": [
+            {
+                "id": 1,
+                "question": "Which choice most percisely fit in this blank?",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": {
+                    "A": "option1",
+                    "B": "option2",
+                    "C": "option3",
+                    "D": "option4"
+                },
+                "correct": "A",
+                "explanation": "The reason why is it option A.\n\n The reason why it's not B. The reason why it's not C. The reason why it's not D"
+            },
+            {
+                "id": 2,
+                "question": "What is the value of b",
+                "content": {
+                    "image": "img_url (can be NULL)",
+                    "text": "text"
+                },
+                "options": null,
+                "correct": 52,
+                "explanation": "The reason why is it 52."
+            }
+        ]
+    }
+}
