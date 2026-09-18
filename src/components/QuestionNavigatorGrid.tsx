@@ -28,7 +28,7 @@ function resultCellClassName(outcome: QuestionOutcome): string {
 
 export function QuestionNavigatorGrid(props: QuestionNavigatorGridProps) {
   return (
-    <View className="flex-row flex-wrap gap-2">
+    <View className="flex-row flex-wrap gap-3 px-1 justify-center">
       {props.variant === 'progress'
         ? props.items.map((item) => (
             <Pressable
@@ -43,7 +43,7 @@ export function QuestionNavigatorGrid(props: QuestionNavigatorGridProps) {
             <Pressable
               key={item.id}
               onPress={() => props.onPress(item.id)}
-              className={`h-11 w-11 items-center justify-center rounded-lg border ${resultCellClassName(item.outcome)}`}>
+              className={`h-11 w-11 mx-2 items-center justify-center rounded-lg border ${resultCellClassName(item.outcome)}`}>
               <Text className="text-sm font-semibold text-white">{item.id}</Text>
             </Pressable>
           ))}

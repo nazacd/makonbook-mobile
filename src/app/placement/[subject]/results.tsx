@@ -32,11 +32,11 @@ export default function ResultsScreen() {
               <Text className="text-center text-sm font-semibold uppercase tracking-wide text-white/60">
                 Recommended Starting Level
               </Text>
-              <Text className="text-4xl font-bold text-white">{level}</Text>
+              <Text className="text-4xl mt-0.5 font-bold text-accent">{level}</Text>
             </View>
 
             <View className="gap-3">
-              <Text className="text-base font-semibold text-white">Question Review</Text>
+              <Text className="text-base font-semibold text-white mb-2">Question Review</Text>
               <QuestionNavigatorGrid
                 variant="results"
                 items={state.questions.map((q) => ({ id: q.id, outcome: perQuestion[q.id] }))}
