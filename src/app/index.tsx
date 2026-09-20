@@ -15,7 +15,7 @@ export default function HomeScreen() {
   return (
     <View className="flex-1 bg-brand">
       <GlowBackground />
-      <SafeAreaView className="flex-1">
+      <SafeAreaView style={{ flex: 1 }}>
         <View className="flex-1 items-center justify-center gap-4 px-6">
           <Image
             source={require("../../assets/icon.png")}

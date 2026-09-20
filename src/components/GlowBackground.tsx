@@ -107,7 +107,6 @@ function GlowBlob({ config }: { config: BlobConfig }) {
           top: config.cy - canvasHalf,
         },
       ]}
-      viewBox={`0 0 ${canvasHalf * 2} ${canvasHalf * 2}`}
     >
       <Defs>
         {/* Many gradual stops (instead of a hard core -> transparent edge)

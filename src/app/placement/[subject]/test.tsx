@@ -4,7 +4,10 @@ import { Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AnswerChoice } from '@/components/AnswerChoice';
+import { BookmarkIcon } from '@/components/BookmarkIcon';
 import { BottomNavBar } from '@/components/BottomNavBar';
+import { CalculatorIcon } from '@/components/CalculatorIcon';
+import { CalculatorWidget } from '@/components/CalculatorWidget';
 import { GridInInput } from '@/components/GridInInput';
 import { HomeIcon } from '@/components/HomeIcon';
 import { QuestionCard } from '@/components/QuestionCard';
@@ -23,6 +26,7 @@ export default function TestRunnerScreen() {
 
   const [showNavigator, setShowNavigator] = useState(false);
   const [showReviewGrid, setShowReviewGrid] = useState(false);
+  const [showCalculator, setShowCalculator] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const pausedAtRef = useRef<number | null>(null);
 
@@ -101,21 +105,21 @@ export default function TestRunnerScreen() {
             <View className="flex-1">
               <Timer remainingMs={remainingMs} />
             </View>
-            <View style={{ width: 36 }} />
+            {subject === 'math' ? (
+              <Pressable onPress={() => setShowCalculator((prev) => !prev)} hitSlop={10} className="p-2">
+                <CalculatorIcon size={20} />
+              </Pressable>
+            ) : null}
+            <Pressable onPress={() => toggleMark(question.id)} hitSlop={10} className="p-2">
+              <BookmarkIcon size={20} color={marked ? '#fbbf24' : '#ffffff'} filled={marked} />
+            </Pressable>
           </View>
 
           <ScrollView className="flex-1">
             <View className="gap-4 p-4">
-              <View className="flex-row items-center justify-between">
-                <Text className="text-sm text-white/50">
-                  Question {state.currentIndex + 1} of {total}
-                </Text>
-                <Pressable onPress={() => toggleMark(question.id)} hitSlop={8}>
-                  <Text className={`text-sm font-medium ${marked ? 'text-amber-400' : 'text-white/50'}`}>
-                    {marked ? '★ Marked for review' : 'Mark for review'}
-                  </Text>
-                </Pressable>
-              </View>
+              <Text className="text-sm text-white/50">
+                Question {state.currentIndex + 1} of {total}
+              </Text>
 
               <QuestionCard question={question} />
 
@@ -230,6 +234,8 @@ export default function TestRunnerScreen() {
           </SafeAreaView>
         </View>
       </Modal>
+
+      <CalculatorWidget visible={showCalculator} onClose={() => setShowCalculator(false)} />
     </View>
   );
 }

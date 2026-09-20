@@ -1,8 +1,9 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { HomeIcon } from '@/components/HomeIcon';
 import { QuestionNavigatorGrid } from '@/components/QuestionNavigatorGrid';
 import { useSession } from '@/lib/session-context';
 import type { PlacementSubject } from '@/lib/types';
@@ -26,6 +27,11 @@ export default function ResultsScreen() {
   return (
     <View className="flex-1 bg-brand">
       <SafeAreaView style={{ flex: 1 }}>
+        <View className="px-2 pt-2">
+          <Pressable onPress={() => router.replace('/')} hitSlop={10} className="self-start p-2">
+            <HomeIcon size={20} />
+          </Pressable>
+        </View>
         <ScrollView className="flex-1">
           <View className="gap-6 p-6">
             <View className="items-center gap-2 rounded-2xl bg-surface p-8">
