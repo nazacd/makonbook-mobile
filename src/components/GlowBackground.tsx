@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * GlowBackground.tsx
  *
@@ -71,7 +70,7 @@ function GlowBlob({ config }: { config: BlobConfig }) {
         true, // reverse each cycle (breathe in / out)
       ),
     );
-  }, []);
+  }, [config.delay, progress]);
 
   const animatedProps = useAnimatedProps(() => {
     const opacity =

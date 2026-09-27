@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { router } from "expo-router";
 import { Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
