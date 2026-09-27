@@ -31,6 +31,11 @@ Fixed single dark theme — **no `dark:` NativeWind variants anywhere**, no ligh
 - `--color-surface: #16141d` — cards, panels, inputs (a lifted near-black, distinct from the base).
 - `--color-accent: #8b5cf6` — buttons, selected states, links, "current" nav cell. Kept deliberately separate from `brand`/`surface` because a near-black-on-near-black interactive element is invisible — always use `accent` for anything tappable that needs to stand out, never `brand`/`surface`.
 
+### Checks & config
+
+- `npm run typecheck` and `npm run lint` must pass; CI runs both. React Compiler is enabled, so keep render pure (no `Date.now()`, ref writes, or synchronous `setState` in effects — the lint rules flag these).
+- The Desmos key comes from `EXPO_PUBLIC_DESMOS_API_KEY` (`.env`, git-ignored; see `.env.example`). Never hard-code or commit it.
+
 Math content may contain inline LaTeX (`\( ... \)`); always render question/option text through `<MathText>` (`src/components/MathText.tsx`), never a raw `<Text>`, so it degrades correctly either way.
 
 ## Gotchas found the hard way (read before touching styling, deps, or native builds)

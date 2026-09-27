@@ -1,7 +1,6 @@
 import { router } from "expo-router";
 import { Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import GlowBackground from "../components/GlowBackground";
 
 import type { PlacementSubject } from "@/lib/types";
 
@@ -13,7 +12,6 @@ const SUBJECTS: { subject: PlacementSubject; label: string }[] = [
 export default function HomeScreen() {
   return (
     <View className="flex-1 bg-brand">
-      <GlowBackground />
       <SafeAreaView style={{ flex: 1 }}>
         <View className="flex-1 items-center justify-center gap-4 px-6">
           <Image
