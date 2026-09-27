@@ -1,6 +1,6 @@
 import { router, useFocusEffect, useIsFocused, useLocalSearchParams } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Alert, AppState, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AnswerChoice } from '@/components/AnswerChoice';
@@ -19,6 +19,9 @@ import type { OptionLetter, PlacementSubject } from '@/lib/types';
 
 const OPTION_LETTERS: OptionLetter[] = ['A', 'B', 'C', 'D'];
 
+/** How often elapsed time is saved while the test is on screen. */
+const PERSIST_INTERVAL_MS = 5000;
+
 export default function TestRunnerScreen() {
   const { subject } = useLocalSearchParams<{ subject: PlacementSubject }>();
   const { state, setAnswer, toggleMark, toggleEliminated, goto, submitTest, shiftStart, persistNow } = useSession();
@@ -30,8 +33,11 @@ export default function TestRunnerScreen() {
   const [showCalculator, setShowCalculator] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const pausedAtRef = useRef<number | null>(null);
+  const submittingRef = useRef(false);
   const persistNowRef = useRef(persistNow);
-  persistNowRef.current = persistNow;
+  useLayoutEffect(() => {
+    persistNowRef.current = persistNow;
+  });
 
   const total = state.questions.length;
   const question = state.questions[state.currentIndex];
@@ -73,16 +79,37 @@ export default function TestRunnerScreen() {
     }, [state.status])
   );
 
-  const handleSubmit = async () => {
-    if (submitting) return;
-    setSubmitting(true);
+  // Save elapsed time every few seconds, and immediately when the app leaves
+  // the foreground, so closing or killing the app stops the timer at (at most
+  // a few seconds before) that moment — not at the last answer change.
+  useEffect(() => {
+    if (!isFocused || state.status !== 'in-progress') return;
+    const id = setInterval(() => persistNowRef.current(), PERSIST_INTERVAL_MS);
+    const subscription = AppState.addEventListener('change', (next) => {
+      if (next !== 'active') persistNowRef.current();
+    });
+    return () => {
+      clearInterval(id);
+      subscription.remove();
+    };
+  }, [isFocused, state.status]);
+
+  const submit = async () => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     await submitTest();
     router.replace({ pathname: '/placement/[subject]/results', params: { subject } });
   };
 
+  const handleSubmit = () => {
+    setSubmitting(true);
+    submit();
+  };
+
+  // Auto-submit when time runs out.
   useEffect(() => {
     if (isFocused && isExpired && state.status === 'in-progress') {
-      handleSubmit();
+      submit();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, isExpired, state.status]);

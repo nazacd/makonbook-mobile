@@ -38,14 +38,19 @@ A short static screen before the timer starts — mirrors Bluebook's per-section
 
 The core test-taking screen. One question at a time.
 
-- **Timer, fixed at the top**, counting down from 60:00. Compute remaining time from a stored start timestamp (`duration - (now - startTimestamp)`) on every tick — never a naive `setInterval` decrement — so it survives backgrounding or screen lock without drifting. Default: the timer keeps running in the background (does not pause), matching a proctored in-person session.
+- **Timer, fixed at the top**, counting down from 60:00. Compute remaining time from a stored start timestamp (`duration - (now - startTimestamp)`) on every tick — never a naive `setInterval` decrement — so it doesn't drift.
+- **When the timer stops and when it keeps running:**
+  - **Stops** when the student leaves the test (Home button → "Leave test?" confirmation) or the app is closed. It resumes from the same remaining time when they come back.
+  - **Keeps running** when the phone is locked or the student switches to another app without leaving the test.
+  - Elapsed time is saved every 5 seconds and whenever the app leaves the foreground, so closing the app stops the clock at that moment (to within a few seconds), not at the last answer change. If the OS kills the app while it's in the background, the time since it was backgrounded is not counted — there's no way to know when it was killed.
 - Question content: prompt text, optional passage/stimulus text, optional image.
 - Answer input: 4-choice multiple choice (A–D) for most questions, or numeric text entry for grid-in math questions (`options: null`, see Data Model).
 - **Mark for review** toggle per question.
 - **Answer eliminator**: strike through an option to visually rule it out without it counting as the selected answer.
 - **Fixed footer navigation**: Back / Next, plus a "Question X of 50" control opening a **question navigator overlay** — a grid of all 50 numbers, state-coded (current / answered / unanswered / marked), tap to jump directly to any question.
 - **Review-before-submit screen**: after question 50, show the same navigator grid full-screen with an answered/unanswered/marked summary and a "Submit Test" button.
-- **Persistence**: on every answer change, save progress (answers, marked set, start timestamp) to AsyncStorage under an in-progress test ID. If the app is closed and reopened before submission, resume exactly where it left off, timer continuing from real elapsed time. Clear this entry on submit.
+- **Persistence**: on every answer change (and every 5 seconds, see Timer), save progress (answers, marked set, eliminated options, current question, and time used so far) to AsyncStorage under an in-progress test ID. If the app is closed and reopened before submission, resume exactly where it left off, with the timer continuing from the saved time used. Clear this entry on submit.
+- **Answer eliminator + selection**: striking out the currently selected option also deselects it, so an eliminated option is never graded as the answer.
 
 ### 4. Results
 
@@ -57,7 +62,8 @@ Shown immediately after submission.
 ### 5. Question Review
 
 - Shows the question again (prompt, stimulus, image, options), with the student's chosen answer and the correct answer both visible.
-- Explanation is **hidden by default**, behind a "Show Explanation" toggle.
+- Explanation is **hidden by default**, behind a "Show Explanation" toggle. Explanations render through `MathText`, like all other question text.
+- Grid-in correct answers display as a short decimal, or as a simplest fraction with a rounded decimal when the value repeats (e.g. `36/85 (≈ 0.4235)`).
 - **Top-left back button** returns to Results.
 - **Fixed bottom navigation**: Previous/Next flips through all 50 questions in review mode sequentially, without returning to the grid each time.
 
@@ -188,5 +194,5 @@ General SAT **practice tests** (distinct from this placement test) will eventual
 - Level recommendation displays the real class names (Foundation/Pre-SAT/Advanced) rather than the internal "Easy/Medium/Hard" tags.
 - Mastery thresholds default to 75% / 60% / 40% (easy / medium / hard) — a single constant, easy to retune once real placement outcomes are available.
 - Tier split defaults to ~17/17/16 per subject — a content guideline, not enforced in code.
-- Timer keeps running through app backgrounding rather than pausing.
+- Timer stops when the student leaves the test or closes the app, but keeps running through screen lock and app switching.
 - A short Instructions screen was added before the timer starts, for Bluebook parity — remove it if you'd rather jump straight from Home into the test.
