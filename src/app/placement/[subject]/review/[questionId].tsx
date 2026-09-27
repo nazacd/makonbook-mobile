@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomNavBar } from '@/components/BottomNavBar';
 import { MathText } from '@/components/MathText';
 import { QuestionCard } from '@/components/QuestionCard';
+import { formatGridInAnswer } from '@/lib/gradeAnswer';
 import { useSession } from '@/lib/session-context';
 import type { OptionLetter, PlacementSubject } from '@/lib/types';
 
@@ -45,7 +46,11 @@ export default function QuestionReviewScreen() {
         <View className="flex-1">
           <View className="flex-row items-center px-4 py-3">
             <Pressable
-              onPress={() => router.push({ pathname: '/placement/[subject]/results', params: { subject } })}
+              onPress={() =>
+                router.canGoBack()
+                  ? router.back()
+                  : router.replace({ pathname: '/placement/[subject]/results', params: { subject } })
+              }
               hitSlop={8}>
               <Text className="text-base font-medium text-accent">← Results</Text>
             </Pressable>
@@ -111,12 +116,12 @@ export default function QuestionReviewScreen() {
                   {!question.options ? (
                     <View className="rounded-xl border border-emerald-400 bg-emerald-400/10 p-4">
                       <Text className="text-sm font-semibold text-emerald-400">
-                        Correct answer: {String(question.correct)}
+                        Correct answer: {formatGridInAnswer(Number(question.correct))}
                       </Text>
                     </View>
                   ) : null}
                   <View className="rounded-xl bg-surface p-4">
-                    <Text className="text-base text-white">{question.explanation}</Text>
+                    <MathText text={question.explanation} className="text-base text-white" />
                   </View>
                 </View>
               ) : null}

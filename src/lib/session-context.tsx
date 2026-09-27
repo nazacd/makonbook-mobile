@@ -76,10 +76,16 @@ function sessionReducer(state: SessionState, action: Action): SessionState {
     }
     case 'TOGGLE_ELIMINATED': {
       const current = state.eliminated[action.questionId] ?? [];
-      const next = current.includes(action.letter)
-        ? current.filter((letter) => letter !== action.letter)
-        : [...current, action.letter];
-      return { ...state, eliminated: { ...state.eliminated, [action.questionId]: next } };
+      const eliminating = !current.includes(action.letter);
+      const next = eliminating ? [...current, action.letter] : current.filter((letter) => letter !== action.letter);
+      // Striking out the selected option also deselects it, so an eliminated
+      // choice can never be graded as the student's answer.
+      let answers = state.answers;
+      if (eliminating && answers[action.questionId] === action.letter) {
+        answers = { ...answers };
+        delete answers[action.questionId];
+      }
+      return { ...state, answers, eliminated: { ...state.eliminated, [action.questionId]: next } };
     }
     case 'GOTO':
       return {

@@ -20,6 +20,26 @@ export function parseGridInInput(raw: string): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+const MAX_DISPLAY_DENOMINATOR = 1000;
+
+/**
+ * Formats a grid-in answer key for display. Short decimals stay as-is
+ * ("0.375", "1209"); repeating values are shown as their simplest fraction
+ * plus a rounded decimal ("36/85 (≈ 0.4235)") instead of "0.4235294118".
+ */
+export function formatGridInAnswer(value: number): string {
+  if (Math.abs(value - Number(value.toFixed(4))) < 1e-9) {
+    return String(Number(value.toFixed(4)));
+  }
+  for (let denominator = 2; denominator <= MAX_DISPLAY_DENOMINATOR; denominator++) {
+    const numerator = Math.round(value * denominator);
+    if (Math.abs(value * denominator - numerator) < 1e-6) {
+      return `${numerator}/${denominator} (≈ ${value.toFixed(4)})`;
+    }
+  }
+  return value.toFixed(4);
+}
+
 export function isAnswerCorrect(question: Question, raw: string | number | undefined): boolean {
   if (raw == null || raw === '') return false;
 
