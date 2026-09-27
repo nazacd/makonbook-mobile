@@ -138,10 +138,13 @@ Each question's `content.image` value is a key into this map; the renderer does 
 For each subject, independently:
 
 1. Compute percent correct within each tier: `easyPct`, `mediumPct`, `hardPct`.
-2. Apply a threshold, default **75%**, defined as a single named constant so it's trivial to tune later:
-   - If `easyPct < THRESHOLD` → recommend **Foundation**
-   - Else if `mediumPct < THRESHOLD` → recommend **Pre-SAT**
+2. Apply per-tier thresholds — **75% easy, 60% medium, 40% hard** — defined together in a single named constant (`MASTERY_THRESHOLDS`) so they're trivial to tune later:
+   - If `easyPct < THRESHOLDS.easy` → recommend **Foundation**
+   - Else if `mediumPct < THRESHOLDS.medium` → recommend **Pre-SAT**
+   - Else if `hardPct < THRESHOLDS.hard` → recommend **Pre-SAT**
    - Else → recommend **Advanced**
+
+   The bar drops as difficulty rises. The `hard` check ensures Advanced is never recommended without some evidence on hard questions.
 3. Display the recommendation using the real class names (Foundation / Pre-SAT / Advanced), mapped from the internal `easy/medium/hard` tags at the display layer — never show the raw tag names to the user.
 
 This logic intentionally biases toward shoring up fundamentals: a student who's shaky on `easy` but strong on `hard` is still placed at Foundation. That's a deliberate design choice for a placement test, not a bug.
@@ -183,7 +186,7 @@ General SAT **practice tests** (distinct from this placement test) will eventual
 ## Assumptions Flagged for Quick Review
 
 - Level recommendation displays the real class names (Foundation/Pre-SAT/Advanced) rather than the internal "Easy/Medium/Hard" tags.
-- Mastery threshold defaults to 75% — a single constant, easy to retune.
+- Mastery thresholds default to 75% / 60% / 40% (easy / medium / hard) — a single constant, easy to retune once real placement outcomes are available.
 - Tier split defaults to ~17/17/16 per subject — a content guideline, not enforced in code.
 - Timer keeps running through app backgrounding rather than pausing.
 - A short Instructions screen was added before the timer starts, for Bluebook parity — remove it if you'd rather jump straight from Home into the test.

@@ -1,8 +1,16 @@
 import { isAnswerCorrect } from './gradeAnswer';
 import type { DisplayLevel, PlacementResults, Question, QuestionLevel, QuestionOutcome, SessionAnswers } from './types';
 
-/** Mastery threshold for the staircase level-estimation algorithm. Single named constant so it's trivial to retune. */
-export const MASTERY_THRESHOLD = 0.75;
+/**
+ * Per-tier mastery thresholds for the staircase level-estimation algorithm.
+ * The bar drops as difficulty rises. Kept in one named constant so they're
+ * trivial to retune against real placement outcomes.
+ */
+export const MASTERY_THRESHOLDS: Record<QuestionLevel, number> = {
+  easy: 0.75,
+  medium: 0.6,
+  hard: 0.4,
+};
 
 export function computeTierPercentages(
   questions: Question[],
@@ -33,10 +41,12 @@ export function computeTierPercentages(
  * Staircase / mastery-threshold placement. Deliberately biased toward
  * fundamentals: a student shaky on `easy` but strong on `hard` still lands
  * at Foundation. Not a bug — see spec's "Level-estimation algorithm" section.
+ * Advanced also requires some evidence on `hard`, not just `easy`/`medium`.
  */
 export function estimateLevel(pct: Record<QuestionLevel, number>): DisplayLevel {
-  if (pct.easy < MASTERY_THRESHOLD) return 'Foundation';
-  if (pct.medium < MASTERY_THRESHOLD) return 'Pre-SAT';
+  if (pct.easy < MASTERY_THRESHOLDS.easy) return 'Foundation';
+  if (pct.medium < MASTERY_THRESHOLDS.medium) return 'Pre-SAT';
+  if (pct.hard < MASTERY_THRESHOLDS.hard) return 'Pre-SAT';
   return 'Advanced';
 }
 
