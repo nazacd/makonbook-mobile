@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, View, useWindowDimensions } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
@@ -48,7 +48,11 @@ function buildCalculatorHtml(apiKey: string): string {
 <body>
   <div id="calculator"></div>
   <div id="fallback">
-    <p>No internet connection.<br/>Connect to Wi-Fi to use the graphing calculator.</p>
+    <p>${
+      apiKey
+        ? 'No internet connection.<br/>Connect to Wi-Fi to use the graphing calculator.'
+        : 'Calculator is not configured.<br/>Ask staff to set the Desmos API key.'
+    }</p>
   </div>
   <script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=${apiKey}"></script>
   <script>
@@ -138,10 +142,10 @@ export function CalculatorWidget({ visible, onClose }: CalculatorWidgetProps) {
     height: height.value,
   }));
 
+  // Mount the WebView on first open, then keep it mounted (hidden) so the
+  // calculator's state survives closing and reopening it.
   const [hasOpened, setHasOpened] = useState(visible);
-  useEffect(() => {
-    if (visible) setHasOpened(true);
-  }, [visible]);
+  if (visible && !hasOpened) setHasOpened(true);
 
   if (!hasOpened) return null;
 
