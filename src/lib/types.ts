@@ -31,7 +31,10 @@ export interface PlacementResults {
 }
 
 export interface StoredProgress {
-  startTimestamp: number;
+  // Time consumed so far, not an absolute timestamp — makes resuming
+  // pause-safe regardless of how long the app/test was closed or backgrounded
+  // for, since it isn't tied to wall-clock time passing while away.
+  elapsedMs: number;
   currentIndex: number;
   answers: SessionAnswers;
   marked: number[];

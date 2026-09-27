@@ -45,7 +45,11 @@ function sessionReducer(state: SessionState, action: Action): SessionState {
       return {
         ...state,
         status: 'in-progress',
-        startTimestamp: action.payload.startTimestamp,
+        // Rebase to "now minus time already used" rather than restoring an
+        // absolute timestamp — keeps the countdown pause-safe across a full
+        // remount (e.g. leaving via Home and resuming through Instructions),
+        // not just a same-instance blur/refocus.
+        startTimestamp: Date.now() - action.payload.elapsedMs,
         currentIndex: action.payload.currentIndex,
         answers: action.payload.answers,
         marked: action.payload.marked,
@@ -115,6 +119,7 @@ interface SessionContextValue {
   submitTest: () => Promise<void>;
   resetTest: () => void;
   shiftStart: (deltaMs: number) => void;
+  persistNow: () => void;
 }
 
 const SessionContext = createContext<SessionContextValue | null>(null);
@@ -142,7 +147,7 @@ export function SessionProvider({
   useEffect(() => {
     if (state.status !== 'in-progress' || state.startTimestamp == null) return;
     saveProgress(subject, {
-      startTimestamp: state.startTimestamp,
+      elapsedMs: Date.now() - state.startTimestamp,
       currentIndex: state.currentIndex,
       answers: state.answers,
       marked: state.marked,
@@ -165,6 +170,16 @@ export function SessionProvider({
       },
       resetTest: () => dispatch({ type: 'RESET' }),
       shiftStart: (deltaMs) => dispatch({ type: 'SHIFT_START', deltaMs }),
+      persistNow: () => {
+        if (state.status !== 'in-progress' || state.startTimestamp == null) return;
+        saveProgress(subject, {
+          elapsedMs: Date.now() - state.startTimestamp,
+          currentIndex: state.currentIndex,
+          answers: state.answers,
+          marked: state.marked,
+          eliminated: state.eliminated,
+        });
+      },
     }),
     [state, subject]
   );

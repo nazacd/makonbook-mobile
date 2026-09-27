@@ -4,20 +4,15 @@
     "slug": "makonbook-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    // "icon": "./assets/images/icon.png",
     "scheme": "makonbookmobile",
     "userInterfaceStyle": "automatic",
-    "ios": {
-      // "icon": "./assets/expo.icon"
-    },
+    "ios": {},
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        // "foregroundImage": "./assets/images/android-icon-foreground.png",
-        // "backgroundImage": "./assets/images/android-icon-background.png",
-        // "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#E6F4FE"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.nazacd.makonbookmobile"
     },
     "web": {
       "output": "static",
@@ -28,15 +23,21 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#01000f",
+          "image": "./assets/icon.png",
+          "imageWidth": 200
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0199b10f-895f-439b-991f-528d493fc624"
+      }
     }
   }
 }

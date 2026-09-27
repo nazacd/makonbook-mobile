@@ -1,4 +1,4 @@
-import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,14 +21,17 @@ const OPTION_LETTERS: OptionLetter[] = ['A', 'B', 'C', 'D'];
 
 export default function TestRunnerScreen() {
   const { subject } = useLocalSearchParams<{ subject: PlacementSubject }>();
-  const { state, setAnswer, toggleMark, toggleEliminated, goto, submitTest, shiftStart } = useSession();
-  const { remainingMs, isExpired } = useRemainingTime(state.startTimestamp);
+  const { state, setAnswer, toggleMark, toggleEliminated, goto, submitTest, shiftStart, persistNow } = useSession();
+  const isFocused = useIsFocused();
+  const { remainingMs, isExpired } = useRemainingTime(state.startTimestamp, isFocused);
 
   const [showNavigator, setShowNavigator] = useState(false);
   const [showReviewGrid, setShowReviewGrid] = useState(false);
   const [showCalculator, setShowCalculator] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const pausedAtRef = useRef<number | null>(null);
+  const persistNowRef = useRef(persistNow);
+  persistNowRef.current = persistNow;
 
   const total = state.questions.length;
   const question = state.questions[state.currentIndex];
@@ -47,6 +50,13 @@ export default function TestRunnerScreen() {
   // student navigated back to Home) by shifting startTimestamp forward on
   // return; OS-level backgrounding does not blur/refocus the route, so it's
   // unaffected and keeps counting down per the proctored-session spec.
+  //
+  // This only covers same-instance blur/refocus (e.g. this exact screen gets
+  // covered and uncovered). Leaving via Home and coming back in through
+  // Instructions mounts a brand new screen/session instance instead, which
+  // has no pausedAtRef to shift — that path is made pause-safe separately by
+  // persisting elapsed (not absolute) time, flushed immediately below on
+  // blur so no in-progress time is missed between periodic saves.
   useFocusEffect(
     useCallback(() => {
       if (pausedAtRef.current != null) {
@@ -56,6 +66,7 @@ export default function TestRunnerScreen() {
       return () => {
         if (state.status === 'in-progress') {
           pausedAtRef.current = Date.now();
+          persistNowRef.current();
         }
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,11 +81,11 @@ export default function TestRunnerScreen() {
   };
 
   useEffect(() => {
-    if (isExpired && state.status === 'in-progress') {
+    if (isFocused && isExpired && state.status === 'in-progress') {
       handleSubmit();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isExpired, state.status]);
+  }, [isFocused, isExpired, state.status]);
 
   const handleExit = () => {
     Alert.alert('Leave test?', 'Your progress is saved and the timer will pause until you return.', [
