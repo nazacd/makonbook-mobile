@@ -15,7 +15,7 @@
         "D": "\\(4^{12}\\)"
       },
       "correct": "A",
-      "explanation": "When multiplying powers with the same base, add the exponents: 2^3 · 2^4 = 2^{3+4} = 2^7."
+      "explanation": "When multiplying powers with the same base, add the exponents: \\(2^3 · 2^4 = 2^{3+4} = 2^7\\)."
     },
     {
       "id": 2,
@@ -27,7 +27,7 @@
       },
       "options": null,
       "correct": 729,
-      "explanation": "When raising a power to a power, multiply the exponents: (3^2)^3 = 3^{2×3} = 3^6 = 729."
+      "explanation": "When raising a power to a power, multiply the exponents: \\((3^2)^3 = 3^{2×3} = 3^6 = 729\\)."
     },
     {
       "id": 3,
@@ -44,7 +44,7 @@
         "D": "\\(x^{10}\\)"
       },
       "correct": "B",
-      "explanation": "When dividing powers with the same base, subtract the exponents: x^5 / x^2 = x^{5-2} = x^3."
+      "explanation": "When dividing powers with the same base, subtract the exponents: \\(\\frac{x^5}{x^2} = x^{5-2} = x^3\\)."
     },
     {
       "id": 4,
@@ -56,7 +56,7 @@
       },
       "options": null,
       "correct": 1.25,
-      "explanation": "Any nonzero number raised to the 0 power is 1, so 5^0 = 1. A negative exponent means a reciprocal: 2^{-2} = 1/2^2 = 1/4 = 0.25. Adding: 1 + 0.25 = 1.25."
+      "explanation": "Any nonzero number raised to the 0 power is 1, so \\(5^0 = 1\\).\nA negative exponent means a reciprocal: \\(2^{-2} = \\frac{1}{2^2} = \\frac{1}{4} = 0.25\\).\nAdding: \\(1 + 0.25 = 1.25\\)."
     },
     {
       "id": 5,
@@ -73,7 +73,7 @@
         "D": "1"
       },
       "correct": "C",
-      "explanation": "Rewrite 2/3 with a denominator of 6: 2/3 = 4/6. Adding: 4/6 + 1/6 = 5/6."
+      "explanation": "Rewrite \\(\\frac{2}{3}\\) with a denominator of 6: \\(\\frac{2}{3} = \\frac{4}{6}\\).\nAdding: \\(\\frac{4}{6} + \\frac{1}{6} = \\frac{5}{6}\\)."
     },
     {
       "id": 6,
@@ -85,7 +85,7 @@
       },
       "options": null,
       "correct": 0.3,
-      "explanation": "Multiply numerators and denominators: (3×2)/(4×5) = 6/20 = 3/10 = 0.3."
+      "explanation": "Multiply numerators and denominators: \\(\\frac{3×2}{4×5} = \\frac{6}{20} = \\frac{3}{10} = 0.3\\)."
     },
     {
       "id": 7,
@@ -102,7 +102,7 @@
         "D": "\\(\\dfrac{5}{2}\\)"
       },
       "correct": "D",
-      "explanation": "Dividing by a fraction means multiplying by its reciprocal: 5/6 × 3/1 = 15/6 = 5/2."
+      "explanation": "Dividing by a fraction means multiplying by its reciprocal: \\(\\frac{5}{6} × \\frac{3}{1} = \\frac{15}{6} = \\frac{5}{2}\\)."
     },
     {
       "id": 8,
@@ -114,7 +114,7 @@
       },
       "options": null,
       "correct": 0.375,
-      "explanation": "Making half the recipe means multiplying every ingredient by 1/2: 3/4 × 1/2 = 3/8 = 0.375 cup."
+      "explanation": "Making half the recipe means multiplying every ingredient by \\(\\frac{1}{2}\\): \\(\\frac{3}{4} × \\frac{1}{2} = \\frac{3}{8} = 0.375\\) cup."
     },
     {
       "id": 9,
@@ -131,7 +131,7 @@
         "D": "5"
       },
       "correct": "A",
-      "explanation": "Subtract 5 from both sides: 2x = 12. Divide by 2: x = 6."
+      "explanation": "Subtract 5 from both sides: \\(2x = 12\\).\nDivide by 2: \\(x = 6\\)."
     },
     {
       "id": 10,
@@ -148,7 +148,7 @@
         "D": "3"
       },
       "correct": "B",
-      "explanation": "Distribute: 3x - 6 = 15. Add 6: 3x = 21. Divide by 3: x = 7."
+      "explanation": "Distribute: \\(3x - 6 = 15\\).\nAdd 6: \\(3x = 21\\).\nDivide by 3: \\(x = 7\\)."
     },
     {
       "id": 11,
@@ -165,7 +165,7 @@
         "D": "-4"
       },
       "correct": "C",
-      "explanation": "Subtract 2x from both sides: 3x - 3 = 9. Add 3: 3x = 12. Divide by 3: x = 4."
+      "explanation": "Subtract \\(2x\\) from both sides: \\(3x - 3 = 9\\).\nAdd 3: \\(3x = 12\\).\nDivide by 3: \\(x = 4\\)."
     },
     {
       "id": 12,
@@ -182,7 +182,7 @@
         "D": "16"
       },
       "correct": "D",
-      "explanation": "Subtract 3 from both sides: x/4 = 4. Multiply both sides by 4: x = 16."
+      "explanation": "Subtract 3 from both sides: \\(\\frac{x}{4} = 4\\).\nMultiply both sides by 4: \\(x = 16\\)."
     },
     {
       "id": 13,
@@ -199,7 +199,7 @@
         "D": "\\(x<2 \\text{ or } x>6\\)"
       },
       "correct": "A",
-      "explanation": "The first inequality simplifies to x > 2. The second simplifies to x < 6. Combining both conditions gives 2 < x < 6."
+      "explanation": "The first inequality simplifies to \\(x > 2\\).\nThe second simplifies to \\(x < 6\\).\nCombining both conditions gives \\(2 < x < 6\\)."
     },
     {
       "id": 14,
@@ -216,7 +216,7 @@
         "D": "\\(x<2 \\text{ or } x>3\\)"
       },
       "correct": "B",
-      "explanation": "The first inequality simplifies to x ≥ 2. The second simplifies to x ≤ 3. Combining both conditions gives 2 ≤ x ≤ 3."
+      "explanation": "The first inequality simplifies to \\(x ≥ 2\\).\nThe second simplifies to \\(x ≤ 3\\).\nCombining both conditions gives \\(2 ≤ x ≤ 3\\)."
     },
     {
       "id": 15,
@@ -233,7 +233,7 @@
         "D": "\\(x<2 \\text{ or } x>5\\)"
       },
       "correct": "C",
-      "explanation": "The first inequality simplifies to x < 5. The second simplifies to x > 2. Combining both conditions gives 2 < x < 5."
+      "explanation": "The first inequality simplifies to \\(x < 5\\).\nThe second simplifies to \\(x > 2\\).\nCombining both conditions gives \\(2 < x < 5\\)."
     },
     {
       "id": 16,
@@ -250,7 +250,7 @@
         "D": "\\(-3\\le x\\le 3\\)"
       },
       "correct": "D",
-      "explanation": "The first inequality simplifies to x ≤ 3. The second simplifies to x ≥ -3. Combining both conditions gives -3 ≤ x ≤ 3."
+      "explanation": "The first inequality simplifies to \\(x ≤ 3\\).\nThe second simplifies to \\(x ≥ -3\\).\nCombining both conditions gives \\(-3 ≤ x ≤ 3\\)."
     },
     {
       "id": 17,
@@ -262,7 +262,7 @@
       },
       "options": null,
       "correct": 11,
-      "explanation": "Following order of operations: first the parentheses (6-2=4), then multiplication and division left to right (4×4=16, then 16÷2=8), then addition: 3 + 8 = 11."
+      "explanation": "Following order of operations: first the parentheses \\((6-2=4)\\),\nthen multiplication and division left to right (\\(4×4=16\\), then \\(16÷2=8\\)),\nthen addition: \\(3 + 8 = 11\\)."
     },
     {
       "id": 18,
@@ -274,7 +274,7 @@
       },
       "options": null,
       "correct": 20,
-      "explanation": "Substituting the given values: 2(3)^2 - (-2) = 2(9) + 2 = 18 + 2 = 20."
+      "explanation": "Substituting the given values: \\(2(3)^2 - (-2) = 2(9) + 2 = 18 + 2 = 20\\)."
     },
     {
       "id": 19,
@@ -286,7 +286,7 @@
       },
       "options": null,
       "correct": 28,
-      "explanation": "“Of” means multiply: 0.35 × 80 = 28."
+      "explanation": "“Of” means multiply: \\(0.35 × 80 = 28\\)."
     },
     {
       "id": 20,
@@ -303,7 +303,7 @@
         "D": "\\(2x + 3\\)"
       },
       "correct": "A",
-      "explanation": "Combine the x-terms: 4x - 2x = 2x. Combine the constants: 7 + 3 = 10. The simplified expression is 2x + 10."
+      "explanation": "Combine the \\(x\\)-terms: \\(4x - 2x = 2x\\).\nCombine the constants: \\(7 + 3 = 10\\).\nThe simplified expression is \\(2x + 10\\)."
     },
     {
       "id": 21,
@@ -320,7 +320,7 @@
         "D": "\\(4\\frac{1}{3}\\)"
       },
       "correct": "B",
-      "explanation": "LCM(12,18) = 36 and GCD(24,36) = 12, so the first term is 36/12 = 3. The repeating decimal 0,(3) equals 1/3. Adding: 3 + 1/3 + 5/6 = 3 + 2/6 + 5/6 = 3 + 7/6 = 4 1/6."
+      "explanation": "\\(LCM(12,18) = 36\\) and \\(GCD(24,36) = 12\\), so the first term is \\(\\frac{36}{12} = 3\\).\nThe repeating decimal \\(0,(3)\\) equals \\(\\frac{1}{3}\\).\nAdding: \\(3 + \\frac{1}{3} + \\frac{5}{6} = 3 + \\frac{2}{6} + \\frac{5}{6} = 3 + \\frac{7}{6} = 4\\frac{1}{6}\\)."
     },
     {
       "id": 22,
@@ -337,7 +337,7 @@
         "D": "\\(8x\\)"
       },
       "correct": "C",
-      "explanation": "(-2)^3 = -8. Simplifying the fraction: -x^{-2}/x^{-3} = -x^{-2-(-3)} = -x^{1} = -x. So the first term is -8 × (-x) = 8x. The second term, -4(-x), equals 4x. Adding: 8x + 4x = 12x."
+      "explanation": "\\((-2)^3 = -8\\).\nSimplifying the fraction: \\(\\frac{-x^{-2}}{x^{-3}} = -x^{-2-(-3)} = -x^{1} = -x\\).\nSo the first term is \\(-8 × (-x) = 8x\\).\nThe second term, \\(-4(-x)\\), equals \\(4x\\).\nAdding: \\(8x + 4x = 12x\\)."
     },
     {
       "id": 23,
@@ -354,7 +354,7 @@
         "D": "\\(x=1\\)"
       },
       "correct": "D",
-      "explanation": "Multiplying both sides by x gives x + 3 = 4x, so 3 = 3x, and x = 1. Checking x = 1 in the original equation (and confirming x ≠ 0) verifies this is valid."
+      "explanation": "Multiplying both sides by \\(x\\) gives \\(x + 3 = 4x\\), so \\(3 = 3x\\), and \\(x = 1\\).\nChecking \\(x = 1\\) in the original equation (and confirming \\(x ≠ 0\\)) verifies this is valid."
     },
     {
       "id": 24,
@@ -371,7 +371,7 @@
         "D": "0"
       },
       "correct": "A",
-      "explanation": "(x-3)(x+3) = x^2 - 9, so the first term becomes (x^2-9)(x^2+9) = x^4 - 81. Expanding (x^2-9)^2 = x^4 - 18x^2 + 81. Subtracting: (x^4 - 81) - (x^4 - 18x^2 + 81) = 18x^2 - 162 = 18(x^2 - 9)."
+      "explanation": "\\((x-3)(x+3) = x^2 - 9\\), so the first term becomes \\((x^2-9)(x^2+9) = x^4 - 81\\).\nExpanding \\((x^2-9)^2 = x^4 - 18x^2 + 81\\).\nSubtracting: \\((x^4 - 81) - (x^4 - 18x^2 + 81) = 18x^2 - 162 = 18(x^2 - 9)\\)."
     },
     {
       "id": 25,
@@ -388,7 +388,7 @@
         "D": "No solution"
       },
       "correct": "B",
-      "explanation": "Expanding the left side: (x-1)(x+2) = x^2 + x - 2, which is identical to the right side for every value of x. Since both sides are always equal, the equation is an identity true for all real numbers, not just a single value."
+      "explanation": "Expanding the left side: \\((x-1)(x+2) = x^2 + x - 2\\), which is identical to the right side for every value of \\(x\\).\nSince both sides are always equal, the equation is an identity true for all real numbers, not just a single value."
     },
     {
       "id": 26,
@@ -405,7 +405,7 @@
         "D": "\\((3,3)\\)"
       },
       "correct": "C",
-      "explanation": "Multiplying the first equation by 6 clears denominators: 3(x+1) + 2(y-1) = 24, which simplifies to 3x + 2y = 23. Substituting y = 2x - 3 from the second equation gives 3x + 2(2x-3) = 23, so 7x = 29 and x = 29/7. Then y = 2(29/7) - 3 = 37/7."
+      "explanation": "Multiplying the first equation by 6 clears denominators: \\(3(x+1) + 2(y-1) = 24\\), which simplifies to \\(3x + 2y = 23\\).\nSubstituting \\(y = 2x - 3\\) from the second equation gives \\(3x + 2(2x-3) = 23\\), so \\(7x = 29\\) and \\(x = \\frac{29}{7}\\).\nThen \\(y = 2\\left(\\frac{29}{7}\\right) - 3 = \\frac{37}{7}\\)."
     },
     {
       "id": 27,
@@ -422,7 +422,7 @@
         "D": "\\(5<x≤6\\)"
       },
       "correct": "D",
-      "explanation": "The first inequality simplifies to x ≤ 6. The second simplifies to 2x - 2 > x + 3, so x > 5. Combining both conditions gives 5 < x ≤ 6."
+      "explanation": "The first inequality simplifies to \\(x ≤ 6\\).\nThe second simplifies to \\(2x - 2 > x + 3\\), so \\(x > 5\\).\nCombining both conditions gives \\(5 < x ≤ 6\\)."
     },
     {
       "id": 28,
@@ -439,7 +439,7 @@
         "D": "\\(x=4,-2\\)"
       },
       "correct": "A",
-      "explanation": "This splits into two cases. Case 1: 2x - 1 = x + 3, giving x = 4. Case 2: 2x - 1 = -(x+3), giving 3x = -2, so x = -2/3. Both solutions check out in the original equation (the right side, x + 3, stays non-negative for both)."
+      "explanation": "This splits into two cases.\nCase 1: \\(2x - 1 = x + 3\\), giving \\(x = 4\\).\nCase 2: \\(2x - 1 = -(x+3)\\), giving \\(3x = -2\\), so \\(x = -\\frac{2}{3}\\).\nBoth solutions check out in the original equation (the right side, \\(x + 3\\), stays non-negative for both)."
     },
     {
       "id": 29,
@@ -456,7 +456,7 @@
         "D": "\\(2<x<6\\)"
       },
       "correct": "B",
-      "explanation": "An absolute value inequality of the form |x - a| > b splits into x - a > b or x - a < -b. Here that gives x - 4 > 2 (so x > 6) or x - 4 < -2 (so x < 2)."
+      "explanation": "An absolute value inequality of the form \\(|x - a| > b\\) splits into \\(x - a > b\\) or \\(x - a < -b\\).\nHere that gives \\(x - 4 > 2\\) (so \\(x > 6\\)) or \\(x - 4 < -2\\) (so \\(x < 2\\))."
     },
     {
       "id": 30,
@@ -473,7 +473,7 @@
         "D": "\\(7\\sqrt2\\)"
       },
       "correct": "C",
-      "explanation": "Simplify each radical: √50 = 5√2, √8 = 2√2, √18 = 3√2. Combining: 5√2 - 2√2 + 3√2 = 6√2."
+      "explanation": "Simplify each radical: \\(√50 = 5√2\\), \\(√8 = 2√2\\), \\(√18 = 3√2\\).\nCombining: \\(5√2 - 2√2 + 3√2 = 6√2\\)."
     },
     {
       "id": 31,
@@ -490,7 +490,7 @@
         "D": "\\(x=\\frac{1}{2},3\\)"
       },
       "correct": "D",
-      "explanation": "Factoring: 2x^2 - 7x + 3 = (2x - 1)(x - 3) = 0, so x = 1/2 or x = 3."
+      "explanation": "Factoring: \\(2x^2 - 7x + 3 = (2x - 1)(x - 3) = 0\\), so \\(x = \\frac{1}{2}\\) or \\(x = 3\\)."
     },
     {
       "id": 32,
@@ -507,7 +507,7 @@
         "D": "No solution"
       },
       "correct": "A",
-      "explanation": "Letting u = x^2 turns this into u^2 - 10u + 9 = 0, which factors as (u-1)(u-9) = 0, so u = 1 or u = 9. Substituting back, x^2 = 1 gives x = ±1, and x^2 = 9 gives x = ±3."
+      "explanation": "Letting \\(u = x^2\\) turns this into \\(u^2 - 10u + 9 = 0\\), which factors as \\((u-1)(u-9) = 0\\), so \\(u = 1\\) or \\(u = 9\\).\nSubstituting back, \\(x^2 = 1\\) gives \\(x = ±1\\), and \\(x^2 = 9\\) gives \\(x = ±3\\)."
     },
     {
       "id": 33,
@@ -524,7 +524,7 @@
         "D": "\\(x<-2\\)"
       },
       "correct": "B",
-      "explanation": "Factoring gives (x-3)(x+2) > 0, which is true when both factors are positive (x > 3) or both are negative (x < -2). So the solution is x < -2 or x > 3."
+      "explanation": "Factoring gives \\((x-3)(x+2) > 0\\), which is true when both factors are positive (\\(x > 3\\)) or both are negative (\\(x < -2\\)).\nSo the solution is \\(x < -2\\) or \\(x > 3\\)."
     },
     {
       "id": 34,
@@ -541,7 +541,7 @@
         "D": "All real values"
       },
       "correct": "C",
-      "explanation": "Solving for x gives x = 3/(a-1), provided a ≠ 1. For x to be positive, the denominator (a-1) must be positive as well, since the numerator 3 is already positive. That requires a > 1."
+      "explanation": "Solving for \\(x\\) gives \\(x = \\frac{3}{a-1}\\), provided \\(a ≠ 1\\).\nFor \\(x\\) to be positive, the denominator \\((a-1)\\) must be positive as well, since the numerator 3 is already positive.\nThat requires \\(a > 1\\)."
     },
     {
       "id": 35,
@@ -558,7 +558,7 @@
         "D": "\\(a≠±1\\)"
       },
       "correct": "D",
-      "explanation": "This system has a unique solution whenever its coefficient determinant is nonzero: a·a - 1·1 = a^2 - 1 ≠ 0, which means a ≠ 1 and a ≠ -1, i.e., a ≠ ±1."
+      "explanation": "This system has a unique solution whenever its coefficient determinant is nonzero: \\(a·a - 1·1 = a^2 - 1 ≠ 0\\), which means \\(a ≠ 1\\) and \\(a ≠ -1\\), i.e., \\(a ≠ ±1\\)."
     },
     {
       "id": 36,
@@ -575,7 +575,7 @@
         "D": "\\(a≥2\\)"
       },
       "correct": "A",
-      "explanation": "The equation factors as (x-1)(x-(a-1)) = 0, giving roots x = 1 and x = a - 1. For two distinct roots, a - 1 ≠ 1, so a ≠ 2. For both roots to be positive, a - 1 > 0, so a > 1. Combining: a > 1 and a ≠ 2."
+      "explanation": "The equation factors as \\((x-1)(x-(a-1)) = 0\\), giving roots \\(x = 1\\) and \\(x = a - 1\\).\nFor two distinct roots, \\(a - 1 ≠ 1\\), so \\(a ≠ 2\\).\nFor both roots to be positive, \\(a - 1 > 0\\), so \\(a > 1\\).\nCombining: \\(a > 1\\) and \\(a ≠ 2\\)."
     },
     {
       "id": 37,
@@ -592,7 +592,7 @@
         "D": "\\(𝑓(𝑥) = 6𝑥-12\\)"
       },
       "correct": "B",
-      "explanation": "The slope is (24 - (-12)) / (-2 - 4) = 36 / (-6) = -6. Using point-slope form with f(4) = -12: f(x) = -6(x - 4) - 12 = -6x + 24 - 12 = -6x + 12."
+      "explanation": "The slope is \\(\\frac{24 - (-12)}{-2 - 4} = \\frac{36}{-6} = -6\\).\nUsing point-slope form with \\(f(4) = -12\\): \\(f(x) = -6(x - 4) - 12 = -6x + 24 - 12 = -6x + 12\\)."
     },
     {
       "id": 38,
@@ -604,7 +604,7 @@
       },
       "options": null,
       "correct": 3.75,
-      "explanation": "Slope = (change in y) / (change in x) = (22 - (-8)) / (18 - 10) = 30 / 8 = 15/4."
+      "explanation": "Slope = (change in y) / (change in x) = \\(\\frac{22 - (-8)}{18 - 10} = \\frac{30}{8} = \\frac{15}{4}\\)."
     },
     {
       "id": 39,
@@ -621,7 +621,7 @@
         "D": "\\(5x-4y=10\\)"
       },
       "correct": "C",
-      "explanation": "Rewriting in slope-intercept form: y = (5/4)x + 5/2, so the slope is 5/4. A perpendicular line has a slope that is the negative reciprocal, -4/5. Rewriting choice A (4x + 5y = 10) as y = -(4/5)x + 2 shows it has slope -4/5, the perpendicular slope."
+      "explanation": "Rewriting in slope-intercept form: \\(y = \\frac{5}{4}x + \\frac{5}{2}\\), so the slope is \\(\\frac{5}{4}\\).\nA perpendicular line has a slope that is the negative reciprocal, \\(-\\frac{4}{5}\\).\nRewriting choice A (\\(4x + 5y = 10\\)) as \\(y = -\\frac{4}{5}x + 2\\) shows it has slope \\(-\\frac{4}{5}\\), the perpendicular slope."
     },
     {
       "id": 40,
@@ -633,7 +633,7 @@
       },
       "options": null,
       "correct": 5.0,
-      "explanation": "Parallel lines have equal slopes. The slope of f can be read directly from the graph as the rise over run between two clearly marked points on the line; function g, being parallel to f, must have that same slope."
+      "explanation": "Parallel lines have equal slopes.\nThe slope of \\(f\\) can be read directly from the graph as the rise over run between two clearly marked points on the line; function \\(g\\), being parallel to \\(f\\), must have that same slope."
     },
     {
       "id": 41,
@@ -645,7 +645,7 @@
       },
       "options": null,
       "correct": 56.0,
-      "explanation": "Since 25% of the collection equals 40 items, the total collection size is 40 / 0.25 = 160 items. Blue items make up 35% of the total: 0.35 × 160 = 56."
+      "explanation": "Since 25% of the collection equals 40 items, the total collection size is \\(\\frac{40}{0.25} = 160\\) items.\nBlue items make up 35% of the total: \\(0.35 × 160 = 56\\)."
     },
     {
       "id": 42,
@@ -657,7 +657,7 @@
       },
       "options": null,
       "correct": 1209.0,
-      "explanation": "The 2021 price was 620 × 1.30 = $806. The 2022 price was 806 × 1.50 = $1,209."
+      "explanation": "The 2021 price was \\(620 × 1.30 = \\$806\\).\nThe 2022 price was \\(806 × 1.50 = \\$1{,}209\\)."
     },
     {
       "id": 43,
@@ -674,7 +674,7 @@
         "D": "\\(P(𝑡) = 5000(2.7)^t\\)"
       },
       "correct": "D",
-      "explanation": "An increase of 170% each hour means the population is multiplied by (1 + 1.70) = 2.70 every hour, not by 1.70 — a 170% increase means the new amount is the original amount plus 170% more of it. Starting from 5,000, the function is P(t) = 5000(2.7)^t."
+      "explanation": "An increase of 170% each hour means the population is multiplied by \\((1 + 1.70) = 2.70\\) every hour, not by \\(1.70\\) — a 170% increase means the new amount is the original amount plus 170% more of it.\nStarting from 5,000, the function is \\(P(t) = 5000(2.7)^t\\)."
     },
     {
       "id": 44,
@@ -686,7 +686,7 @@
       },
       "options": null,
       "correct": 450.0,
-      "explanation": "For infinitely many solutions, both sides must be identical expressions. Matching the x-coefficients gives d = 6. Matching the constant terms: 18 - c/15 = d(-2) = -12, so c/15 = 30, meaning c = 450."
+      "explanation": "For infinitely many solutions, both sides must be identical expressions.\nMatching the \\(x\\)-coefficients gives \\(d = 6\\).\nMatching the constant terms: \\(18 - \\frac{c}{15} = d(-2) = -12\\), so \\(\\frac{c}{15} = 30\\), meaning \\(c = 450\\)."
     },
     {
       "id": 45,
@@ -703,7 +703,7 @@
         "D": "\\(𝑦 = 2(𝑥 + 3)^2 - 4\\)"
       },
       "correct": "A",
-      "explanation": "Completing the square: y = 2(x^2 - 6x) + 22 = 2(x^2 - 6x + 9 - 9) + 22 = 2(x-3)^2 - 18 + 22 = 2(x-3)^2 + 4."
+      "explanation": "Completing the square:\n\\(y = 2(x^2 - 6x) + 22 = 2(x^2 - 6x + 9 - 9) + 22\\)\n\\(= 2(x-3)^2 - 18 + 22 = 2(x-3)^2 + 4\\)."
     },
     {
       "id": 46,
@@ -715,7 +715,7 @@
       },
       "options": null,
       "correct": 69.0,
-      "explanation": "Since the coefficient of x^2 is negative, the parabola opens downward and its vertex gives the maximum. The vertex's x-coordinate is -b/(2a) = -18/(2×-3) = 3. Substituting: y = -3(9) + 18(3) + 42 = -27 + 54 + 42 = 69."
+      "explanation": "Since the coefficient of \\(x^2\\) is negative, the parabola opens downward and its vertex gives the maximum.\nThe vertex's x-coordinate is \\(-\\frac{b}{2a} = \\frac{-18}{2×-3} = 3\\).\nSubstituting: \\(y = -3(9) + 18(3) + 42 = -27 + 54 + 42 = 69\\)."
     },
     {
       "id": 47,
@@ -727,7 +727,7 @@
       },
       "options": null,
       "correct": 70.0,
-      "explanation": "Since 3 parts correspond to 21 girls, each part equals 7. Boys make up 7 parts: 7 × 7 = 49 boys. Total = 49 + 21 = 70."
+      "explanation": "Since 3 parts correspond to 21 girls, each part equals 7.\nBoys make up 7 parts: \\(7 × 7 = 49\\) boys.\nTotal = \\(49 + 21 = 70\\)."
     },
     {
       "id": 48,
@@ -751,7 +751,7 @@
       },
       "options": null,
       "correct": 18.25,
-      "explanation": "The mean is the sum of all values divided by the count: (12+13+14+17+18+20+24+28) / 8 = 146 / 8 = 18.25."
+      "explanation": "The mean is the sum of all values divided by the count: \\(\\frac{12+13+14+17+18+20+24+28}{8} = \\frac{146}{8} = 18.25\\)."
     },
     {
       "id": 50,

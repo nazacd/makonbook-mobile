@@ -121,7 +121,7 @@ export default function QuestionReviewScreen() {
                     </View>
                   ) : null}
                   <View className="rounded-xl bg-surface p-4">
-                    <MathText text={question.explanation} className="text-base text-white" />
+                    <MathText text={question.explanation} className="text-base text-white" looseLineHeight />
                   </View>
                 </View>
               ) : null}
