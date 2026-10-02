@@ -1,11 +1,12 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BottomNavBar } from '@/components/BottomNavBar';
 import { MathText } from '@/components/MathText';
 import { QuestionCard } from '@/components/QuestionCard';
+import { Text } from '@/components/Text';
 import { formatGridInAnswer } from '@/lib/gradeAnswer';
 import { useSession } from '@/lib/session-context';
 import type { OptionLetter, PlacementSubject } from '@/lib/types';
