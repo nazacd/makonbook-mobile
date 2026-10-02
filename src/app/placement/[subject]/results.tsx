@@ -1,10 +1,11 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { HomeIcon } from '@/components/HomeIcon';
 import { QuestionNavigatorGrid } from '@/components/QuestionNavigatorGrid';
+import { Text } from '@/components/Text';
 import { useSession } from '@/lib/session-context';
 import type { PlacementSubject } from '@/lib/types';
 
