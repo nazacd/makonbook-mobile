@@ -1,12 +1,13 @@
 {
   "expo": {
-    "name": "makonbook-mobile",
+    "name": "MakonBook",
     "slug": "makonbook-mobile",
     "version": "1.0.0",
     "icon": "./assets/app-icon.png",
     "orientation": "portrait",
     "scheme": "makonbookmobile",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#01000f",
     "ios": {},
     "android": {
       "adaptiveIcon": {
@@ -14,7 +15,13 @@
         "backgroundColor": "#01000f"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.nazacd.makonbookmobile"
+      "package": "com.nazacd.makonbookmobile",
+      "blockedPermissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.VIBRATE"
+      ]
     },
     "web": {
       "output": "static",
