@@ -24,6 +24,10 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), Math.max(min, max));
 }
 
+// How long the Desmos script may take before the spinner gets a "slow
+// connection" hint. Loading keeps going; this only explains the wait.
+const SLOW_LOAD_HINT_MS = 6000;
+
 function buildCalculatorHtml(apiKey: string): string {
   return `<!DOCTYPE html>
 <html>
@@ -33,44 +37,103 @@ function buildCalculatorHtml(apiKey: string): string {
 <style>
   html, body { margin: 0; padding: 0; height: 100%; background: #01000f; overflow: hidden; }
   #calculator { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
-  #fallback {
+  .overlay {
     display: none;
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background: #01000f; color: #ffffff;
     align-items: center; justify-content: center;
-    flex-direction: column; padding: 24px; text-align: center;
+    flex-direction: column; gap: 16px; padding: 24px; text-align: center;
     font-family: -apple-system, Roboto, sans-serif;
   }
-  #fallback.visible { display: flex; }
-  #fallback p { color: rgba(255,255,255,0.7); font-size: 15px; line-height: 1.5; margin: 0; }
+  .overlay.visible { display: flex; }
+  .overlay p { color: rgba(255,255,255,0.7); font-size: 15px; line-height: 1.5; margin: 0; }
+  .spinner {
+    width: 36px; height: 36px; box-sizing: border-box; border-radius: 50%;
+    border: 4px solid rgba(139,92,246,0.2); border-top-color: #8b5cf6;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #slow-hint { display: none; }
+  #retry {
+    border: 0; border-radius: 12px; padding: 10px 24px;
+    background: #8b5cf6; color: #ffffff; font-size: 15px; font-weight: 600;
+    font-family: inherit;
+  }
 </style>
 </head>
 <body>
   <div id="calculator"></div>
-  <div id="fallback">
+  <div id="loading" class="overlay">
+    <div class="spinner"></div>
+    <p id="slow-hint">Slow connection. Still loading the calculator…</p>
+  </div>
+  <div id="fallback" class="overlay">
     <p>${
       apiKey
         ? 'No internet connection.<br/>Connect to Wi-Fi to use the graphing calculator.'
         : 'Calculator is not configured.<br/>Ask staff to set the Desmos API key.'
     }</p>
+    ${apiKey ? '<button id="retry" type="button">Try again</button>' : ''}
   </div>
-  <script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=${apiKey}"></script>
   <script>
-    setTimeout(function () {
-      if (typeof Desmos === 'undefined') {
-        document.getElementById('calculator').style.display = 'none';
-        document.getElementById('fallback').className = 'visible';
-        return;
-      }
-      var elt = document.getElementById('calculator');
-      Desmos.GraphingCalculator(elt, {
+    var API_KEY = ${JSON.stringify(apiKey)};
+    var calculator = null;
+    var slowTimer = null;
+
+    function show(id, visible) {
+      document.getElementById(id).className = visible ? 'overlay visible' : 'overlay';
+    }
+
+    function onLoaded() {
+      clearTimeout(slowTimer);
+      if (typeof Desmos === 'undefined') return onFailed();
+      show('loading', false);
+      calculator = Desmos.GraphingCalculator(document.getElementById('calculator'), {
         keypad: true,
         expressionsCollapsed: false,
         settingsMenu: false,
         zoomButtons: true,
         border: false
       });
-    }, 4000);
+    }
+
+    function onFailed() {
+      clearTimeout(slowTimer);
+      show('loading', false);
+      show('fallback', true);
+    }
+
+    // Load the script asynchronously instead of with a blocking <script src>
+    // so the spinner is on screen while it downloads, and so we hear about
+    // success or failure the moment it happens rather than after a fixed wait.
+    function loadDesmos() {
+      show('fallback', false);
+      show('loading', true);
+      document.getElementById('slow-hint').style.display = 'none';
+      slowTimer = setTimeout(function () {
+        document.getElementById('slow-hint').style.display = 'block';
+      }, ${SLOW_LOAD_HINT_MS});
+      var script = document.createElement('script');
+      script.src = 'https://www.desmos.com/api/v1.11/calculator.js?apiKey=' + encodeURIComponent(API_KEY);
+      script.onload = onLoaded;
+      script.onerror = function () {
+        script.remove();
+        onFailed();
+      };
+      document.head.appendChild(script);
+    }
+
+    // The widget is resizable, so keep the calculator's layout in sync.
+    window.addEventListener('resize', function () {
+      if (calculator) calculator.resize();
+    });
+
+    if (API_KEY) {
+      document.getElementById('retry').addEventListener('click', loadDesmos);
+      loadDesmos();
+    } else {
+      show('fallback', true);
+    }
   </script>
 </body>
 </html>`;
@@ -174,7 +237,9 @@ export function CalculatorWidget({ visible, onClose }: CalculatorWidgetProps) {
         <WebView
           originWhitelist={['*']}
           source={{ html: buildCalculatorHtml(DESMOS_API_KEY) }}
-          style={{ flex: 1 }}
+          // Matches the page background so there's no white flash while the
+          // WebView itself starts up, before the page's spinner is painted.
+          style={{ flex: 1, backgroundColor: '#01000f' }}
           scrollEnabled={false}
           bounces={false}
           onShouldStartLoadWithRequest={(request) =>
