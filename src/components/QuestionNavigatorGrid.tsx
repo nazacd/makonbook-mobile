@@ -1,5 +1,6 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
+import { Text } from '@/components/Text';
 import type { QuestionOutcome } from '@/lib/types';
 
 type ProgressItem = { id: number; current: boolean; answered: boolean; marked: boolean };

@@ -1,6 +1,6 @@
 import { router, useFocusEffect, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Alert, AppState, Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, AppState, Modal, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AnswerChoice } from '@/components/AnswerChoice';
@@ -12,6 +12,7 @@ import { GridInInput } from '@/components/GridInInput';
 import { HomeIcon } from '@/components/HomeIcon';
 import { QuestionCard } from '@/components/QuestionCard';
 import { QuestionNavigatorGrid } from '@/components/QuestionNavigatorGrid';
+import { Text } from '@/components/Text';
 import { Timer } from '@/components/Timer';
 import { useSession } from '@/lib/session-context';
 import { useRemainingTime } from '@/lib/timer';
