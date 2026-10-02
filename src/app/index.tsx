@@ -15,7 +15,7 @@ export default function HomeScreen() {
       <SafeAreaView style={{ flex: 1 }}>
         <View className="flex-1 items-center justify-center gap-4 px-6">
           <Image
-            source={require("../../assets/icon.png")}
+            source={require("../../assets/makonbook-icon.png")}
             className="mb-2 h-44 w-44"
             resizeMode="contain"
           />

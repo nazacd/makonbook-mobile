@@ -3,20 +3,22 @@
     "name": "makonbook-mobile",
     "slug": "makonbook-mobile",
     "version": "1.0.0",
+    "icon": "./assets/app-icon.png",
     "orientation": "portrait",
     "scheme": "makonbookmobile",
     "userInterfaceStyle": "automatic",
     "ios": {},
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE"
+        "foregroundImage": "./assets/app-icon.png",
+        "backgroundColor": "#01000f"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.nazacd.makonbookmobile"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/app-icon.png"
     },
     "plugins": [
       "expo-router",
