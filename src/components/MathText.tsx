@@ -1,5 +1,6 @@
-import { Text } from 'react-native';
 import { MathJaxSvg } from 'react-native-mathjax-html-to-svg';
+
+import { Text } from '@/components/Text';
 
 const LATEX_DELIMITER_PATTERN = /\\\(|\\\[/;
 const MATH_COLOR = '#f5f5f5';

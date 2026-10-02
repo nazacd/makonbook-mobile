@@ -1,8 +1,9 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Text } from '@/components/Text';
 import { useSession } from '@/lib/session-context';
 import { loadProgress } from '@/lib/storage';
 import type { PlacementSubject } from '@/lib/types';

@@ -1,7 +1,8 @@
 import { router } from "expo-router";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { Text } from "@/components/Text";
 import type { PlacementSubject } from "@/lib/types";
 
 const SUBJECTS: { subject: PlacementSubject; label: string }[] = [
