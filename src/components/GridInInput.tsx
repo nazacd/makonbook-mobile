@@ -10,6 +10,9 @@ export function GridInInput({ value, onChange }: GridInInputProps) {
     <TextInput
       value={value}
       onChangeText={onChange}
+      // Same reason as src/components/Text.tsx: avoid font-scale
+      // measure/draw mismatches after a configuration change.
+      allowFontScaling={false}
       placeholder="Enter a number or fraction (e.g. 1/2)"
       placeholderTextColor="#6b7280"
       keyboardType={Platform.OS === "ios" ? "numbers-and-punctuation" : "default"}
