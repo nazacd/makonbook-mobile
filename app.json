@@ -33,10 +33,11 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#01000f",
-          "image": "./assets/icon.png",
-          "imageWidth": 200
+          "image": "./assets/makonbook-icon.png",
+          "imageWidth": 140
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true,
