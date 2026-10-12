@@ -6,23 +6,40 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before 
 
 ## Project
 
-**SAT MAKON** — an Expo Router + React Native app. The only feature built so far is the **Level Check (Placement) Test**: an offline, anonymous, in-person placement test (Math or English, 50 questions, 60-minute timer) that recommends a starting class level. Full spec: `sat-makon-placement-test-spec.md` (repo root) — read it before changing test-flow/scoring behavior, it documents the data model, screen flow, and the level-estimation algorithm's intentional design (e.g. why a student strong on `hard` but weak on `easy` still gets placed at Foundation — not a bug).
+**SAT MAKON / MakonBook** — an Expo Router + React Native app for SAT MAKON students (and teachers), backed by the Go API in `nazacd/makonbook-api` (`https://api.makonbook.uz`; the contract is that repo's `api/openapi.yaml`, the product plan its `docs/platform-spec.md`). Built so far: sign-in (phone number or username, temporary password = last 4 digits of the phone, forced change), the Classes tab (groups and schedules from `/v1/me`), Profile (username, password, sign out), the force-update screen, and the public **Level Check (Placement) Test**: an offline, anonymous, in-person placement test (Math or English, 50 questions, 60-minute timer) that recommends a starting class level. Full spec: `sat-makon-placement-test-spec.md` (repo root) — read it before changing test-flow/scoring behavior, it documents the data model, screen flow, and the level-estimation algorithm's intentional design (e.g. why a student strong on `hard` but weak on `easy` still gets placed at Foundation — not a bug).
 
 ### Structure
 ```
 src/
   app/
-    index.tsx                                    Home
+    _layout.tsx                                  providers, launch screen, route guards, force update
+    welcome.tsx, sign-in.tsx                     signed out only (Stack.Protected)
+    (app)/                                       signed in only
+      _layout.tsx                                loads /v1/me; guards choose-password vs everything else
+      choose-password.tsx                        forced: the only screen until the temporary password is replaced
+      password.tsx, username.tsx                 sheets from Profile
+      (tabs)/_layout.tsx                         NativeTabs (system tab bar)
+      (tabs)/index.tsx, profile.tsx              Classes ("/") and Profile
+    level-check.tsx                              public subject picker
     placement/[subject]/
       _layout.tsx                                validates subject, hosts SessionProvider
       instructions.tsx, test.tsx, results.tsx
       review/[questionId].tsx
   data/placement/{math,english}.json              50-question banks, assetMap.ts for bundled images
-  lib/                                            session-context (test state + AsyncStorage resume),
-                                                   scoring.ts, gradeAnswer.ts, timer.ts, storage.ts, types.ts
-  components/                                     QuestionCard, AnswerChoice, GridInInput, Timer,
-                                                   QuestionNavigatorGrid, BottomNavBar, MathText, HomeIcon
+  design/                                         colors, typography (type scale), motion (springs),
+                                                   haptics, navigation (header/sheet options)
+  lib/api/                                        client (fetch, ApiError, token), types, queries (React Query hooks), errors
+  lib/auth/                                       session (AuthProvider/useAuth), secure-storage, device id
+  lib/                                            clock (useNow), schedule (next class, Tashkent time);
+                                                   placement: session-context, scoring, gradeAnswer, timer, storage, types
+  components/                                     Button, PressableScale, TextField, Notice, ListRow, GroupCard,
+                                                   PasswordForm, UpdateRequired; placement: QuestionCard, AnswerChoice,
+                                                   GridInInput, Timer, QuestionNavigatorGrid, BottomNavBar, MathText, …
 ```
+
+Routing rules: who can see what is decided only by `Stack.Protected` guards in the two layouts — screens never redirect themselves after a state change (a screen's effect runs before its parent layout re-renders the guard, so the navigation lands on a still-guarded route and bounces). To leave a screen when state changes, guard that screen too and let the router fall back. `/` is the Classes tab; signed out, the router falls back to `welcome`.
+
+Server state lives in React Query (`useMe` is the person, seeded by the login response). The bearer token is in `expo-secure-store`; any 401 on an authenticated call signs out locally. Branch on `ApiError.code`, never on messages; `describeError` has the wording for codes a screen doesn't handle itself.
 
 ### Design system
 
@@ -31,10 +48,20 @@ Fixed single dark theme — **no `dark:` NativeWind variants anywhere**, no ligh
 - `--color-surface: #16141d` — cards, panels, inputs (a lifted near-black, distinct from the base).
 - `--color-accent: #8b5cf6` — buttons, selected states, links, "current" nav cell. Kept deliberately separate from `brand`/`surface` because a near-black-on-near-black interactive element is invisible — always use `accent` for anything tappable that needs to stand out, never `brand`/`surface`.
 
+Interaction and motion (the "apple-design" principles, applied to React Native):
+- **Respond on press-in, not release.** Tappable surfaces use `PressableScale` (sinks on press-in, springs back) or `ListRow` (highlight on press-in). Never feedback only on `onPress`.
+- **Springs, not durations**, via `src/design/motion.ts`: `spring(response, dampingRatio)` in Apple's terms. Default `springs.default` (critically damped, 0.35 s); bounce (`springs.momentum`) only after a gesture that carried momentum. Springs start from the current value, so everything stays interruptible.
+- **Reduce Motion**: springs use `ReduceMotion.System`; components swap movement for opacity (`useReducedMotion`).
+- **System chrome over custom**: `NativeTabs` and native-stack headers (`headerOptions`) — translucent on iOS (Liquid Glass on 26, blur material before), solid brand on Android. Scroll views under them use `contentInsetAdjustmentBehavior="automatic"`. Secondary tasks open with `sheetOptions` (iOS sheet, Android push).
+- **Haptics only at meaningful moments** (`src/design/haptics.ts`: success, error, selection) — never on ordinary taps. Android uses `performAndroidHapticsAsync`, which needs no `VIBRATE` permission (it stays blocked in `app.json`).
+- **Type**: use `<Text variant="…">` from the scale in `src/design/typography.ts` (size, weight and leading as a set; Android gets hand-tuned tracking, iOS's system font does its own). Avoid mixing `text-*`/`font-*` size classes with a variant.
+- **Feedback**: validate inline as people type; put errors next to the field they're about; `Notice` for screen-level status. Every screen has a way out (the forced password screen has Sign out).
+
 ### Checks & config
 
 - `npm run typecheck` and `npm run lint` must pass; CI runs both. React Compiler is enabled, so keep render pure (no `Date.now()`, ref writes, or synchronous `setState` in effects — the lint rules flag these).
 - The Desmos key comes from `EXPO_PUBLIC_DESMOS_API_KEY` (`.env`, git-ignored; see `.env.example`). Never hard-code or commit it.
+- `EXPO_PUBLIC_API_URL` overrides the API address (default `https://api.makonbook.uz`). Run the web dev server without `CI=1` when iterating — CI mode turns off Metro's file watching and serves stale code.
 
 Math content may contain inline LaTeX (`\( ... \)`); always render question/option text through `<MathText>` (`src/components/MathText.tsx`), never a raw `<Text>`, so it degrades correctly either way.
 

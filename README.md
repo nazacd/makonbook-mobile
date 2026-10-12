@@ -1,7 +1,10 @@
 # SAT MAKON — mobile
 
-Expo Router + React Native app for SAT MAKON. The only feature so far is the
-**Level Check (placement) test**: an offline, anonymous, in-person test (Math
+Expo Router + React Native app for SAT MAKON students, backed by
+[makonbook-api](https://github.com/nazacd/makonbook-api). Students sign in
+with their phone number (first password: the last 4 digits), see their classes
+and schedule, and manage their username and password. Also public, without an
+account: the **Level Check (placement) test**: an offline, anonymous, in-person test (Math
 or English, 50 questions, 60 minutes) that recommends a starting class —
 Foundation, Pre-SAT or Advanced.
 
@@ -24,6 +27,7 @@ Open the app in Expo Go, an emulator, or a web browser from the Expo CLI.
 
 | Variable | Used for |
 |---|---|
+| `EXPO_PUBLIC_API_URL` | MakonBook API address. Optional; defaults to `https://api.makonbook.uz`. |
 | `EXPO_PUBLIC_DESMOS_API_KEY` | Graphing calculator on Math questions. Request a key at <https://www.desmos.com/api>. Without it the calculator shows a "not configured" message; everything else works. |
 
 `.env` is git-ignored. For EAS builds, set the same variable as an
