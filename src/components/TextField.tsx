@@ -1,5 +1,5 @@
 import { useState, type Ref } from 'react';
-import { Platform, Pressable, TextInput, View, type TextInputProps } from 'react-native';
+import { Platform, Pressable, StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
 import { EyeIcon } from '@/components/EyeIcon';
 import { Text } from '@/components/Text';
@@ -46,11 +46,12 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
             setFocused(false);
             onBlur?.(e);
           }}
-          className="h-full flex-1 px-4"
-          // minWidth 0 lets the input shrink to leave room for the eye button
-          // (otherwise the button is pushed past the field's border). On web,
-          // the browser's focus outline would draw a second, square ring.
-          style={[{ color: colors.text, fontSize: 17, minWidth: 0 }, Platform.OS === 'web' && { outlineWidth: 0 }]}
+          // Layout as a plain style, not classes: on Android the padding
+          // classes didn't reach the native input and text sat against the
+          // left edge. minWidth 0 lets the input shrink to leave room for the
+          // eye button. On web, the browser's focus outline would draw a
+          // second, square ring.
+          style={[styles.input, Platform.OS === 'web' && { outlineWidth: 0 }]}
         />
         {secure && (
           <Pressable
@@ -77,3 +78,16 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  input: {
+    flex: 1,
+    alignSelf: 'stretch',
+    minWidth: 0,
+    paddingHorizontal: 16,
+    // Android adds its own vertical padding, which pushes the text off-centre.
+    paddingVertical: 0,
+    color: colors.text,
+    fontSize: 17,
+  },
+});
