@@ -10,7 +10,6 @@ import { StateChip } from '@/components/StateChip';
 import { Text } from '@/components/Text';
 import { colors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
-import { webTabBarInset } from '@/design/navigation';
 import { useOpenSession, useTeacherLessons } from '@/lib/api/attendance';
 import { describeError } from '@/lib/api/errors';
 import type { TeacherLesson } from '@/lib/api/types';
@@ -66,7 +65,7 @@ export function TeacherToday() {
     <ScrollView
       className="flex-1 bg-brand"
       contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={{ paddingTop: insets.top + webTabBarInset + 12, paddingBottom: 32 }}
+      contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: 32 }}
       contentContainerClassName="gap-4 px-5"
       refreshControl={
         <RefreshControl

@@ -19,7 +19,9 @@ src/
       choose-password.tsx                        forced: the only screen until the temporary password is replaced
       password.tsx, username.tsx                 sheets from Profile
       attendance/[id].tsx                        teacher: rotating QR + live list while open; results + corrections after
-      (tabs)/_layout.tsx                         NativeTabs (system tab bar)
+      scan.tsx                                   student: camera scanner (full-screen modal from the tab bar's Scan button)
+      att/[sessionId]/[window]/[sig].tsx         the QR's deep link (makonbookmobile://att/…): check in from the phone's camera
+      (tabs)/_layout.tsx                         JS Tabs + AppTabBar (custom: students get a raised centre Scan button)
       (tabs)/index.tsx, profile.tsx              "/" = StudentClasses or TeacherToday by role; Profile
     level-check.tsx                              public subject picker
     placement/[subject]/
@@ -36,11 +38,12 @@ src/
                                                    placement: session-context, scoring, gradeAnswer, timer, storage, types
   components/                                     Button, PressableScale, TextField, Notice, ListRow, GroupCard,
                                                    PasswordForm, UpdateRequired, StateChip; attendance: TeacherToday,
-                                                   StudentClasses, RotatingQR, MarkSheet; placement: QuestionCard, AnswerChoice,
+                                                   StudentClasses, RotatingQR, MarkSheet, AppTabBar, TabIcons,
+                                                   CheckInResult; placement: QuestionCard, AnswerChoice,
                                                    GridInInput, Timer, QuestionNavigatorGrid, BottomNavBar, MathText, …
 ```
 
-Routing rules: who can see what is decided only by `Stack.Protected` guards in the two layouts — screens never redirect themselves after a state change (a screen's effect runs before its parent layout re-renders the guard, so the navigation lands on a still-guarded route and bounces). To leave a screen when state changes, guard that screen too and let the router fall back. `/` is the Classes tab; signed out, the router falls back to `welcome`.
+Routing rules: who can see what is decided only by `Stack.Protected` guards in the two layouts — screens never redirect themselves after a state change (a screen's effect runs before its parent layout re-renders the guard, so the navigation lands on a still-guarded route and bounces). To leave a screen when state changes, guard that screen too and let the router fall back. `/` is the Classes tab; signed out, the router falls back to `welcome`. The root layout renders no routes while the saved session is still loading, so an opening URL (a check-in link) isn't redirected away before we know who is signed in.
 
 Server state lives in React Query (`useMe` is the person, seeded by the login response). The bearer token is in `expo-secure-store`; any 401 on an authenticated call signs out locally. Branch on `ApiError.code`, never on messages; `describeError` has the wording for codes a screen doesn't handle itself.
 
@@ -55,7 +58,7 @@ Interaction and motion (the "apple-design" principles, applied to React Native):
 - **Respond on press-in, not release.** Tappable surfaces use `PressableScale` (sinks on press-in, springs back) or `ListRow` (highlight on press-in). Never feedback only on `onPress`.
 - **Springs, not durations**, via `src/design/motion.ts`: `spring(response, dampingRatio)` in Apple's terms. Default `springs.default` (critically damped, 0.35 s); bounce (`springs.momentum`) only after a gesture that carried momentum. Springs start from the current value, so everything stays interruptible.
 - **Reduce Motion**: springs use `ReduceMotion.System`; components swap movement for opacity (`useReducedMotion`).
-- **System chrome over custom**: `NativeTabs` and native-stack headers (`headerOptions`) — translucent on iOS (Liquid Glass on 26, blur material before), solid brand on Android. Scroll views under them use `contentInsetAdjustmentBehavior="automatic"`. Secondary tasks open with `sheetOptions` (iOS sheet, Android push).
+- **System chrome over custom**, with one deliberate exception: native-stack headers (`headerOptions`) are translucent on iOS (Liquid Glass on 26, blur material before), solid brand on Android. The tab bar is our own `AppTabBar` (JS tabs), because the student's raised centre Scan button can't live in a native tab bar. Scroll views under them use `contentInsetAdjustmentBehavior="automatic"`. Secondary tasks open with `sheetOptions` (iOS sheet, Android push).
 - **Haptics only at meaningful moments** (`src/design/haptics.ts`: success, error, selection) — never on ordinary taps. Android uses `performAndroidHapticsAsync`, which needs no `VIBRATE` permission (it stays blocked in `app.json`).
 - **Type**: use `<Text variant="…">` from the scale in `src/design/typography.ts` (size, weight and leading as a set; Android gets hand-tuned tracking, iOS's system font does its own). Avoid mixing `text-*`/`font-*` size classes with a variant.
 - **Feedback**: validate inline as people type; put errors next to the field they're about; `Notice` for screen-level status. Every screen has a way out (the forced password screen has Sign out).
