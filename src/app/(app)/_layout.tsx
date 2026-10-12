@@ -46,6 +46,10 @@ export default function SignedInLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="password" options={{ ...sheetOptions, title: 'Change password' }} />
         <Stack.Screen name="username" options={{ ...sheetOptions, title: 'Username' }} />
+        <Stack.Screen name="attendance/[id]" options={{ ...headerOptions, title: 'Attendance' }} />
+        {/* The scanner rises from the Scan button at the bottom and goes back down. */}
+        <Stack.Screen name="scan" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
+        <Stack.Screen name="att/[sessionId]/[window]/[sig]" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
       </Stack.Protected>
       <Stack.Protected guard={mustChange}>
         <Stack.Screen

@@ -74,6 +74,11 @@ function RootNavigator() {
   const signedIn = status === 'signedIn';
 
   if (updateRequired) return <UpdateRequired />;
+  // Until we know whether someone is signed in, render no routes at all (the
+  // launch screen covers this moment). Otherwise the guards would treat the
+  // person as signed out and redirect away from the URL the app was opened
+  // with — losing, for example, a check-in link scanned with the camera.
+  if (status === 'loading') return null;
 
   return (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.brand } }}>
