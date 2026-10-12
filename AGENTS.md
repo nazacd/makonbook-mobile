@@ -18,8 +18,9 @@ src/
       _layout.tsx                                loads /v1/me; guards choose-password vs everything else
       choose-password.tsx                        forced: the only screen until the temporary password is replaced
       password.tsx, username.tsx                 sheets from Profile
+      attendance/[id].tsx                        teacher: rotating QR + live list while open; results + corrections after
       (tabs)/_layout.tsx                         NativeTabs (system tab bar)
-      (tabs)/index.tsx, profile.tsx              Classes ("/") and Profile
+      (tabs)/index.tsx, profile.tsx              "/" = StudentClasses or TeacherToday by role; Profile
     level-check.tsx                              public subject picker
     placement/[subject]/
       _layout.tsx                                validates subject, hosts SessionProvider
@@ -28,12 +29,14 @@ src/
   data/placement/{math,english}.json              50-question banks, assetMap.ts for bundled images
   design/                                         colors, typography (type scale), motion (springs),
                                                    haptics, navigation (header/sheet options)
-  lib/api/                                        client (fetch, ApiError, token), types, queries (React Query hooks), errors
+  lib/api/                                        client (fetch, ApiError, token), types, queries + attendance (React Query hooks), errors
+  lib/attendance/code.ts                          QR codes: HMAC signing (must match the API's internal/attendance/token.go), link format
   lib/auth/                                       session (AuthProvider/useAuth), secure-storage, device id
-  lib/                                            clock (useNow), schedule (next class, Tashkent time);
+  lib/                                            clock (useNow 30 s, useFastNow 250 ms), schedule (next class, school dates, Tashkent time);
                                                    placement: session-context, scoring, gradeAnswer, timer, storage, types
   components/                                     Button, PressableScale, TextField, Notice, ListRow, GroupCard,
-                                                   PasswordForm, UpdateRequired; placement: QuestionCard, AnswerChoice,
+                                                   PasswordForm, UpdateRequired, StateChip; attendance: TeacherToday,
+                                                   StudentClasses, RotatingQR, MarkSheet; placement: QuestionCard, AnswerChoice,
                                                    GridInInput, Timer, QuestionNavigatorGrid, BottomNavBar, MathText, …
 ```
 
