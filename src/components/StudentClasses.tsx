@@ -4,7 +4,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GroupCard } from '@/components/GroupCard';
 import { Text } from '@/components/Text';
 import { colors } from '@/design/colors';
-import { webTabBarInset } from '@/design/navigation';
 import { useMe } from '@/lib/api/queries';
 import type { Profile } from '@/lib/api/types';
 import { useNow } from '@/lib/clock';
@@ -22,7 +21,7 @@ export function StudentClasses() {
     <ScrollView
       className="flex-1 bg-brand"
       contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={{ paddingTop: insets.top + webTabBarInset + 12, paddingBottom: 32 }}
+      contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: 32 }}
       contentContainerClassName="gap-4 px-5"
       refreshControl={
         <RefreshControl

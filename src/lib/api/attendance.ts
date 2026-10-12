@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { getDeviceId } from '@/lib/auth/device';
+
 import { api } from './client';
 import type { AttendanceSession, MarkState, TeacherLesson } from './types';
 
@@ -61,5 +63,21 @@ export function useSetMark(id: string) {
     mutationFn: ({ clientId, state }: { clientId: number; state: Exclude<MarkState, 'pending'> }) =>
       api.put<AttendanceSession>(`/v1/attendance/sessions/${id}/marks/${clientId}`, { state }),
     onSuccess: (s) => queryClient.setQueryData(sessionKey(id), stamp(s)),
+  });
+}
+
+// --- Student check-in --------------------------------------------------------
+
+export type CheckIn = { state: 'present' | 'late'; already: boolean; group_name: string; at: string };
+
+export function useCheckIn() {
+  return useMutation({
+    mutationFn: async (code: { sessionId: string; window: number; sig: string }) =>
+      api.post<CheckIn>('/v1/attendance/scan', {
+        session_id: code.sessionId,
+        window: code.window,
+        sig: code.sig,
+        device_id: await getDeviceId(),
+      }),
   });
 }

@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ListRow } from '@/components/ListRow';
 import { Text } from '@/components/Text';
 import { colors } from '@/design/colors';
-import { webTabBarInset } from '@/design/navigation';
 import { appVersion, useMe } from '@/lib/api/queries';
 import type { Profile } from '@/lib/api/types';
 import { useAuth } from '@/lib/auth/session';
@@ -20,7 +19,7 @@ export default function ProfileScreen() {
     <ScrollView
       className="flex-1 bg-brand"
       contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={{ paddingTop: insets.top + webTabBarInset + 12, paddingBottom: 32 }}
+      contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: 32 }}
       contentContainerClassName="gap-6 px-5">
       <Text variant="largeTitle" className="text-white" accessibilityRole="header">
         Profile
