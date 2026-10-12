@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/Button';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
 
 // What someone sees when nobody is signed in on this phone. Two clear paths:
 // students sign in; a new student, at the front desk, takes the Level Check
@@ -21,14 +20,9 @@ export default function WelcomeScreen() {
               resizeMode="contain"
               accessibilityIgnoresInvertColors
             />
-            <View className="items-center gap-2">
-              <Text variant="largeTitle" className="text-white" accessibilityRole="header">
-                MakonBook
-              </Text>
-              <Text variant="body" style={{ color: colors.secondaryText, textAlign: 'center' }}>
-                Your SAT MAKON classes, practice and attendance.
-              </Text>
-            </View>
+            <Text variant="largeTitle" className="text-white" accessibilityRole="header">
+              MakonBook
+            </Text>
           </View>
 
           <View className="w-full max-w-md gap-3 self-center">
@@ -39,9 +33,6 @@ export default function WelcomeScreen() {
               onPress={() => router.push('/level-check')}
               accessibilityHint="Placement test for new students. No account needed."
             />
-            <Text variant="footnote" style={{ color: colors.tertiaryText, textAlign: 'center' }}>
-              The Level Check is for new students and needs no account.
-            </Text>
           </View>
         </View>
       </SafeAreaView>
