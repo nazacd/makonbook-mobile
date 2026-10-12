@@ -1,6 +1,7 @@
 import { useState, type Ref } from 'react';
 import { Platform, Pressable, TextInput, View, type TextInputProps } from 'react-native';
 
+import { EyeIcon } from '@/components/EyeIcon';
 import { Text } from '@/components/Text';
 import { colors } from '@/design/colors';
 
@@ -26,7 +27,7 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
         {label}
       </Text>
       <View
-        className="h-14 flex-row items-center rounded-2xl bg-surface"
+        className="h-14 flex-row items-center overflow-hidden rounded-2xl bg-surface"
         style={{ borderWidth: 1.5, borderColor: border }}>
         <TextInput
           ref={ref}
@@ -46,20 +47,22 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
             onBlur?.(e);
           }}
           className="h-full flex-1 px-4"
-          // The browser's focus outline would draw a second, square ring
-          // inside the rounded one.
-          style={[{ color: colors.text, fontSize: 17 }, Platform.OS === 'web' && { outlineWidth: 0 }]}
+          // minWidth 0 lets the input shrink to leave room for the eye button
+          // (otherwise the button is pushed past the field's border). On web,
+          // the browser's focus outline would draw a second, square ring.
+          style={[{ color: colors.text, fontSize: 17, minWidth: 0 }, Platform.OS === 'web' && { outlineWidth: 0 }]}
         />
         {secure && (
           <Pressable
             onPress={() => setRevealed((r) => !r)}
-            hitSlop={8}
-            className="h-full justify-center px-4"
+            className="h-full w-14 items-center justify-center"
             accessibilityRole="button"
             accessibilityLabel={revealed ? 'Hide password' : 'Show password'}>
-            <Text variant="subhead" style={{ color: colors.accent, fontWeight: '600' }}>
-              {revealed ? 'Hide' : 'Show'}
-            </Text>
+            {/* The icon shows what a tap does: an open eye reveals, a struck
+                eye hides again. */}
+            {({ pressed }) => (
+              <EyeIcon slashed={revealed} color={pressed ? colors.text : colors.secondaryText} />
+            )}
           </Pressable>
         )}
       </View>
