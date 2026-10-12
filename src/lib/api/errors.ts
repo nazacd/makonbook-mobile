@@ -21,6 +21,16 @@ export function describeError(error: unknown): string {
       return `Too many wrong passwords. For your security, try again in ${minutes(error.retryAfter)}.`;
     case 'rate_limited':
       return `Too many attempts. Try again in ${minutes(error.retryAfter)}.`;
+    case 'too_early':
+      return `Attendance opens 15 minutes before the lesson (${error.message.replace(/^attendance opens at /, 'at ')}).`;
+    case 'lesson_over':
+      return 'This lesson is over, so attendance can no longer be started.';
+    case 'attendance_disabled':
+      return 'One-to-one and online lessons don’t take attendance in the app.';
+    case 'edit_window_closed':
+      return 'Marks can only be changed until 24 hours after the lesson. Ask the office to fix it.';
+    case 'not_found':
+      return 'This lesson isn’t on your schedule in HolliHop. If you are substituting, ask the office to add you.';
     default:
       if (error.status >= 500) return 'MakonBook is having a problem right now. Please try again in a moment.';
       return error.requestId

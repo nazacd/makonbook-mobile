@@ -46,6 +46,7 @@ export default function SignedInLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="password" options={{ ...sheetOptions, title: 'Change password' }} />
         <Stack.Screen name="username" options={{ ...sheetOptions, title: 'Username' }} />
+        <Stack.Screen name="attendance/[id]" options={{ ...headerOptions, title: 'Attendance' }} />
       </Stack.Protected>
       <Stack.Protected guard={mustChange}>
         <Stack.Screen
