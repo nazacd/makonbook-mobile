@@ -1,11 +1,11 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { HomeIcon } from '@/components/HomeIcon';
 import { QuestionNavigatorGrid } from '@/components/QuestionNavigatorGrid';
 import { Text } from '@/components/Text';
+import { useGoHome, useHomeHref } from '@/lib/navigation';
 import { useSession } from '@/lib/session-context';
 import type { PlacementSubject } from '@/lib/types';
 
@@ -13,14 +13,12 @@ export default function ResultsScreen() {
   const { subject } = useLocalSearchParams<{ subject: PlacementSubject }>();
   const { state } = useSession();
 
-  useEffect(() => {
-    if (state.status !== 'submitted' || !state.results) {
-      router.replace('/');
-    }
-  }, [state.status, state.results]);
+  const home = useHomeHref();
+  const goHome = useGoHome();
 
+  // Nothing to show (opened directly, or the results were cleared).
   if (state.status !== 'submitted' || !state.results) {
-    return <View className="flex-1 bg-brand" />;
+    return <Redirect href={home} />;
   }
 
   const { level, perQuestion } = state.results;
@@ -29,7 +27,7 @@ export default function ResultsScreen() {
     <View className="flex-1 bg-brand">
       <SafeAreaView style={{ flex: 1 }}>
         <View className="px-2 pt-2">
-          <Pressable onPress={() => router.replace('/')} hitSlop={10} className="self-start p-2">
+          <Pressable onPress={goHome} hitSlop={10} className="self-start p-2">
             <HomeIcon size={20} />
           </Pressable>
         </View>
