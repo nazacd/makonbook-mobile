@@ -34,6 +34,3 @@ export const sheetOptions: NativeStackNavigationOptions = {
   presentation: Platform.OS === 'ios' ? 'modal' : 'card',
 };
 
-// On web, NativeTabs draws its tab switcher floating at the top of the page
-// rather than at the bottom; tab screens leave room for it.
-export const webTabBarInset = Platform.OS === 'web' ? 56 : 0;

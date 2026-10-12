@@ -73,3 +73,27 @@ export function describeDay(start: number, now: number): string {
   if (days === 1) return 'Tomorrow';
   return LONG[WEEKDAYS[new Date(start + SCHOOL_UTC_OFFSET_MS).getUTCDay()]];
 }
+
+/** Today's date at the school, "YYYY-MM-DD". */
+export function schoolDate(now: number): string {
+  return dateKey(schoolMidnight(now));
+}
+
+/** A "YYYY-MM-DD" date moved by n days. */
+export function addDays(date: string, n: number): string {
+  const t = Date.parse(`${date}T00:00:00Z`) + n * DAY_MS;
+  return new Date(t).toISOString().slice(0, 10);
+}
+
+/** "Mon, 12 Oct" for a "YYYY-MM-DD" date. */
+export function formatDate(date: string): string {
+  const d = new Date(`${date}T00:00:00Z`);
+  const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getUTCMonth()];
+  return `${SHORT[WEEKDAYS[d.getUTCDay()]]}, ${d.getUTCDate()} ${month}`;
+}
+
+/** "14:05" at the school for an instant. */
+export function schoolClock(ms: number): string {
+  const d = new Date(ms + SCHOOL_UTC_OFFSET_MS);
+  return `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')}`;
+}
