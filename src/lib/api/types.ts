@@ -118,3 +118,15 @@ export type AttendanceSession = {
   counts: { total: number; present: number; late: number; absent: number; pending: number };
   marks: AttendanceMark[];
 };
+
+// --- Attendance (student) ----------------------------------------------------
+
+export type GroupAttendance = {
+  group_id: number;
+  group_name: string;
+  discipline: string;
+  summary: { lessons: number; present: number; late: number; absent: number };
+  days: { date: string; state: 'present' | 'late' | 'absent' }[]; // newest first
+};
+
+export type MyAttendance = { from: string; to: string; groups: GroupAttendance[] };

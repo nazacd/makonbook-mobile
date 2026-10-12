@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getDeviceId } from '@/lib/auth/device';
 
 import { api } from './client';
-import type { AttendanceSession, MarkState, TeacherLesson } from './types';
+import type { AttendanceSession, MarkState, MyAttendance, TeacherLesson } from './types';
 
 export const lessonsKey = (date: string) => ['teacher-lessons', date] as const;
 export const sessionKey = (id: string) => ['attendance-session', id] as const;
@@ -70,8 +70,21 @@ export function useSetMark(id: string) {
 
 export type CheckIn = { state: 'present' | 'late'; already: boolean; group_name: string; at: string };
 
+export const myAttendanceKey = ['my-attendance'] as const;
+
+export function useMyAttendance(enabled = true) {
+  return useQuery({
+    queryKey: myAttendanceKey,
+    queryFn: () => api.get<MyAttendance>('/v1/me/attendance'),
+    enabled,
+  });
+}
+
 export function useCheckIn() {
+  const queryClient = useQueryClient();
   return useMutation({
+    // A new check-in shows up in the student's table straight away.
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: myAttendanceKey }),
     mutationFn: async (code: { sessionId: string; window: number; sig: string }) =>
       api.post<CheckIn>('/v1/attendance/scan', {
         session_id: code.sessionId,
