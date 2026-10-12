@@ -14,6 +14,7 @@ import { QuestionCard } from '@/components/QuestionCard';
 import { QuestionNavigatorGrid } from '@/components/QuestionNavigatorGrid';
 import { Text } from '@/components/Text';
 import { Timer } from '@/components/Timer';
+import { useGoHome } from '@/lib/navigation';
 import { useSession } from '@/lib/session-context';
 import { useRemainingTime } from '@/lib/timer';
 import type { OptionLetter, PlacementSubject } from '@/lib/types';
@@ -115,10 +116,11 @@ export default function TestRunnerScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, isExpired, state.status]);
 
+  const goHome = useGoHome();
   const handleExit = () => {
     Alert.alert('Leave test?', 'Your progress is saved and the timer will pause until you return.', [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Leave', style: 'destructive', onPress: () => router.push('/') },
+      { text: 'Leave', style: 'destructive', onPress: goHome },
     ]);
   };
 
