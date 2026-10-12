@@ -1,9 +1,11 @@
+import { router } from 'expo-router';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GroupCard } from '@/components/GroupCard';
 import { Text } from '@/components/Text';
 import { colors } from '@/design/colors';
+import { useMyAttendance } from '@/lib/api/attendance';
 import { useMe } from '@/lib/api/queries';
 import type { Profile } from '@/lib/api/types';
 import { useNow } from '@/lib/clock';
@@ -15,6 +17,7 @@ export function StudentClasses() {
   const me = useMe();
   const profile = me.data as Profile; // the signed-in layout only renders with a profile
   const now = useNow();
+  const attendance = useMyAttendance();
   const next = nextClass(profile.groups, now);
 
   return (
@@ -25,8 +28,11 @@ export function StudentClasses() {
       contentContainerClassName="gap-4 px-5"
       refreshControl={
         <RefreshControl
-          refreshing={me.isRefetching}
-          onRefresh={() => me.refetch()}
+          refreshing={me.isRefetching || attendance.isRefetching}
+          onRefresh={() => {
+            me.refetch();
+            attendance.refetch();
+          }}
           tintColor={colors.accent}
           colors={[colors.accent]}
           progressBackgroundColor={colors.surface}
@@ -70,7 +76,17 @@ export function StudentClasses() {
           </Text>
         </View>
       ) : (
-        profile.groups.map((group) => <GroupCard key={group.id} group={group} showTeachers />)
+        profile.groups.map((group) => (
+          <GroupCard
+            key={group.id}
+            group={group}
+            showTeachers
+            attendance={attendance.data?.groups.find((g) => g.group_id === group.id)}
+            onAttendance={() =>
+              router.push({ pathname: '/my-attendance/[groupId]', params: { groupId: String(group.id) } })
+            }
+          />
+        ))
       )}
     </ScrollView>
   );

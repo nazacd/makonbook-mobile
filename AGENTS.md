@@ -21,6 +21,7 @@ src/
       attendance/[id].tsx                        teacher: rotating QR + live list while open; results + corrections after
       scan.tsx                                   student: camera scanner (full-screen modal from the tab bar's Scan button)
       att/[sessionId]/[window]/[sig].tsx         the QR's deep link (makonbookmobile://att/…): check in from the phone's camera
+      my-attendance/[groupId].tsx                student: attendance in one group (opened from the group card on Classes)
       (tabs)/_layout.tsx                         JS Tabs + AppTabBar (custom: students get a raised centre Scan button)
       (tabs)/index.tsx, profile.tsx              "/" = StudentClasses or TeacherToday by role; Profile
     level-check.tsx                              public subject picker
