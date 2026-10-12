@@ -1,4 +1,6 @@
-import { Platform, Text as RNText, type TextProps } from 'react-native';
+import { Platform, Text as RNText, type TextProps as RNTextProps } from 'react-native';
+
+import { type, type TypeVariant } from '@/design/typography';
 
 // Drop-in replacement for React Native's <Text>. Use it everywhere instead of
 // importing Text from 'react-native'.
@@ -24,6 +26,17 @@ import { Platform, Text as RNText, type TextProps } from 'react-native';
 // screens are laid out for fixed sizes, so this is acceptable here.
 const BASE_STYLE = Platform.OS === 'android' ? { fontFamily: 'sans-serif' } : null;
 
-export function Text({ style, ...props }: TextProps) {
-  return <RNText allowFontScaling={false} {...props} style={[BASE_STYLE, style]} />;
+type TextProps = RNTextProps & {
+  /** A style from the app's type scale (src/design/typography.ts). */
+  variant?: TypeVariant;
+};
+
+export function Text({ variant, style, ...props }: TextProps) {
+  return (
+    <RNText
+      allowFontScaling={false}
+      {...props}
+      style={[BASE_STYLE, variant && type[variant], style]}
+    />
+  );
 }
