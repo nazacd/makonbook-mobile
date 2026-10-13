@@ -27,6 +27,8 @@ export function describeError(error: unknown): string {
       return 'This lesson is over, so attendance can no longer be started.';
     case 'attendance_disabled':
       return 'One-to-one and online lessons don’t take attendance in the app.';
+    case 'set_by_admin':
+      return 'The office corrected this mark, so only they can change it.';
     case 'edit_window_closed':
       return 'Marks can only be changed until 24 hours after the lesson. Ask the office to fix it.';
     case 'not_found':
