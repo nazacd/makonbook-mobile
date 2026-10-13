@@ -68,7 +68,8 @@ export type ServerErrorCode =
   | 'not_in_roster'
   | 'device_already_used'
   | 'marked_absent'
-  | 'edit_window_closed';
+  | 'edit_window_closed'
+  | 'set_by_admin';
 
 /** Server codes, plus what can go wrong before a response arrives. */
 export type ErrorCode = ServerErrorCode | 'network' | 'timeout' | 'unknown';
@@ -98,7 +99,8 @@ export type AttendanceMark = {
   first_name: string;
   last_name: string;
   state: MarkState;
-  source: 'scan' | 'teacher' | 'auto' | null;
+  /** admin: corrected by the office in the admin panel; the teacher can't change it. */
+  source: 'scan' | 'teacher' | 'admin' | 'auto' | null;
   scanned_at: string | null;
 };
 
