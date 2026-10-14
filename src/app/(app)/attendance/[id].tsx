@@ -134,7 +134,13 @@ export default function AttendanceScreen() {
             </Text>
           ) : (
             s.marks.map((m, i) => (
-              <StudentRow key={m.client_id} mark={m} first={i === 0} onPress={editable ? () => setEditing(m) : undefined} />
+              <StudentRow
+                key={m.client_id}
+                mark={m}
+                first={i === 0}
+                // A mark the office corrected stays theirs.
+                onPress={editable && m.source !== 'admin' ? () => setEditing(m) : undefined}
+              />
             ))
           )}
         </View>
@@ -193,7 +199,9 @@ function StudentRow({ mark, first, onPress }: { mark: AttendanceMark; first: boo
       ? `Scanned ${schoolClock(Date.parse(mark.scanned_at))}`
       : mark.source === 'teacher'
         ? 'Marked by teacher'
-        : null;
+        : mark.source === 'admin'
+          ? 'Corrected by the office'
+          : null;
   return (
     <Pressable
       onPress={onPress}
