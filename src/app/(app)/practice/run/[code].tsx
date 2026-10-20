@@ -18,8 +18,8 @@ import { QuestionNavigatorGrid } from '@/components/QuestionNavigatorGrid';
 import { Text } from '@/components/Text';
 import { Timer } from '@/components/Timer';
 import { colors } from '@/design/colors';
-import { usePackage, usePerson, useRefreshLocal, useRun } from '@/lib/practice/hooks';
-import { clearRun, saveAttempt, saveRun, type Run } from '@/lib/practice/local';
+import { usePackage, usePerson, useRefreshLocal, useRun, useRunStore } from '@/lib/practice/hooks';
+import { saveAttempt, type Run } from '@/lib/practice/local';
 import { finishRun, questionKey, stagesOf, SUBJECT_LABEL } from '@/lib/practice/run';
 import { confirm } from '@/lib/confirm';
 import { useRemainingTime } from '@/lib/timer';
@@ -58,6 +58,7 @@ export default function PracticeRunScreen() {
 
 function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<typeof usePackage>['data']> }) {
   const person = usePerson();
+  const runs = useRunStore();
   const refresh = useRefreshLocal();
   const queryClient = useQueryClient();
   const isFocused = useIsFocused();
@@ -100,19 +101,26 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
     return { ...r, seconds, elapsedMs: r.ready && s != null ? now - s : r.elapsedMs };
   }, []);
 
+  // Set once the last module is submitted: from then on the run is an
+  // attempt, and nothing (leaving the screen, the periodic save) may write the
+  // run back.
+  const finished = useRef(false);
+
   const persist = useCallback(() => {
+    if (finished.current) return;
     const r = snapshot();
     latest.current.run = r;
     setRun(r);
-    saveRun(person, r);
-  }, [person, snapshot]);
+    runs.save(r);
+  }, [runs, snapshot]);
 
   // Answers, marks and moves are saved as they happen.
   const update = (change: (r: Run) => Run) => {
+    if (finished.current) return;
     const r = change(snapshot());
     latest.current.run = r;
     setRun(r);
-    saveRun(person, r);
+    runs.save(r);
   };
 
   // The clock runs only while this screen is in front: leaving (or closing
@@ -170,14 +178,15 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
       const next = { ...r, stage: r.stage + 1, ready: false, elapsedMs: 0, index: 0 };
       latest.current.run = next;
       setRun(next);
-      await saveRun(person, next);
+      await runs.save(next);
       submitting.current = false;
       return;
     }
+    finished.current = true;
     setFinishing(true);
     const attempt = finishRun(pkg, r, new Date());
     await saveAttempt(person, attempt);
-    await clearRun(person, r.code);
+    await runs.clear(r.code);
     refresh();
     queryClient.invalidateQueries({ queryKey: ['practice-upload'] });
     router.replace({ pathname: '/practice/result/[id]', params: { id: attempt.id } });
@@ -220,7 +229,7 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
       <View className="flex-1 bg-brand">
         <SafeAreaView style={{ flex: 1 }}>
           <View className="flex-1 justify-between px-6 py-4">
-            <Pressable onPress={() => router.back()} hitSlop={10} className="self-start p-2" accessibilityLabel="Close">
+            <Pressable onPress={() => router.back()} hitSlop={10} className="self-start p-2" accessibilityRole="button" accessibilityLabel="Close">
               <HomeIcon size={20} />
             </Pressable>
             <View className="gap-3">
@@ -270,7 +279,7 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
         <View className="flex-1">
           <View className="flex-row items-center border-b border-white/10 bg-brand px-2">
-            <Pressable onPress={leave} hitSlop={10} className="p-2" accessibilityLabel="Leave the test">
+            <Pressable onPress={leave} hitSlop={10} className="p-2" accessibilityRole="button" accessibilityLabel="Leave the test">
               <HomeIcon size={20} />
             </Pressable>
             <View className="flex-1">

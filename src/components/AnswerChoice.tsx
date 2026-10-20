@@ -5,6 +5,7 @@ import Svg, { Path } from 'react-native-svg';
 import type { OptionLetter } from '@/lib/types';
 
 import { MathText } from './MathText';
+import { PressableScale } from './PressableScale';
 
 type AnswerChoiceProps = {
   letter: OptionLetter;
@@ -52,16 +53,22 @@ function UndoIcon({ size = 16, color = '#ffffff80' }: { size?: number; color?: s
   );
 }
 
+// The whole card selects the choice (not only its text); the strike-out
+// button on the right is its own target.
 export function AnswerChoice({ letter, text, content, selected, eliminated, onSelect, onToggleEliminate }: AnswerChoiceProps) {
   return (
-    <View
+    // Not `disabled` while struck out: that would disable the undo button
+    // inside it too. The card just ignores taps then.
+    <PressableScale
+      onPress={eliminated ? undefined : onSelect}
+      pressedScale={eliminated ? 1 : 0.98}
+      accessibilityRole="radio"
+      accessibilityState={{ checked: selected }}
+      accessibilityLabel={eliminated ? `Choice ${letter}, struck out` : `Choice ${letter}`}
       className={`relative flex-row items-center gap-3 rounded-xl border p-3 ${
         selected ? 'border-accent bg-accent/10' : 'border-white/10 bg-surface'
       }`}>
-      <Pressable
-        onPress={onSelect}
-        disabled={eliminated}
-        className={`flex-1 flex-row items-center gap-3 ${eliminated ? 'opacity-40' : ''}`}>
+      <View className={`flex-1 flex-row items-center gap-3 ${eliminated ? 'opacity-40' : ''}`}>
         <View
           className={`h-8 w-8 items-center justify-center rounded-full border ${
             selected ? 'border-accent bg-accent' : 'border-white/20'
@@ -71,13 +78,18 @@ export function AnswerChoice({ letter, text, content, selected, eliminated, onSe
         <View className="flex-1">
           {content ?? <MathText text={text} className="text-base text-white" />}
         </View>
-      </Pressable>
+      </View>
       {eliminated ? (
         <View pointerEvents="none" className="absolute inset-0 items-stretch justify-center">
           <View className="h-0.5 bg-white/50" />
         </View>
       ) : null}
-      <Pressable onPress={onToggleEliminate} hitSlop={8} className="px-2 py-1">
+      <Pressable
+        onPress={onToggleEliminate}
+        hitSlop={8}
+        className="px-2 py-1"
+        accessibilityRole="button"
+        accessibilityLabel={eliminated ? `Bring back choice ${letter}` : `Strike out choice ${letter}`}>
         {eliminated ? (
           <View className="rounded-full bg-surface p-1.5">
             <UndoIcon />
@@ -86,6 +98,6 @@ export function AnswerChoice({ letter, text, content, selected, eliminated, onSe
           <EliminateIcon />
         )}
       </Pressable>
-    </View>
+    </PressableScale>
   );
 }
