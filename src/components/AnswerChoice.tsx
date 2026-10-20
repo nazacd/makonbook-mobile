@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
@@ -8,6 +9,8 @@ import { MathText } from './MathText';
 type AnswerChoiceProps = {
   letter: OptionLetter;
   text: string;
+  /** Drawn instead of `text` (practice tests' rich content). */
+  content?: ReactNode;
   selected: boolean;
   eliminated: boolean;
   onSelect: () => void;
@@ -49,7 +52,7 @@ function UndoIcon({ size = 16, color = '#ffffff80' }: { size?: number; color?: s
   );
 }
 
-export function AnswerChoice({ letter, text, selected, eliminated, onSelect, onToggleEliminate }: AnswerChoiceProps) {
+export function AnswerChoice({ letter, text, content, selected, eliminated, onSelect, onToggleEliminate }: AnswerChoiceProps) {
   return (
     <View
       className={`relative flex-row items-center gap-3 rounded-xl border p-3 ${
@@ -66,7 +69,7 @@ export function AnswerChoice({ letter, text, selected, eliminated, onSelect, onT
           <MathText text={letter} className="font-semibold text-white" />
         </View>
         <View className="flex-1">
-          <MathText text={text} className="text-base text-white" />
+          {content ?? <MathText text={text} className="text-base text-white" />}
         </View>
       </Pressable>
       {eliminated ? (
