@@ -48,6 +48,12 @@ export default function SignedInLayout() {
         <Stack.Screen name="username" options={{ ...sheetOptions, title: 'Username' }} />
         <Stack.Screen name="attendance/[id]" options={{ ...headerOptions, title: 'Attendance' }} />
         <Stack.Screen name="my-attendance/[groupId]" options={{ ...headerOptions, title: 'Attendance' }} />
+        <Stack.Screen name="practice/test/[code]" options={{ ...headerOptions, title: 'Practice test' }} />
+        <Stack.Screen name="practice/result/[id]" options={{ ...headerOptions, title: 'Result' }} />
+        <Stack.Screen name="practice/review/[id]/[slot]" options={{ ...headerOptions, title: 'Question' }} />
+        <Stack.Screen name="practice/group/[id]" options={{ ...headerOptions, title: 'Practice' }} />
+        {/* A test fills the screen; leaving goes through its Home button, which saves and pauses it. */}
+        <Stack.Screen name="practice/run/[code]" options={{ presentation: 'fullScreenModal', gestureEnabled: false }} />
         {/* The scanner rises from the Scan button at the bottom and goes back down. */}
         <Stack.Screen name="scan" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
         <Stack.Screen name="att/[sessionId]/[window]/[sig]" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
