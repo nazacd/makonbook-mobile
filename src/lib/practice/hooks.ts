@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { ApiError, api } from '@/lib/api/client';
 import { useMe } from '@/lib/api/queries';
 
 import { readPackage, removePackages, storeDownload } from './files';
 import {
+  clearRun,
   forgetDownload,
   loadAttempts,
   loadDownloads,
@@ -14,7 +15,9 @@ import {
   markRejected,
   markUploaded,
   saveDownload,
+  saveRun,
   type Person,
+  type Run,
 } from './local';
 import type { CatalogTest, GroupStudent, Package, ServerAttempt } from './types';
 
@@ -62,6 +65,37 @@ export function usePackage(code: string, version: number | undefined) {
     enabled: version != null,
     staleTime: Infinity,
   });
+}
+
+/**
+ * Saves or removes the test in progress: on the phone, and at once in what the
+ * screens show (they read it through React Query, which would otherwise keep
+ * showing the version from before the write until the app restarts).
+ */
+export function useRunStore() {
+  const person = usePerson();
+  const queryClient = useQueryClient();
+  return useMemo(() => {
+    const put = (code: string, run: Run | null) => {
+      queryClient.setQueryData(localKey(person, 'runs', code), run);
+      queryClient.setQueryData<Record<string, Run>>(localKey(person, 'runs'), (all) => {
+        const next = { ...all };
+        if (run) next[code] = run;
+        else delete next[code];
+        return next;
+      });
+    };
+    return {
+      save: (run: Run) => {
+        put(run.code, run);
+        return saveRun(person, run);
+      },
+      clear: (code: string) => {
+        put(code, null);
+        return clearRun(person, code);
+      },
+    };
+  }, [person, queryClient]);
 }
 
 /** Re-reads what is on the phone after a write. */
