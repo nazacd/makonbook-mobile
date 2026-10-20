@@ -23,6 +23,21 @@ export function PersonIcon({ size = 26, color, filled }: IconProps) {
   );
 }
 
+// An open book.
+export function BookIcon({ size = 26, color, filled }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M12 6.5C10.3 5.2 7.9 4.6 4.5 4.75v13.5c3.4-.15 5.8.45 7.5 1.75 1.7-1.3 4.1-1.9 7.5-1.75V4.75c-3.4-.15-5.8.45-7.5 1.75Z"
+        {...stroke(color)}
+        fill={filled ? color : 'none'}
+        fillOpacity={filled ? 0.18 : 0}
+      />
+      <Path d="M12 6.5V20" {...stroke(color)} />
+    </Svg>
+  );
+}
+
 // A QR code inside scanner corners.
 export function ScanIcon({ size = 28, color }: IconProps) {
   return (

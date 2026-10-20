@@ -6,7 +6,7 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before 
 
 ## Project
 
-**SAT MAKON / MakonBook** — an Expo Router + React Native app for SAT MAKON students (and teachers), backed by the Go API in `nazacd/makonbook-api` (`https://api.makonbook.uz`; the contract is that repo's `api/openapi.yaml`, the product plan its `docs/platform-spec.md`). Built so far: sign-in (phone number or username, temporary password = last 4 digits of the phone, forced change), the Classes tab (groups and schedules from `/v1/me`), Profile (username, password, sign out), the force-update screen, and the public **Level Check (Placement) Test**: an offline, anonymous, in-person placement test (Math or English, 50 questions, 60-minute timer) that recommends a starting class level. Full spec: `sat-makon-placement-test-spec.md` (repo root) — read it before changing test-flow/scoring behavior, it documents the data model, screen flow, and the level-estimation algorithm's intentional design (e.g. why a student strong on `hard` but weak on `easy` still gets placed at Foundation — not a bug).
+**SAT MAKON / MakonBook** — an Expo Router + React Native app for SAT MAKON students (and teachers), backed by the Go API in `nazacd/makonbook-api` (`https://api.makonbook.uz`; the contract is that repo's `api/openapi.yaml`, the product plan its `docs/platform-spec.md`). Built so far: sign-in (phone number or username, temporary password = last 4 digits of the phone, forced change), the Classes tab (groups and schedules from `/v1/me`), attendance (QR), the **Practice** tab (SAT practice tests, below), Profile (username, password, sign out), the force-update screen, and the public **Level Check (Placement) Test**: an offline, anonymous, in-person placement test (Math or English, 50 questions, 60-minute timer) that recommends a starting class level. Full spec: `sat-makon-placement-test-spec.md` (repo root) — read it before changing test-flow/scoring behavior, it documents the data model, screen flow, and the level-estimation algorithm's intentional design (e.g. why a student strong on `hard` but weak on `easy` still gets placed at Foundation — not a bug).
 
 ### Structure
 ```
@@ -22,8 +22,12 @@ src/
       scan.tsx                                   student: camera scanner (full-screen modal from the tab bar's Scan button)
       att/[sessionId]/[window]/[sig].tsx         the QR's deep link (makonbookmobile://att/…): check in from the phone's camera
       my-attendance/[groupId].tsx                student: attendance in one group (opened from the group card on Classes)
+      practice/test/[code].tsx                   a practice test: download/update, choose sections, start/continue, results
+      practice/run/[code].tsx                    taking it: modules one after another, each timed; saved as you go, pauses when left
+      practice/result/[id].tsx, review/[id]/[slot].tsx   scores, every question right/wrong/blank, each with its explanation
+      practice/group/[id].tsx                    teacher: a group's students and their attempts
       (tabs)/_layout.tsx                         JS Tabs + AppTabBar (custom: students get a raised centre Scan button)
-      (tabs)/index.tsx, profile.tsx              "/" = StudentClasses or TeacherToday by role; Profile
+      (tabs)/index.tsx, practice.tsx, profile.tsx   "/" = StudentClasses or TeacherToday by role; Practice; Profile
     level-check.tsx                              public subject picker
     placement/[subject]/
       _layout.tsx                                validates subject, hosts SessionProvider
@@ -34,6 +38,11 @@ src/
                                                    haptics, navigation (header/sheet options)
   lib/api/                                        client (fetch, ApiError, token), types, queries + attendance (React Query hooks), errors
   lib/attendance/code.ts                          QR codes: HMAC signing (must match the API's internal/attendance/token.go), link format
+  lib/practice/                                   practice tests: types (the API's PracticePackage etc.), hooks (catalog, download,
+                                                   upload queue), files(.web).ts (packages + images on disk), local.ts (per-person
+                                                   downloads, test in progress, finished attempts), grade.ts (must match the API's
+                                                   internal/practice/scoring.go), run.ts (modules, start, finish)
+  lib/confirm(.web).ts                            "are you sure?" — Alert on phones, window.confirm on web (RN Web has no Alert)
   lib/auth/                                       session (AuthProvider/useAuth), secure-storage, device id
   lib/                                            clock (useNow 30 s, useFastNow 250 ms), schedule (next class, school dates, Tashkent time);
                                                    placement: session-context, scoring, gradeAnswer, timer, storage, types
@@ -41,7 +50,8 @@ src/
                                                    PasswordForm, UpdateRequired, StateChip; attendance: TeacherToday,
                                                    StudentClasses, RotatingQR, MarkSheet, AppTabBar, TabIcons,
                                                    CheckInResult; placement: QuestionCard, AnswerChoice,
-                                                   GridInInput, Timer, QuestionNavigatorGrid, BottomNavBar, MathText, …
+                                                   GridInInput, Timer, QuestionNavigatorGrid, BottomNavBar, MathText, …;
+                                                   practice/: RichContent, StudentPractice, TeacherPractice
 ```
 
 Routing rules: who can see what is decided only by `Stack.Protected` guards in the two layouts — screens never redirect themselves after a state change (a screen's effect runs before its parent layout re-renders the guard, so the navigation lands on a still-guarded route and bounces). To leave a screen when state changes, guard that screen too and let the router fall back. `/` is the Classes tab; signed out, the router falls back to `welcome`. The root layout renders no routes while the saved session is still loading, so an opening URL (a check-in link) isn't redirected away before we know who is signed in.
@@ -71,6 +81,8 @@ Interaction and motion (the "apple-design" principles, applied to React Native):
 - `EXPO_PUBLIC_API_URL` overrides the API address (default `https://api.makonbook.uz`). Run the web dev server without `CI=1` when iterating — CI mode turns off Metro's file watching and serves stale code.
 
 Math content may contain inline LaTeX (`\( ... \)`); always render question/option text through `<MathText>` (`src/components/MathText.tsx`), never a raw `<Text>`, so it degrades correctly either way.
+
+**Practice tests** (the API's spec 9.5): tests are downloaded once (package JSON + images, in `Paths.document/practice`) and taken fully offline; finished attempts are kept per person on the phone and uploaded when online (`useUploadAttempts`: on the Practice screens and whenever the app comes back to the foreground; the attempt's UUID makes a repeat harmless). Their text is the API's content format (paragraphs, `\( \)`/`\[ \]`, `*i*`, `**b**`, `<u>`, lists, pipe tables, `![alt](r2:key)` images): render it with `<RichContent>`, never `<MathText>` — RichContent lays a paragraph out word by word so formulas sit inside the line, and only formulas go through MathJax (MathJax's own `$…$` delimiters would turn prices like "$29" into math). On web, MathJax's SVGs come out several times too large (its `ex` sizes are read as CSS `ex`); this is the library on web only, the placement test shows the same.
 
 ## Gotchas found the hard way (read before touching styling, deps, or native builds)
 

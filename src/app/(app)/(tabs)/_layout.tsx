@@ -14,6 +14,7 @@ export default function TabsLayout() {
       screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: colors.brand } }}
       tabBar={(props) => <AppTabBar {...props} onScan={teacher ? undefined : () => router.push('/scan')} />}>
       <Tabs.Screen name="index" options={{ title: teacher ? 'Today' : 'Classes' }} />
+      <Tabs.Screen name="practice" options={{ title: 'Practice' }} />
       <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
     </Tabs>
   );

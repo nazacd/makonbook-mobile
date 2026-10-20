@@ -69,7 +69,9 @@ export type ServerErrorCode =
   | 'device_already_used'
   | 'marked_absent'
   | 'edit_window_closed'
-  | 'set_by_admin';
+  | 'set_by_admin'
+  | 'invalid_attempt'
+  | 'attempt_id_taken';
 
 /** Server codes, plus what can go wrong before a response arrives. */
 export type ErrorCode = ServerErrorCode | 'network' | 'timeout' | 'unknown';

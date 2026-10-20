@@ -2,14 +2,14 @@ import type { BottomTabBarProps } from 'expo-router/js-tabs';
 import { Platform, View } from 'react-native';
 
 import { PressableScale } from '@/components/PressableScale';
-import { CalendarIcon, PersonIcon, ScanIcon } from '@/components/TabIcons';
+import { BookIcon, CalendarIcon, PersonIcon, ScanIcon } from '@/components/TabIcons';
 import { Text } from '@/components/Text';
 import { colors } from '@/design/colors';
 
 const BAR_HEIGHT = 58;
 const SCAN_SIZE = 62;
 
-const ICONS: Record<string, typeof CalendarIcon> = { index: CalendarIcon, profile: PersonIcon };
+const ICONS: Record<string, typeof CalendarIcon> = { index: CalendarIcon, practice: BookIcon, profile: PersonIcon };
 
 type AppTabBarProps = BottomTabBarProps & {
   /** Shows the raised Scan button in the middle (students). */
@@ -61,9 +61,17 @@ export function AppTabBar({ state, descriptors, navigation, insets, onScan }: Ap
         borderTopColor: colors.separator,
         flexDirection: 'row',
       }}>
-      {tabs.slice(0, middle)}
-      {onScan && <ScanButton onPress={onScan} />}
-      {tabs.slice(middle)}
+      {onScan ? (
+        <>
+          {/* Two halves of equal width keep the Scan button in the middle
+              even when one side has more tabs. */}
+          <View style={{ flex: 1, flexDirection: 'row' }}>{tabs.slice(0, middle)}</View>
+          <ScanButton onPress={onScan} />
+          <View style={{ flex: 1, flexDirection: 'row' }}>{tabs.slice(middle)}</View>
+        </>
+      ) : (
+        tabs
+      )}
     </View>
   );
 }
