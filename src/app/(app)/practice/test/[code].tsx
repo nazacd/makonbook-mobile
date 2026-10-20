@@ -16,12 +16,10 @@ import {
   useDownloadTest,
   useLocalAttempts,
   usePackage,
-  usePerson,
-  useRefreshLocal,
   useRemoveDownload,
   useRuns,
+  useRunStore,
 } from '@/lib/practice/hooks';
-import { clearRun, saveRun } from '@/lib/practice/local';
 import { formatBytes, newRun, SUBJECT_LABEL } from '@/lib/practice/run';
 import type { Subject } from '@/lib/practice/types';
 
@@ -36,8 +34,7 @@ const CHOICES: { value: Choice; label: string; sections: Subject[] }[] = [
 // One test: download it, choose what to take, start or continue; past results.
 export default function PracticeTestScreen() {
   const { code } = useLocalSearchParams<{ code: string }>();
-  const person = usePerson();
-  const refresh = useRefreshLocal();
+  const runStore = useRunStore();
   const catalog = useCatalog();
   const downloads = useDownloads();
   const runs = useRuns();
@@ -57,8 +54,7 @@ export default function PracticeTestScreen() {
   const start = async () => {
     if (!pkg.data) return;
     const sections = CHOICES.find((c) => c.value === choice)!.sections;
-    await saveRun(person, newRun(pkg.data, sections, Crypto.randomUUID(), new Date()));
-    refresh();
+    await runStore.save(newRun(pkg.data, sections, Crypto.randomUUID(), new Date()));
     router.push({ pathname: '/practice/run/[code]', params: { code } });
   };
 
@@ -70,8 +66,7 @@ export default function PracticeTestScreen() {
       cancel: 'Keep',
       destructive: true,
       onConfirm: async () => {
-        await clearRun(person, code);
-        refresh();
+        await runStore.clear(code);
       },
     });
 
