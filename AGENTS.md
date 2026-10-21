@@ -6,7 +6,7 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before 
 
 ## Project
 
-**SAT MAKON / MakonBook** — an Expo Router + React Native app for SAT MAKON students (and teachers), backed by the Go API in `nazacd/makonbook-api` (`https://api.makonbook.uz`; the contract is that repo's `api/openapi.yaml`, the product plan its `docs/platform-spec.md`). Built so far: sign-in (phone number or username, temporary password = last 4 digits of the phone, forced change), the Classes tab (groups and schedules from `/v1/me`), attendance (QR), the **Practice** tab (SAT practice tests, below), Profile (username, password, sign out), the force-update screen, and the public **Level Check (Placement) Test**: an offline, anonymous, in-person placement test (Math or English, 50 questions, 60-minute timer) that recommends a starting class level. Full spec: `sat-makon-placement-test-spec.md` (repo root) — read it before changing test-flow/scoring behavior, it documents the data model, screen flow, and the level-estimation algorithm's intentional design (e.g. why a student strong on `hard` but weak on `easy` still gets placed at Foundation — not a bug).
+**SAT MAKON / MakonBook** — an Expo Router + React Native app for SAT MAKON students (and teachers), backed by the Go API in `nazacd/makonbook-api` (`https://api.makonbook.uz`; the contract is that repo's `api/openapi.yaml`, the product plan its `docs/platform-spec.md`). Built so far: sign-in (phone number or username, temporary password = last 4 digits of the phone, forced change), the Classes tab (groups and schedules from `/v1/me`), attendance (QR), the **Practice** tab (SAT practice tests, below), the **Words** tab (vocabulary with FSRS, below), Profile (username, password, sign out), the force-update screen, and the public **Level Check (Placement) Test**: an offline, anonymous, in-person placement test (Math or English, 50 questions, 60-minute timer) that recommends a starting class level. Full spec: `sat-makon-placement-test-spec.md` (repo root) — read it before changing test-flow/scoring behavior, it documents the data model, screen flow, and the level-estimation algorithm's intentional design (e.g. why a student strong on `hard` but weak on `easy` still gets placed at Foundation — not a bug).
 
 ### Structure
 ```
@@ -26,8 +26,10 @@ src/
       practice/run/[code].tsx                    taking it: modules one after another, each timed; saved as you go, pauses when left
       practice/result/[id].tsx, review/[id]/[slot].tsx   scores, every question right/wrong/blank, each with its explanation
       practice/group/[id].tsx                    teacher: a group's students and their attempts
+      vocab/study.tsx                            a study session: due cards, then today's new words; Again/Hard/Good/Easy
+      vocab/group/[id].tsx                       teacher: a group's vocabulary progress
       (tabs)/_layout.tsx                         JS Tabs + AppTabBar (custom: students get a raised centre Scan button)
-      (tabs)/index.tsx, practice.tsx, profile.tsx   "/" = StudentClasses or TeacherToday by role; Practice; Profile
+      (tabs)/index.tsx, practice.tsx, words.tsx, profile.tsx   "/" = StudentClasses or TeacherToday by role; Practice; Words; Profile
     level-check.tsx                              public subject picker
     placement/[subject]/
       _layout.tsx                                validates subject, hosts SessionProvider
@@ -42,6 +44,9 @@ src/
                                                    upload queue), files(.web).ts (packages + images on disk), local.ts (per-person
                                                    downloads, test in progress, finished attempts), grade.ts (must match the API's
                                                    internal/practice/scoring.go), run.ts (modules, start, finish)
+  lib/vocab/                                      vocabulary: types, scheduler.ts (ts-fsrs: replay, rate, queue, previews), files(.web).ts
+                                                   (deck, images, each person's append-only review log), local.ts (settings, upload
+                                                   queue, fetch cursor), hooks.ts (deck, state, recording, sync)
   lib/confirm(.web).ts                            "are you sure?" — Alert on phones, window.confirm on web (RN Web has no Alert)
   lib/auth/                                       session (AuthProvider/useAuth), secure-storage, device id
   lib/                                            clock (useNow 30 s, useFastNow 250 ms), schedule (next class, school dates, Tashkent time);
@@ -51,7 +56,8 @@ src/
                                                    StudentClasses, RotatingQR, MarkSheet, AppTabBar, TabIcons,
                                                    CheckInResult; placement: QuestionCard, AnswerChoice,
                                                    GridInInput, Timer, QuestionNavigatorGrid, BottomNavBar, MathText, …;
-                                                   practice/: RichContent, StudentPractice, TeacherPractice
+                                                   practice/: RichContent, StudentPractice, TeacherPractice;
+                                                   vocab/: StudentWords, TeacherWords
 ```
 
 Routing rules: who can see what is decided only by `Stack.Protected` guards in the two layouts — screens never redirect themselves after a state change (a screen's effect runs before its parent layout re-renders the guard, so the navigation lands on a still-guarded route and bounces). To leave a screen when state changes, guard that screen too and let the router fall back. `/` is the Classes tab; signed out, the router falls back to `welcome`. The root layout renders no routes while the saved session is still loading, so an opening URL (a check-in link) isn't redirected away before we know who is signed in.
@@ -83,6 +89,8 @@ Interaction and motion (the "apple-design" principles, applied to React Native):
 Math content may contain inline LaTeX (`\( ... \)`); always render question/option text through `<MathText>` (`src/components/MathText.tsx`), never a raw `<Text>`, so it degrades correctly either way.
 
 **Practice tests** (the API's spec 9.5): tests are downloaded once (package JSON + images, in `Paths.document/practice`) and taken fully offline; finished attempts are kept per person on the phone and uploaded when online (`useUploadAttempts`: on the Practice screens and whenever the app comes back to the foreground; the attempt's UUID makes a repeat harmless). Their text is the API's content format (paragraphs, `\( \)`/`\[ \]`, `*i*`, `**b**`, `<u>`, lists, pipe tables, `![alt](r2:key)` images): render it with `<RichContent>`, never `<MathText>` — RichContent lays a paragraph out word by word so formulas sit inside the line, and only formulas go through MathJax (MathJax's own `$…$` delimiters would turn prices like "$29" into math). On web, MathJax's SVGs come out several times too large (its `ex` sizes are read as CSS `ex`); this is the library on web only, the placement test shows the same.
+
+**Vocabulary** (the API's spec 11): every student sees every list and turns on the ones they study (a phone where they never changed a setting counts the lists they already studied as on). Scheduling is FSRS on the phone (`ts-fsrs`, **pinned to an exact version**, no fuzz, 90 % retention): replaying the same log must give the same cards on every phone, so don't bump it casually or turn fuzz on. Every rating is appended to the person's log on disk and to an upload queue; `useVocabSync` (on the Words screens and when the app comes to the foreground) uploads the queue, fetches reviews from other phones after a cursor and merges them, refreshes the deck when its version changed, and downloads images of the lists turned on. Card states are always derived from the log (full replay on load, one card updated per rating), never stored on their own.
 
 ## Gotchas found the hard way (read before touching styling, deps, or native builds)
 
