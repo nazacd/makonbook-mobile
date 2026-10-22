@@ -38,6 +38,17 @@ export function BookIcon({ size = 26, color, filled }: IconProps) {
   );
 }
 
+// Two flash cards, one behind the other.
+export function CardsIcon({ size = 26, color, filled }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M8 4.5h9.5A2.5 2.5 0 0 1 20 7v9" {...stroke(color)} />
+      <Rect x="4" y="7.5" width="12.5" height="12.5" rx="2.5" {...stroke(color)} fill={filled ? color : 'none'} fillOpacity={filled ? 0.18 : 0} />
+      <Path d="M7.5 12h5.5M7.5 15.5h3.5" {...stroke(color)} />
+    </Svg>
+  );
+}
+
 // A QR code inside scanner corners.
 export function ScanIcon({ size = 28, color }: IconProps) {
   return (
