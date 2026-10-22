@@ -2,14 +2,14 @@ import type { BottomTabBarProps } from 'expo-router/js-tabs';
 import { Platform, View } from 'react-native';
 
 import { PressableScale } from '@/components/PressableScale';
-import { BookIcon, CalendarIcon, PersonIcon, ScanIcon } from '@/components/TabIcons';
+import { BookIcon, CalendarIcon, CardsIcon, PersonIcon, ScanIcon } from '@/components/TabIcons';
 import { Text } from '@/components/Text';
 import { colors } from '@/design/colors';
 
 const BAR_HEIGHT = 58;
 const SCAN_SIZE = 62;
 
-const ICONS: Record<string, typeof CalendarIcon> = { index: CalendarIcon, practice: BookIcon, profile: PersonIcon };
+const ICONS: Record<string, typeof CalendarIcon> = { index: CalendarIcon, practice: BookIcon, words: CardsIcon, profile: PersonIcon };
 
 type AppTabBarProps = BottomTabBarProps & {
   /** Shows the raised Scan button in the middle (students). */
