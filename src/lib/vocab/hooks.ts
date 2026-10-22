@@ -52,8 +52,10 @@ export function useSaveSettings() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (s: Settings) => {
-      queryClient.setQueryData(settingsKey(person), s);
-      await saveSettings(person, s);
+      // Now chosen on this phone: no longer the new-phone default.
+      const next = { ...s, saved: true };
+      queryClient.setQueryData(settingsKey(person), next);
+      await saveSettings(person, next);
     },
     // A list just turned on may have images to fetch.
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['vocab-sync', person] }),
