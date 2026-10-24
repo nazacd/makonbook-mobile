@@ -13,7 +13,6 @@ const uz = {
   codeIntro:
     'Farzandingizning 5 xonali ota-ona kodini kiriting. Farzandingiz uni ilovadagi «Profile» bo‘limida ko‘radi, yoki kodni ofisdan so‘rashingiz mumkin.',
   codeLabel: 'Kod',
-  codeHint: 'Faqat ko‘rish uchun: darslar, jadval va davomat.',
   enter: 'Kirish',
   wrongCode: 'Bu kod bilan o‘quvchi topilmadi. Raqamlarni tekshiring.',
   tooManyChildren: 'Bitta telefonga ko‘pi bilan 5 nafar farzand qo‘shish mumkin.',
@@ -91,7 +90,6 @@ const ru: Strings = {
   codeIntro:
     'Введите 5-значный родительский код вашего ребёнка. Ребёнок видит его в приложении в разделе «Profile», или код можно узнать в офисе.',
   codeLabel: 'Код',
-  codeHint: 'Только просмотр: занятия, расписание и посещаемость.',
   enter: 'Войти',
   wrongCode: 'Ученик с таким кодом не найден. Проверьте цифры.',
   tooManyChildren: 'На один телефон можно добавить не больше 5 детей.',
