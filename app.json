@@ -46,7 +46,8 @@
           "cameraPermission": "MakonBook uses the camera to scan your teacher’s attendance code.",
           "recordAudioAndroid": false
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
