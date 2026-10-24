@@ -13,6 +13,7 @@ import { colors } from '@/design/colors';
 import { headerOptions } from '@/design/navigation';
 import { connectFocusManager, createQueryClient, useUpdateRequired } from '@/lib/api/queries';
 import { AuthProvider, useAuth } from '@/lib/auth/session';
+import { ParentProvider, useParent } from '@/lib/parent/session';
 import '../global.css';
 
 SplashScreen.preventAutoHideAsync();
@@ -47,11 +48,13 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <ThemeProvider value={theme}>
-            <RootNavigator />
-            <Launch assetsReady={assetsReady} />
-            <StatusBar style="light" />
-          </ThemeProvider>
+          <ParentProvider>
+            <ThemeProvider value={theme}>
+              <RootNavigator />
+              <Launch assetsReady={assetsReady} />
+              <StatusBar style="light" />
+            </ThemeProvider>
+          </ParentProvider>
         </AuthProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>
@@ -64,33 +67,48 @@ export default function RootLayout() {
 // signed in — so the first screen people see is the right one.
 function Launch({ assetsReady }: { assetsReady: boolean }) {
   const { status } = useAuth();
-  if (assetsReady && status !== 'loading') return null;
+  const parent = useParent();
+  if (assetsReady && status !== 'loading' && parent.ready) return null;
   return <LaunchScreen onLayout={() => SplashScreen.hide()} />;
 }
 
 function RootNavigator() {
   const { status } = useAuth();
+  const parent = useParent();
   const updateRequired = useUpdateRequired();
   const signedIn = status === 'signedIn';
+  // A parent's phone: children added with their codes, nobody signed in.
+  const parentMode = !signedIn && parent.kids.length > 0;
 
   if (updateRequired) return <UpdateRequired />;
   // Until we know whether someone is signed in, render no routes at all (the
   // launch screen covers this moment). Otherwise the guards would treat the
   // person as signed out and redirect away from the URL the app was opened
   // with — losing, for example, a check-in link scanned with the camera.
-  if (status === 'loading') return null;
+  if (status === 'loading' || !parent.ready) return null;
 
   return (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.brand } }}>
       {/* "/" is the Classes tab inside (app). Signed out, that is guarded and
-          the router falls back to the first screen available: welcome. */}
-      <Stack.Protected guard={!signedIn}>
+          the router falls back to the first screen available: welcome, or a
+          parent's home on a parent's phone. */}
+      <Stack.Protected guard={!signedIn && !parentMode}>
         <Stack.Screen name="welcome" />
-        <Stack.Screen name="sign-in" options={{ ...headerOptions, title: 'Sign in' }} />
+        <Stack.Screen name="parent-code" options={headerOptions} />
       </Stack.Protected>
-
       <Stack.Protected guard={signedIn}>
         <Stack.Screen name="(app)" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={parentMode}>
+        <Stack.Screen name="parent" />
+      </Stack.Protected>
+
+      {/* A student can sign in on a parent's phone too (a shared phone). It
+          comes after the parent's screens: a guard falls back to the first
+          screen available, and on a parent's phone that is their home. */}
+      <Stack.Protected guard={!signedIn}>
+        <Stack.Screen name="sign-in" options={{ ...headerOptions, title: 'Sign in' }} />
       </Stack.Protected>
 
       {/* The Level Check is public: no account, nothing leaves the device. */}
