@@ -71,7 +71,9 @@ export type ServerErrorCode =
   | 'edit_window_closed'
   | 'set_by_admin'
   | 'invalid_attempt'
-  | 'attempt_id_taken';
+  | 'attempt_id_taken'
+  | 'invalid_parent_code'
+  | 'invalid_report';
 
 /** Server codes, plus what can go wrong before a response arrives. */
 export type ErrorCode = ServerErrorCode | 'network' | 'timeout' | 'unknown';

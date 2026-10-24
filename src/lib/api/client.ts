@@ -43,6 +43,22 @@ type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export async function request<T>(method: Method, path: string, body?: unknown): Promise<T> {
   const token = authToken;
+  try {
+    return await send<T>(method, path, body, token);
+  } catch (e) {
+    // Only a 401 for the token that is still current ends the session; a late
+    // answer to a request made before signing in again must not.
+    if (e instanceof ApiError && e.status === 401 && token && token === authToken) unauthorizedHandler?.();
+    throw e;
+  }
+}
+
+/** A request with a token of its own (a parent's, for one child), or none. It never touches the signed-in session. */
+export function requestAs<T>(token: string | null, method: Method, path: string, body?: unknown): Promise<T> {
+  return send<T>(method, path, body, token);
+}
+
+async function send<T>(method: Method, path: string, body: unknown, token: string | null): Promise<T> {
   const headers: Record<string, string> = { Accept: 'application/json' };
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -81,12 +97,6 @@ export async function request<T>(method: Method, path: string, body?: unknown): 
     if (payload.error?.message) message = payload.error.message;
   } catch {
     // Not our JSON envelope (a proxy error page); keep the generic message.
-  }
-
-  // Only a 401 for the token that is still current ends the session; a late
-  // answer to a request made before signing in again must not.
-  if (res.status === 401 && token && token === authToken) {
-    unauthorizedHandler?.();
   }
 
   throw new ApiError(res.status, code, message, requestId, retryAfter);

@@ -36,6 +36,16 @@ export function useMe(enabled = true) {
   });
 }
 
+/** A student's parent code, for their parents (GET /v1/me/parent-code). */
+export function useParentCode(enabled: boolean) {
+  return useQuery({
+    queryKey: ['me', 'parent-code'],
+    queryFn: () => api.get<{ code: string }>('/v1/me/parent-code'),
+    enabled,
+    staleTime: Infinity, // it never changes
+  });
+}
+
 export function useChangePassword() {
   const queryClient = useQueryClient();
   return useMutation({

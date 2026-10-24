@@ -1,9 +1,11 @@
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Switch, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
+import { PressableScale } from '@/components/PressableScale';
 import { Text } from '@/components/Text';
 import { colors } from '@/design/colors';
 import { describeError } from '@/lib/api/errors';
@@ -22,6 +24,7 @@ export function StudentWords() {
   const settings = useSettings();
   const save = useSaveSettings();
   const sync = useVocabSync(true);
+  const [pulling, setPulling] = useState(false);
 
   const cards = state.data?.cards ?? new Map();
   const loaded = settings.data ?? { active: [], newPerDay: 20 };
@@ -52,8 +55,12 @@ export function StudentWords() {
       contentContainerClassName="gap-4 px-5"
       refreshControl={
         <RefreshControl
-          refreshing={sync.isRefetching}
-          onRefresh={() => sync.refetch()}
+          refreshing={pulling}
+          onRefresh={() => {
+            // The spinner is for a pull only, not the quiet syncs a change starts.
+            setPulling(true);
+            sync.refetch().finally(() => setPulling(false));
+          }}
           tintColor={colors.accent}
           colors={[colors.accent]}
           progressBackgroundColor={colors.surface}
@@ -135,19 +142,21 @@ export function StudentWords() {
               {NEW_PER_DAY.map((n) => {
                 const selected = s.newPerDay === n;
                 return (
-                  <Pressable
+                  // Colours as classes, not a style function: NativeWind on a
+                  // phone doesn't apply a style function next to className.
+                  <PressableScale
                     key={n}
                     onPress={() => save.mutate({ ...s, newPerDay: n })}
+                    pressedScale={0.95}
+                    style={{ flex: 1 }}
                     accessibilityRole="radio"
                     accessibilityState={{ checked: selected }}
-                    className="h-11 flex-1 items-center justify-center rounded-xl"
-                    style={({ pressed }) => ({
-                      backgroundColor: selected ? colors.accent : pressed ? 'rgba(255,255,255,0.1)' : colors.surface,
-                    })}>
+                    accessibilityLabel={`${n} new words a day`}
+                    className={`h-11 items-center justify-center rounded-xl ${selected ? 'bg-accent' : 'bg-surface'}`}>
                     <Text variant="headline" className="text-white">
                       {n}
                     </Text>
-                  </Pressable>
+                  </PressableScale>
                 );
               })}
             </View>

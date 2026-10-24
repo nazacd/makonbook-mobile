@@ -39,7 +39,6 @@ export function StudentPractice() {
     }));
   const open = tests.filter((t) => t.version != null);
   const locked = tests.filter((t) => t.version == null);
-  const nextUp = [...locked].sort((a, b) => percent(b) - percent(a)).slice(0, 3);
   const pending = (attempts.data ?? []).filter((a) => !a.uploaded && !a.rejected).length;
 
   return (
@@ -142,9 +141,8 @@ export function StudentPractice() {
               <Text variant="footnote" style={{ color: colors.secondaryText, textTransform: 'uppercase' }} className="px-1">
                 Coming soon
               </Text>
-              {/* The few closest to ready; the rest only counted. */}
               <View className="overflow-hidden rounded-3xl bg-surface">
-                {nextUp.map((t, i) => (
+                {locked.map((t, i) => (
                   <TestRow
                     key={t.code}
                     title={t.title}
@@ -154,11 +152,9 @@ export function StudentPractice() {
                   />
                 ))}
               </View>
-              {locked.length > nextUp.length && (
-                <Text variant="footnote" style={{ color: colors.tertiaryText }} className="px-1">
-                  and {locked.length - nextUp.length} more tests. Teachers check every question before a test opens.
-                </Text>
-              )}
+              <Text variant="footnote" style={{ color: colors.tertiaryText }} className="px-1">
+                Teachers check every question before a test opens.
+              </Text>
             </View>
           )}
         </>

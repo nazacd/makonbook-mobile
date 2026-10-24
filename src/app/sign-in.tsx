@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { ScrollView, View, type TextInput } from 'react-native';
 
@@ -10,9 +11,11 @@ import * as haptics from '@/design/haptics';
 import { ApiError } from '@/lib/api/client';
 import { describeError } from '@/lib/api/errors';
 import { useAuth } from '@/lib/auth/session';
+import { useParent } from '@/lib/parent/session';
 
 export default function SignInScreen() {
   const { signIn } = useAuth();
+  const parent = useParent();
   const passwordRef = useRef<TextInput>(null);
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
@@ -100,6 +103,17 @@ export default function SignInScreen() {
       <Text variant="footnote" style={{ color: colors.tertiaryText, textAlign: 'center' }}>
         Forgot your password, or your number changed? Ask the office to reset it.
       </Text>
+
+      {/* Parents don't sign in: they enter their child's code. (On a parent's
+          phone they are already in, and this screen is a student's.) */}
+      {parent.kids.length === 0 && (
+        <Button
+          label="Ota-onalar uchun"
+          variant="plain"
+          onPress={() => router.replace('/parent-code')}
+          accessibilityHint="Farzandingizning 5 xonali kodi bilan kirish"
+        />
+      )}
     </ScrollView>
   );
 }
