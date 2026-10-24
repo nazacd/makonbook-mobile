@@ -27,18 +27,18 @@ export default function WelcomeScreen() {
 
           <View className="w-full max-w-md gap-3 self-center">
             <Button label="Sign in" onPress={() => router.push('/sign-in')} />
-            {/* Parents read the app in Uzbek or Russian: the label says both. */}
-            <Button
-              label="Ota-onalar uchun · Для родителей"
-              variant="secondary"
-              onPress={() => router.push('/parent-code')}
-              accessibilityHint="For parents: enter your child's 5-digit code"
-            />
             <Button
               label="Take the Level Check"
               variant="secondary"
               onPress={() => router.push('/level-check')}
               accessibilityHint="Placement test for new students. No account needed."
+            />
+            {/* Parents: the child's code, then their screens in Uzbek or Russian. */}
+            <Button
+              label="Ota-onalar uchun"
+              variant="secondary"
+              onPress={() => router.push('/parent-code')}
+              accessibilityHint="Farzandingizning 5 xonali kodi bilan kirish"
             />
           </View>
         </View>

@@ -108,10 +108,10 @@ export default function SignInScreen() {
           phone they are already in, and this screen is a student's.) */}
       {parent.kids.length === 0 && (
         <Button
-          label="Ota-onalar uchun · Для родителей"
+          label="Ota-onalar uchun"
           variant="plain"
           onPress={() => router.replace('/parent-code')}
-          accessibilityHint="For parents: enter your child's 5-digit code"
+          accessibilityHint="Farzandingizning 5 xonali kodi bilan kirish"
         />
       )}
     </ScrollView>

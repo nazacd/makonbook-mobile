@@ -81,7 +81,7 @@ export default function ProfileScreen() {
           </View>
           <Text variant="footnote" className="px-5" style={{ color: colors.tertiaryText }}>
             Give this code to your parents. With it, they see your classes, schedule and attendance in this app
-            (“Ota-onalar uchun · Для родителей” on the first screen). They can’t change anything.
+            (“Ota-onalar uchun” on the first screen). They can’t change anything.
           </Text>
         </View>
       )}
