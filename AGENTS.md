@@ -60,7 +60,7 @@ src/
                                                    StudentClasses, RotatingQR, MarkSheet, AppTabBar, TabIcons,
                                                    CheckInResult; placement: QuestionCard, AnswerChoice,
                                                    GridInInput, Timer, QuestionNavigatorGrid, BottomNavBar, MathText, …;
-                                                   practice/: RichContent, StudentPractice, TeacherPractice; parent/: CodeForm, LangSwitch;
+                                                   practice/: RichContent, StudentPractice, TeacherPractice; parent/: CodeForm (5 boxes), LangSwitch (flags), Flag;
                                                    vocab/: StudentWords, TeacherWords
 ```
 

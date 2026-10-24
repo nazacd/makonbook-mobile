@@ -15,8 +15,7 @@ export default function ParentCodeScreen() {
       contentInsetAdjustmentBehavior="automatic"
       keyboardShouldPersistTaps="handled"
       contentContainerClassName="gap-6 px-5 pb-10 pt-4">
-      <Stack.Screen options={{ title: t.forParents }} />
-      <LangSwitch />
+      <Stack.Screen options={{ title: t.forParents, headerRight: () => <LangSwitch /> }} />
       <CodeForm />
     </ScrollView>
   );

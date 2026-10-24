@@ -61,9 +61,12 @@ export default function ParentHome() {
         />
       }>
       <View className="gap-1 pb-2">
-        <Text variant="subhead" style={{ color: colors.secondaryText }}>
-          {t.parentMode}
-        </Text>
+        <View className="flex-row items-center justify-between gap-3">
+          <Text variant="subhead" style={{ color: colors.secondaryText }}>
+            {t.parentMode}
+          </Text>
+          <LangSwitch />
+        </View>
         <Text variant="largeTitle" className="text-white" accessibilityRole="header">
           {child.first_name} {child.last_name}
         </Text>
@@ -160,7 +163,6 @@ export default function ParentHome() {
         <Text variant="footnote" className="px-5" style={{ color: colors.secondaryText, textTransform: 'uppercase' }}>
           {t.settings}
         </Text>
-        <LangSwitch />
         <View className="overflow-hidden rounded-2xl bg-surface">
           <ListRow label={t.addChild} onPress={() => router.push('/parent/add')} />
           <ListRow label={t.studentSignIn} separator onPress={() => router.push('/sign-in')} />
