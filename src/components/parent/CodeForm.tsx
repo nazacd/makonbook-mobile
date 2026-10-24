@@ -1,18 +1,14 @@
-import { useRef, useState } from "react";
-import { Platform, StyleSheet, TextInput, View } from "react-native";
+import { useRef, useState } from 'react';
+import { Platform, StyleSheet, TextInput, View } from 'react-native';
 
-import { Button } from "@/components/Button";
-import { Notice } from "@/components/Notice";
-import { Text } from "@/components/Text";
-import { colors } from "@/design/colors";
-import * as haptics from "@/design/haptics";
-import { ApiError } from "@/lib/api/client";
-import { describeParentError } from "@/lib/parent/i18n";
-import {
-  TooManyChildrenError,
-  useParent,
-  type SavedChild,
-} from "@/lib/parent/session";
+import { Button } from '@/components/Button';
+import { Notice } from '@/components/Notice';
+import { Text } from '@/components/Text';
+import { colors } from '@/design/colors';
+import * as haptics from '@/design/haptics';
+import { ApiError } from '@/lib/api/client';
+import { describeParentError } from '@/lib/parent/i18n';
+import { TooManyChildrenError, useParent, type SavedChild } from '@/lib/parent/session';
 
 const LENGTH = 5;
 const BOXES = Array.from({ length: LENGTH }, (_, i) => i);
@@ -21,7 +17,7 @@ const BOXES = Array.from({ length: LENGTH }, (_, i) => i);
 // fifth digit is in.
 export function CodeForm({ onDone }: { onDone?: (kid: SavedChild) => void }) {
   const { t, addChild } = useParent();
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [wrong, setWrong] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
@@ -37,15 +33,11 @@ export function CodeForm({ onDone }: { onDone?: (kid: SavedChild) => void }) {
       onDone?.(kid);
     } catch (e) {
       haptics.error();
-      if (e instanceof ApiError && e.code === "invalid_parent_code") {
+      if (e instanceof ApiError && e.code === 'invalid_parent_code') {
         setWrong(true);
-        setCode("");
+        setCode('');
       } else {
-        setProblem(
-          e instanceof TooManyChildrenError
-            ? t.tooManyChildren
-            : describeParentError(t, e),
-        );
+        setProblem(e instanceof TooManyChildrenError ? t.tooManyChildren : describeParentError(t, e));
       }
       setBusy(false);
     }
@@ -69,22 +61,13 @@ export function CodeForm({ onDone }: { onDone?: (kid: SavedChild) => void }) {
           onSubmit={() => submit(code)}
         />
         {wrong && (
-          <Text
-            variant="footnote"
-            accessibilityLiveRegion="polite"
-            style={{ color: colors.danger, textAlign: "center" }}
-          >
+          <Text variant="footnote" accessibilityLiveRegion="polite" style={{ color: colors.danger, textAlign: 'center' }}>
             {t.wrongCode}
           </Text>
         )}
       </View>
       {problem && <Notice tone="error" message={problem} />}
-      <Button
-        label={t.enter}
-        onPress={() => submit(code)}
-        loading={busy}
-        disabled={code.length !== LENGTH && !busy}
-      />
+      <Button label={t.enter} onPress={() => submit(code)} loading={busy} disabled={code.length !== LENGTH && !busy} />
     </View>
   );
 }
@@ -111,29 +94,17 @@ function CodeBoxes({
 
   return (
     <View>
-      <View
-        className="flex-row justify-center gap-3"
-        importantForAccessibility="no-hide-descendants"
-      >
+      <View className="flex-row justify-center gap-3" importantForAccessibility="no-hide-descendants">
         {BOXES.map((i) => (
           <View
             key={i}
             className="h-16 max-w-16 flex-1 items-center justify-center rounded-2xl bg-surface"
             style={{
               borderWidth: 1.5,
-              borderColor: error
-                ? colors.danger
-                : focused && i === current
-                  ? colors.accent
-                  : "transparent",
-            }}
-          >
-            <Text
-              variant="title"
-              className="text-white"
-              style={{ fontVariant: ["tabular-nums"] }}
-            >
-              {value[i] ?? ""}
+              borderColor: error ? colors.danger : focused && i === current ? colors.accent : 'transparent',
+            }}>
+            <Text variant="title" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
+              {value[i] ?? ''}
             </Text>
           </View>
         ))}
@@ -141,9 +112,7 @@ function CodeBoxes({
       <TextInput
         ref={input}
         value={value}
-        onChangeText={(v) =>
-          onChange(v.replace(/[^0-9]/g, "").slice(0, LENGTH))
-        }
+        onChangeText={(v) => onChange(v.replace(/[^0-9]/g, '').slice(0, LENGTH))}
         accessibilityLabel={label}
         keyboardType="number-pad"
         textContentType="oneTimeCode"
@@ -156,7 +125,7 @@ function CodeBoxes({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         selectionColor="transparent"
-        style={[styles.input, Platform.OS === "web" && { outlineWidth: 0 }]}
+        style={[styles.input, Platform.OS === 'web' && { outlineWidth: 0 }]}
       />
     </View>
   );
@@ -164,13 +133,5 @@ function CodeBoxes({
 
 const styles = StyleSheet.create({
   // Over the boxes, so a tap anywhere on them focuses it; never seen.
-  input: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    opacity: 0,
-    color: "transparent",
-  },
+  input: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, opacity: 0, color: 'transparent' },
 });
