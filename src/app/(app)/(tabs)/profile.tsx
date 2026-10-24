@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ListRow } from '@/components/ListRow';
 import { Text } from '@/components/Text';
 import { colors } from '@/design/colors';
-import { appVersion, useMe } from '@/lib/api/queries';
+import { appVersion, useMe, useParentCode } from '@/lib/api/queries';
 import type { Profile } from '@/lib/api/types';
 import { useAuth } from '@/lib/auth/session';
 
@@ -13,6 +13,7 @@ export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const profile = useMe().data as Profile; // the signed-in layout only renders with a profile
   const { signOut } = useAuth();
+  const parentCode = useParentCode(profile.kind === 'student');
   const initials = `${profile.first_name[0] ?? ''}${profile.last_name[0] ?? ''}`.toUpperCase();
 
   return (
@@ -60,6 +61,30 @@ export default function ProfileScreen() {
             : 'Set a username to sign in without typing your phone number.'}
         </Text>
       </View>
+
+      {profile.kind === 'student' && (
+        <View className="gap-2">
+          <Text variant="footnote" className="px-5" style={{ color: colors.secondaryText }}>
+            FOR YOUR PARENTS
+          </Text>
+          <View className="flex-row items-center gap-3 rounded-2xl bg-surface px-5 py-4">
+            <Text variant="body" className="flex-1 text-white">
+              Parent code
+            </Text>
+            <Text
+              variant="title2"
+              selectable
+              style={{ color: colors.accent, fontVariant: ['tabular-nums'], letterSpacing: 4 }}
+              accessibilityLabel={parentCode.data ? `Parent code ${parentCode.data.code.split('').join(' ')}` : undefined}>
+              {parentCode.data?.code ?? (parentCode.isError ? '—' : '·····')}
+            </Text>
+          </View>
+          <Text variant="footnote" className="px-5" style={{ color: colors.tertiaryText }}>
+            Give this code to your parents. With it, they see your classes, schedule and attendance in this app
+            (“Ota-onalar uchun” on the first screen). They can’t change anything.
+          </Text>
+        </View>
+      )}
 
       <View className="overflow-hidden rounded-2xl bg-surface">
         <ListRow label="Sign out" destructive onPress={signOut} />

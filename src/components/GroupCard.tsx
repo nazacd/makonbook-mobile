@@ -2,8 +2,29 @@ import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/Text';
 import { colors } from '@/design/colors';
-import type { Group, GroupAttendance } from '@/lib/api/types';
+import type { Group, GroupAttendance, Weekday } from '@/lib/api/types';
 import { formatWeekdays } from '@/lib/schedule';
+
+/** The card's words; parents read it in Uzbek or Russian. */
+export type GroupCardLabels = {
+  weekdays: (days: Weekday[]) => string;
+  room: (room: string) => string;
+  attendance: string;
+  noLessons: string;
+  attended: (attended: number, lessons: number) => string;
+  late: (n: number) => string;
+  absent: (n: number) => string;
+};
+
+const ENGLISH: GroupCardLabels = {
+  weekdays: formatWeekdays,
+  room: (room) => `Room ${room}`,
+  attendance: 'Attendance',
+  noLessons: 'No lessons recorded yet',
+  attended: (a, n) => `${a} of ${n} lessons`,
+  late: (n) => `${n} late`,
+  absent: (n) => `${n} absent`,
+};
 
 type GroupCardProps = {
   group: Group;
@@ -11,9 +32,10 @@ type GroupCardProps = {
   /** The student's attendance in this group; adds a row that opens it. */
   attendance?: GroupAttendance;
   onAttendance?: () => void;
+  labels?: GroupCardLabels;
 };
 
-export function GroupCard({ group, showTeachers, attendance, onAttendance }: GroupCardProps) {
+export function GroupCard({ group, showTeachers, attendance, onAttendance, labels = ENGLISH }: GroupCardProps) {
   return (
     <View className="gap-4 rounded-3xl bg-surface p-5">
       <View className="gap-1">
@@ -35,36 +57,46 @@ export function GroupCard({ group, showTeachers, attendance, onAttendance }: Gro
           style={{ borderTopWidth: 1, borderTopColor: colors.separator }}>
           <View className="flex-row items-baseline justify-between gap-3">
             <Text variant="subhead" className="flex-1 text-white" style={{ fontWeight: '600' }}>
-              {formatWeekdays(slot.weekdays)}
+              {labels.weekdays(slot.weekdays)}
             </Text>
             <Text variant="subhead" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
               {slot.begin_time}–{slot.end_time}
             </Text>
           </View>
           <Text variant="footnote" style={{ color: colors.secondaryText }}>
-            {[slot.classroom && `Room ${slot.classroom}`, showTeachers && slot.teachers.join(', ')]
+            {[slot.classroom && labels.room(slot.classroom), showTeachers && slot.teachers.join(', ')]
               .filter(Boolean)
               .join(' · ')}
           </Text>
         </View>
       ))}
-      {onAttendance && <AttendanceRow attendance={attendance} onPress={onAttendance} />}
+      {onAttendance && <AttendanceRow attendance={attendance} onPress={onAttendance} labels={labels} />}
     </View>
   );
 }
 
 // Attendance sits on the card it belongs to, one tap from the full list.
-function AttendanceRow({ attendance, onPress }: { attendance?: GroupAttendance; onPress: () => void }) {
+function AttendanceRow({
+  attendance,
+  onPress,
+  labels,
+}: {
+  attendance?: GroupAttendance;
+  onPress: () => void;
+  labels: GroupCardLabels;
+}) {
   const s = attendance?.summary;
   const attended = s ? s.present + s.late : 0;
   const detail = !s
-    ? 'No lessons recorded yet'
-    : `${attended} of ${s.lessons} lessons${s.late ? ` · ${s.late} late` : ''}${s.absent ? ` · ${s.absent} absent` : ''}`;
+    ? labels.noLessons
+    : [labels.attended(attended, s.lessons), s.late > 0 && labels.late(s.late), s.absent > 0 && labels.absent(s.absent)]
+        .filter(Boolean)
+        .join(' · ');
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`Attendance: ${detail}`}
+      accessibilityLabel={`${labels.attendance}: ${detail}`}
       style={({ pressed }) => ({
         marginHorizontal: -20,
         marginBottom: -20,
@@ -79,7 +111,7 @@ function AttendanceRow({ attendance, onPress }: { attendance?: GroupAttendance; 
       <View className="flex-row items-center gap-3">
         <View className="flex-1 gap-0.5">
           <Text variant="subhead" className="text-white" style={{ fontWeight: '600' }}>
-            Attendance
+            {labels.attendance}
           </Text>
           <Text variant="footnote" style={{ color: colors.secondaryText }}>
             {detail}
