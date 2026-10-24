@@ -1,0 +1,41 @@
+MakonBook Privacy Policy
+
+Effective date: 3 October 2026
+
+This policy explains how the MakonBook app ("the app"), published by SAT MAKON ("we", "us"), handles information. The current version of the app is a timed placement test (Math or English) that recommends a starting class level.
+
+Summary
+
+• The app has no accounts and no sign-in.
+• We do not collect, store on our servers, sell, or share any personal information.
+• The app contains no advertising and no analytics or tracking tools.
+
+Information stored on your device
+
+While you take a test, the app saves your progress on your own device (your answers, questions you marked for review or ruled out, the current question, and the time used) so you can resume if the app is closed. This information never leaves your device. It is deleted when you submit the test, and you can also remove it at any time by clearing the app's storage or uninstalling the app. Test results are shown on screen and are not saved after you leave the results screen.
+
+The app does not ask for your name, email address, phone number, location, contacts, or photos.
+
+Graphing calculator (Desmos)
+
+Math questions include an optional graphing calculator provided by Desmos. When you open it, your device connects to Desmos's servers to load the calculator. As with any website, Desmos receives standard technical information from that connection, such as your IP address and device or browser type. The app does not send Desmos any information about you or your test. Desmos handles that information under its own privacy policy: https://www.desmos.com/privacy
+
+Everything else in the app works without an internet connection.
+
+Permissions
+
+The app requests only the Internet permission, which is used solely to load the graphing calculator.
+
+Children
+
+The app is intended for students preparing for the SAT and is not directed at children under 13. It does not knowingly collect personal information from anyone, including children.
+
+Changes to this policy
+
+Future versions of the app may add features such as user accounts. If that changes what information the app handles, we will update this policy before releasing that version and change the effective date above.
+
+Contact
+
+Questions about this policy can be sent to CONTACT_EMAIL.
+
+SAT® is a trademark registered by the College Board, which is not affiliated with, and does not endorse, this app.
