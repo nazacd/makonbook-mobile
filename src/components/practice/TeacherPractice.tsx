@@ -13,7 +13,7 @@ import type { Group, Profile } from '@/lib/api/types';
 import { useNow } from '@/lib/clock';
 import { dayLetters, parseClassName, teacherTitle } from '@/lib/groups';
 import { useLastVisit, useMarkVisited, usePracticeSummary, type GroupSummary } from '@/lib/practice/summary';
-import { addDays, formatDate, schoolClock, schoolDate } from '@/lib/schedule';
+import { addDays, formatDate, pastDay, schoolClock, schoolDate } from '@/lib/schedule';
 
 const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -37,10 +37,7 @@ export function TeacherPractice() {
   const now = useNow();
   const since = useLastVisit();
   const markVisited = useMarkVisited();
-  const summary = usePracticeSummary(
-    profile.groups.map((g) => g.id),
-    since,
-  );
+  const summary = usePracticeSummary(profile.groups, since, now);
   const [pulling, setPulling] = useState(false);
 
   // "New" is new since the teacher last left the tab for another tab, not
@@ -96,13 +93,13 @@ export function TeacherPractice() {
       {profile.groups.length === 0 ? (
         <EmptyState icon={Users} title="No groups yet" message="Your groups appear here once you teach one in HolliHop." />
       ) : (
-        profile.groups.map((g, i) => <GroupRow key={g.id} group={g} summary={summary.groups[g.id]} first={i === 0} />)
+        profile.groups.map((g, i) => <GroupRow key={g.id} group={g} summary={summary.groups[g.id]} now={now} first={i === 0} />)
       )}
     </ScrollView>
   );
 }
 
-function GroupRow({ group, summary, first }: { group: Group; summary?: GroupSummary; first: boolean }) {
+function GroupRow({ group, summary, now, first }: { group: Group; summary?: GroupSummary; now: number; first: boolean }) {
   const colors = useColors();
   const name = parseClassName(group.name, group.discipline);
   const title = teacherTitle(name);
@@ -110,10 +107,12 @@ function GroupRow({ group, summary, first }: { group: Group; summary?: GroupSumm
   const time = slot ? `${slot.begin_time} · ${dayLetters(slot.weekdays)}` : null;
   const dot = name.subject === 'Math' ? colors.math : name.subject === 'English' ? colors.english : colors.ink3;
   const fresh = summary?.fresh.length ?? 0;
+  // Practised since the group's last lesson; nothing while that's still none.
+  const practiced = summary?.practiced && summary.since != null ? { count: summary.practiced, day: pastDay(summary.since, now) } : null;
   const label = [
     title,
     time,
-    summary && `${summary.practiced} of ${summary.students} practiced`,
+    practiced && summary && `${practiced.count} of ${summary.students} practiced since ${pastDay(summary.since!, now, true)}`,
     fresh > 0 && `${fresh} new`,
   ]
     .filter(Boolean)
@@ -141,11 +140,16 @@ function GroupRow({ group, summary, first }: { group: Group; summary?: GroupSumm
             </View>
           )}
         </View>
-        {summary && (
+        {summary && (practiced || fresh > 0) && (
           <View className="items-end gap-1">
-            <Text variant="subhead" style={{ color: colors.ink, fontWeight: '600', fontVariant: ['tabular-nums'] }}>
-              {summary.practiced}/{summary.students}
-            </Text>
+            {practiced && (
+              <Text variant="subhead" style={{ color: colors.ink, fontWeight: '600', fontVariant: ['tabular-nums'] }}>
+                {practiced.count}/{summary.students}
+                <Text variant="footnote" style={{ color: colors.ink3, fontWeight: '400' }}>
+                  {' '}since {practiced.day}
+                </Text>
+              </Text>
+            )}
             {fresh > 0 && (
               <Text variant="subhead" style={{ color: colors.accent, fontWeight: '600' }}>
                 {fresh} new
