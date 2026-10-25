@@ -1,9 +1,9 @@
 import { MathJaxSvg } from 'react-native-mathjax-html-to-svg';
 
 import { Text } from '@/components/Text';
+import { useColors } from '@/design/colors';
 
 const LATEX_DELIMITER_PATTERN = /\\\(|\\\[/;
-const MATH_COLOR = '#f5f5f5';
 
 /**
  * MathJaxSvg parses its children as HTML before extracting TeX segments, so
@@ -36,6 +36,7 @@ type MathTextProps = {
 
 /** Renders a string that may mix plain prose with inline `\( ... \)` LaTeX. */
 export function MathText({ text, className, fontSize = 16, looseLineHeight = false }: MathTextProps) {
+  const colors = useColors();
   if (!text) return null;
 
   if (!LATEX_DELIMITER_PATTERN.test(text)) {
@@ -49,7 +50,7 @@ export function MathText({ text, className, fontSize = 16, looseLineHeight = fal
   return (
     <MathJaxSvg
       fontSize={fontSize}
-      color={MATH_COLOR}
+      color={colors.ink}
       fontCache
       style={looseLineHeight ? { rowGap: fontSize * 0.6 } : undefined}>
       {escapeForMathJax(text)}

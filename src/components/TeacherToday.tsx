@@ -8,7 +8,7 @@ import { Notice } from '@/components/Notice';
 import { PressableScale } from '@/components/PressableScale';
 import { StateChip } from '@/components/StateChip';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors, type Palette } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { useOpenSession, useTeacherLessons } from '@/lib/api/attendance';
 import { describeError } from '@/lib/api/errors';
@@ -41,6 +41,7 @@ function relativeDay(offset: number, date: string): string {
 
 // The teacher's home: their lessons on a day, each with its attendance.
 export function TeacherToday() {
+  const colors = useColors();
   const insets = useSafeAreaInsets();
   const now = useNow();
   const [offset, setOffset] = useState(0);
@@ -77,11 +78,11 @@ export function TeacherToday() {
         />
       }>
       <View className="gap-1">
-        <Text variant="largeTitle" className="text-white" accessibilityRole="header">
+        <Text variant="largeTitle" className="text-ink" accessibilityRole="header">
           {relativeDay(offset, date)}
         </Text>
         <View className="flex-row items-center justify-between">
-          <Text variant="subhead" style={{ color: colors.secondaryText }}>
+          <Text variant="subhead" style={{ color: colors.ink2 }}>
             {formatDate(date)}
           </Text>
           <View className="flex-row items-center gap-1">
@@ -98,10 +99,10 @@ export function TeacherToday() {
         <Notice tone="error" title="Couldn’t load your lessons" message={describeError(lessons.error)} />
       ) : lessons.data.lessons.length === 0 ? (
         <View className="items-center gap-2 px-4 py-16">
-          <Text variant="title3" className="text-white">
+          <Text variant="title3" className="text-ink">
             No lessons
           </Text>
-          <Text variant="subhead" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+          <Text variant="subhead" style={{ color: colors.ink2, textAlign: 'center' }}>
             Nothing on your HolliHop schedule for this day.
           </Text>
         </View>
@@ -121,6 +122,7 @@ export function TeacherToday() {
 }
 
 function DayButton({ label, hint, disabled, onPress }: { label: string; hint: string; disabled?: boolean; onPress: () => void }) {
+  const colors = useColors();
   return (
     <Pressable
       onPress={onPress}
@@ -135,7 +137,7 @@ function DayButton({ label, hint, disabled, onPress }: { label: string; hint: st
         borderRadius: 17,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: pressed ? 'rgba(255,255,255,0.12)' : colors.surface,
+        backgroundColor: pressed ? colors.surface2 : colors.surface,
         opacity: disabled ? 0.35 : 1,
       })}>
       <Text variant="headline" style={{ color: colors.accent }}>
@@ -145,10 +147,10 @@ function DayButton({ label, hint, disabled, onPress }: { label: string; hint: st
   );
 }
 
-const CHIP: Partial<Record<Phase, { label: string; color: string }>> = {
-  open: { label: 'In progress', color: colors.accent },
-  finished: { label: 'Done', color: colors.success },
-  missed: { label: 'Not taken', color: colors.tertiaryText },
+const CHIP: Partial<Record<Phase, { label: string; tone: keyof Palette }>> = {
+  open: { label: 'In progress', tone: 'accent' },
+  finished: { label: 'Done', tone: 'good' },
+  missed: { label: 'Not taken', tone: 'ink3' },
 };
 
 function LessonCard({
@@ -162,6 +164,7 @@ function LessonCard({
   starting: boolean;
   onStart: () => void;
 }) {
+  const colors = useColors();
   const chip = CHIP[phase];
   const details = [lesson.discipline, lesson.classroom && `Room ${lesson.classroom}`, `${lesson.students} ${lesson.students === 1 ? 'student' : 'students'}`]
     .filter(Boolean)
@@ -172,33 +175,33 @@ function LessonCard({
   const body = (
     <View className="gap-3">
       <View className="flex-row items-center justify-between gap-3">
-        <Text variant="title3" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
+        <Text variant="title3" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
           {lesson.begin_time}–{lesson.end_time}
         </Text>
-        {chip && <StateChip label={chip.label} color={chip.color} />}
+        {chip && <StateChip label={chip.label} color={colors[chip.tone]} />}
       </View>
       <View className="gap-0.5">
-        <Text variant="headline" className="text-white">
+        <Text variant="headline" className="text-ink">
           {lesson.group_name}
         </Text>
-        <Text variant="footnote" style={{ color: colors.secondaryText }}>
+        <Text variant="footnote" style={{ color: colors.ink2 }}>
           {details}
         </Text>
       </View>
       {phase === 'startable' && <Button label="Start attendance" onPress={onStart} loading={starting} />}
       {phase === 'open' && <Button label="Continue attendance" onPress={openSession} />}
       {phase === 'upcoming' && (
-        <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+        <Text variant="footnote" style={{ color: colors.ink3 }}>
           Attendance opens at {schoolClock(Date.parse(lesson.starts_at) - OPENS_BEFORE_MS)}.
         </Text>
       )}
       {phase === 'missed' && (
-        <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+        <Text variant="footnote" style={{ color: colors.ink3 }}>
           Attendance wasn’t taken in the app. The office can still mark it in HolliHop.
         </Text>
       )}
       {phase === 'disabled' && (
-        <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+        <Text variant="footnote" style={{ color: colors.ink3 }}>
           One-to-one and online lessons don’t take attendance in the app.
         </Text>
       )}

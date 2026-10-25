@@ -1,7 +1,9 @@
 import { Pressable, View } from 'react-native';
+import { ChevronRight } from 'lucide-react-native';
 
+import { Icon } from '@/components/Icon';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import type { Group, GroupAttendance, Weekday } from '@/lib/api/types';
 import { formatWeekdays } from '@/lib/schedule';
 
@@ -36,16 +38,17 @@ type GroupCardProps = {
 };
 
 export function GroupCard({ group, showTeachers, attendance, onAttendance, labels = ENGLISH }: GroupCardProps) {
+  const colors = useColors();
   return (
     <View className="gap-4 rounded-3xl bg-surface p-5">
       <View className="gap-1">
         <Text variant="caption" style={{ color: colors.accent, textTransform: 'uppercase' }}>
           {group.discipline}
         </Text>
-        <Text variant="headline" className="text-white">
+        <Text variant="headline" className="text-ink">
           {group.name}
         </Text>
-        <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+        <Text variant="footnote" style={{ color: colors.ink3 }}>
           {group.office}
         </Text>
       </View>
@@ -54,16 +57,16 @@ export function GroupCard({ group, showTeachers, attendance, onAttendance, label
         <View
           key={i}
           className="gap-1 pt-4"
-          style={{ borderTopWidth: 1, borderTopColor: colors.separator }}>
+          style={{ borderTopWidth: 1, borderTopColor: colors.line }}>
           <View className="flex-row items-baseline justify-between gap-3">
-            <Text variant="subhead" className="flex-1 text-white" style={{ fontWeight: '600' }}>
+            <Text variant="subhead" className="flex-1 text-ink" style={{ fontWeight: '600' }}>
               {labels.weekdays(slot.weekdays)}
             </Text>
-            <Text variant="subhead" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
+            <Text variant="subhead" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
               {slot.begin_time}–{slot.end_time}
             </Text>
           </View>
-          <Text variant="footnote" style={{ color: colors.secondaryText }}>
+          <Text variant="footnote" style={{ color: colors.ink2 }}>
             {[slot.classroom && labels.room(slot.classroom), showTeachers && slot.teachers.join(', ')]
               .filter(Boolean)
               .join(' · ')}
@@ -85,6 +88,7 @@ function AttendanceRow({
   onPress: () => void;
   labels: GroupCardLabels;
 }) {
+  const colors = useColors();
   const s = attendance?.summary;
   const attended = s ? s.present + s.late : 0;
   const detail = !s
@@ -103,28 +107,26 @@ function AttendanceRow({
         paddingHorizontal: 20,
         paddingVertical: 14,
         borderTopWidth: 1,
-        borderTopColor: colors.separator,
+        borderTopColor: colors.line,
         borderBottomLeftRadius: 24,
         borderBottomRightRadius: 24,
-        backgroundColor: pressed ? 'rgba(255,255,255,0.06)' : 'transparent',
+        backgroundColor: pressed ? colors.surface2 : 'transparent',
       })}>
       <View className="flex-row items-center gap-3">
         <View className="flex-1 gap-0.5">
-          <Text variant="subhead" className="text-white" style={{ fontWeight: '600' }}>
+          <Text variant="subhead" className="text-ink" style={{ fontWeight: '600' }}>
             {labels.attendance}
           </Text>
-          <Text variant="footnote" style={{ color: colors.secondaryText }}>
+          <Text variant="footnote" style={{ color: colors.ink2 }}>
             {detail}
           </Text>
         </View>
         {s && s.lessons > 0 && (
-          <Text variant="title3" style={{ color: colors.text, fontVariant: ['tabular-nums'] }}>
+          <Text variant="title3" style={{ color: colors.ink, fontVariant: ['tabular-nums'] }}>
             {Math.round((attended / s.lessons) * 100)}%
           </Text>
         )}
-        <Text variant="body" style={{ color: colors.tertiaryText }}>
-          ›
-        </Text>
+        <Icon as={ChevronRight} size={18} color={colors.ink3} />
       </View>
     </Pressable>
   );

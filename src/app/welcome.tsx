@@ -20,7 +20,7 @@ export default function WelcomeScreen() {
               resizeMode="contain"
               accessibilityIgnoresInvertColors
             />
-            <Text variant="largeTitle" className="text-white" accessibilityRole="header">
+            <Text variant="largeTitle" className="text-ink" accessibilityRole="header">
               MakonBook
             </Text>
           </View>

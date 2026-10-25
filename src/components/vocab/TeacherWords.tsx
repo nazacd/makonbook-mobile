@@ -1,15 +1,18 @@
 import { router } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ChevronRight } from 'lucide-react-native';
 
+import { Icon } from '@/components/Icon';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import { useMe } from '@/lib/api/queries';
 import type { Profile } from '@/lib/api/types';
 
 // The teacher's Words tab: their groups, each opening its students'
 // vocabulary progress.
 export function TeacherWords() {
+  const colors = useColors();
   const insets = useSafeAreaInsets();
   const profile = useMe().data as Profile; // the signed-in layout only renders with a profile
 
@@ -20,19 +23,19 @@ export function TeacherWords() {
       contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: 32 }}
       contentContainerClassName="gap-4 px-5">
       <View className="gap-1 pb-2">
-        <Text variant="subhead" style={{ color: colors.secondaryText }}>
+        <Text variant="subhead" style={{ color: colors.ink2 }}>
           Your students’ vocabulary
         </Text>
-        <Text variant="largeTitle" className="text-white" accessibilityRole="header">
+        <Text variant="largeTitle" className="text-ink" accessibilityRole="header">
           Words
         </Text>
       </View>
       {profile.groups.length === 0 ? (
         <View className="items-center gap-2 px-4 py-16">
-          <Text variant="title3" className="text-white">
+          <Text variant="title3" className="text-ink">
             No groups yet
           </Text>
-          <Text variant="subhead" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+          <Text variant="subhead" style={{ color: colors.ink2, textAlign: 'center' }}>
             Your groups appear here once you teach one in HolliHop.
           </Text>
         </View>
@@ -43,20 +46,18 @@ export function TeacherWords() {
               key={g.id}
               onPress={() => router.push({ pathname: '/vocab/group/[id]', params: { id: String(g.id), name: g.name } })}
               accessibilityRole="button"
-              style={({ pressed }) => ({ backgroundColor: pressed ? 'rgba(255, 255, 255, 0.06)' : 'transparent' })}>
-              <View className="ml-5" style={i ? { borderTopWidth: 1, borderTopColor: colors.separator } : undefined}>
+              style={({ pressed }) => ({ backgroundColor: pressed ? colors.surface2 : 'transparent' })}>
+              <View className="ml-5" style={i ? { borderTopWidth: 1, borderTopColor: colors.line } : undefined}>
                 <View className="min-h-[60px] flex-row items-center gap-3 py-3 pr-5">
                   <View className="flex-1 gap-0.5">
-                    <Text variant="body" className="text-white">
+                    <Text variant="body" className="text-ink">
                       {g.name}
                     </Text>
-                    <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+                    <Text variant="footnote" style={{ color: colors.ink3 }}>
                       {[g.discipline, g.office].filter(Boolean).join(' · ')}
                     </Text>
                   </View>
-                  <Text variant="body" style={{ color: colors.tertiaryText }}>
-                    ›
-                  </Text>
+                  <Icon as={ChevronRight} size={18} color={colors.ink3} />
                 </View>
               </View>
             </Pressable>

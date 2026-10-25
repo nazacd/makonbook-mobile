@@ -4,7 +4,7 @@ import { Platform, View } from 'react-native';
 import { PressableScale } from '@/components/PressableScale';
 import { BookIcon, CalendarIcon, CardsIcon, PersonIcon, ScanIcon } from '@/components/TabIcons';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 
 const BAR_HEIGHT = 58;
 const SCAN_SIZE = 62;
@@ -20,12 +20,13 @@ type AppTabBarProps = BottomTabBarProps & {
 // to a lesson — as a raised button in the middle: it sits half above the bar,
 // the one thing on the screen that is always within thumb's reach.
 export function AppTabBar({ state, descriptors, navigation, insets, onScan }: AppTabBarProps) {
+  const colors = useColors();
   const tabs = state.routes.map((route, index) => {
     const { options } = descriptors[route.key];
     const focused = state.index === index;
     const label = typeof options.title === 'string' ? options.title : route.name;
     const Icon = ICONS[route.name] ?? CalendarIcon;
-    const color = focused ? colors.accent : colors.secondaryText;
+    const color = focused ? colors.accent : colors.ink2;
 
     const onPress = () => {
       const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
@@ -58,7 +59,7 @@ export function AppTabBar({ state, descriptors, navigation, insets, onScan }: Ap
         paddingBottom: insets.bottom,
         backgroundColor: colors.surface,
         borderTopWidth: 1,
-        borderTopColor: colors.separator,
+        borderTopColor: colors.line,
         flexDirection: 'row',
       }}>
       {onScan ? (
@@ -77,6 +78,7 @@ export function AppTabBar({ state, descriptors, navigation, insets, onScan }: Ap
 }
 
 function ScanButton({ onPress }: { onPress: () => void }) {
+  const colors = useColors();
   return (
     <View style={{ width: SCAN_SIZE + 28, alignItems: 'center' }}>
       {/* The ring in the background colour makes the button look set into
@@ -86,7 +88,7 @@ function ScanButton({ onPress }: { onPress: () => void }) {
           marginTop: -SCAN_SIZE / 2 - 4,
           padding: 5,
           borderRadius: SCAN_SIZE,
-          backgroundColor: colors.brand,
+          backgroundColor: colors.bg,
         }}>
         <PressableScale
           onPress={onPress}
@@ -103,11 +105,11 @@ function ScanButton({ onPress }: { onPress: () => void }) {
           accessibilityLabel="Scan attendance code"
           accessibilityHint="Opens the camera to check in to your lesson">
           <View style={{ width: SCAN_SIZE, height: SCAN_SIZE, alignItems: 'center', justifyContent: 'center' }}>
-            <ScanIcon color={colors.text} />
+            <ScanIcon color={colors.ink} />
           </View>
         </PressableScale>
       </View>
-      <Text variant="caption" style={{ color: colors.secondaryText, marginTop: 1 }}>
+      <Text variant="caption" style={{ color: colors.ink2, marginTop: 1 }}>
         Scan
       </Text>
     </View>

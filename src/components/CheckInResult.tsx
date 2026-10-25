@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/Button';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors, type Palette } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { springs } from '@/design/motion';
 import { useCheckIn } from '@/lib/api/attendance';
@@ -48,6 +48,7 @@ function outcomeOf(error: unknown): Outcome {
 // Sends one scanned code and shows the answer: a clear yes (present or late),
 // or what went wrong and what to do about it.
 export function CheckInResult({ code, onDone, onScanAgain }: CheckInResultProps) {
+  const colors = useColors();
   const checkIn = useCheckIn();
   const sent = useRef(false);
 
@@ -83,10 +84,10 @@ export function CheckInResult({ code, onDone, onScanAgain }: CheckInResultProps)
               <>
                 <Badge tone={outcome.tone} />
                 <View className="items-center gap-2">
-                  <Text variant="title" className="text-white" style={{ textAlign: 'center' }} accessibilityRole="header">
+                  <Text variant="title" className="text-ink" style={{ textAlign: 'center' }} accessibilityRole="header">
                     {outcome.title}
                   </Text>
-                  <Text variant="body" style={{ color: colors.secondaryText, textAlign: 'center' }} accessibilityLiveRegion="polite">
+                  <Text variant="body" style={{ color: colors.ink2, textAlign: 'center' }} accessibilityLiveRegion="polite">
                     {outcome.message}
                   </Text>
                 </View>
@@ -94,7 +95,7 @@ export function CheckInResult({ code, onDone, onScanAgain }: CheckInResultProps)
             ) : (
               <>
                 <ActivityIndicator size="large" color={colors.accent} />
-                <Text variant="body" style={{ color: colors.secondaryText }}>
+                <Text variant="body" style={{ color: colors.ink2 }}>
                   Checking you in…
                 </Text>
               </>
@@ -112,15 +113,16 @@ export function CheckInResult({ code, onDone, onScanAgain }: CheckInResultProps)
   );
 }
 
-const BADGE: Record<Outcome['tone'], { color: string; mark: string }> = {
-  success: { color: colors.success, mark: '✓' },
-  warning: { color: colors.warning, mark: '!' },
-  error: { color: colors.danger, mark: '✕' },
+const BADGE: Record<Outcome['tone'], { tone: keyof Palette; mark: string }> = {
+  success: { tone: 'good', mark: '✓' },
+  warning: { tone: 'watch', mark: '!' },
+  error: { tone: 'bad', mark: '✕' },
 };
 
 // The result mark grows into place with the default (non-bouncing) spring;
 // with Reduce Motion it fades in instead.
 function Badge({ tone }: { tone: Outcome['tone'] }) {
+  const colors = useColors();
   const reduceMotion = useReducedMotion();
   const shown = useSharedValue(0);
   useEffect(() => {
@@ -129,7 +131,8 @@ function Badge({ tone }: { tone: Outcome['tone'] }) {
   const style = useAnimatedStyle(() =>
     reduceMotion ? { opacity: shown.value } : { opacity: shown.value, transform: [{ scale: 0.6 + 0.4 * shown.value }] },
   );
-  const { color, mark } = BADGE[tone];
+  const { mark } = BADGE[tone];
+  const color = colors[BADGE[tone].tone];
   return (
     <Animated.View
       style={[
@@ -137,7 +140,7 @@ function Badge({ tone }: { tone: Outcome['tone'] }) {
         style,
       ]}>
       <View style={{ width: 80, height: 80, borderRadius: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: color }}>
-        <Text style={{ fontSize: 40, lineHeight: 46, fontWeight: '700', color: colors.brand }}>{mark}</Text>
+        <Text style={{ fontSize: 40, lineHeight: 46, fontWeight: '700', color: colors.bg }}>{mark}</Text>
       </View>
     </Animated.View>
   );

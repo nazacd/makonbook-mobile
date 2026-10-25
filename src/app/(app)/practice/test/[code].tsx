@@ -2,11 +2,13 @@ import * as Crypto from 'expo-crypto';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
+import { ChevronRight } from 'lucide-react-native';
 
 import { Button } from '@/components/Button';
+import { Icon } from '@/components/Icon';
 import { Notice } from '@/components/Notice';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { describeError } from '@/lib/api/errors';
 import { confirm } from '@/lib/confirm';
@@ -33,6 +35,7 @@ const CHOICES: { value: Choice; label: string; sections: Subject[] }[] = [
 
 // One test: download it, choose what to take, start or continue; past results.
 export default function PracticeTestScreen() {
+  const colors = useColors();
   const { code } = useLocalSearchParams<{ code: string }>();
   const runStore = useRunStore();
   const catalog = useCatalog();
@@ -91,10 +94,10 @@ export default function PracticeTestScreen() {
       <Stack.Screen options={{ title }} />
 
       <View className="gap-1">
-        <Text variant="title" className="text-white">
+        <Text variant="title" className="text-ink">
           {title}
         </Text>
-        <Text variant="subhead" style={{ color: colors.secondaryText }}>
+        <Text variant="subhead" style={{ color: colors.ink2 }}>
           {sizes
             ? sizes.map((s) => `${SUBJECT_LABEL[s.subject]}: ${s.questions} questions, ${s.minutes} min`).join('\n')
             : test
@@ -105,7 +108,7 @@ export default function PracticeTestScreen() {
 
       {!local || update ? (
         <View className="gap-3">
-          <Text variant="subhead" style={{ color: colors.secondaryText }}>
+          <Text variant="subhead" style={{ color: colors.ink2 }}>
             {update
               ? 'Teachers corrected some questions since you downloaded this test. Update to get them; your results stay.'
               : 'Download the test once and take it any time, even without internet.'}
@@ -127,11 +130,11 @@ export default function PracticeTestScreen() {
       ) : null}
 
       {local && run ? (
-        <View className="gap-3 rounded-3xl p-5" style={{ backgroundColor: 'rgba(139, 92, 246, 0.16)' }}>
-          <Text variant="headline" className="text-white">
+        <View className="gap-3 rounded-3xl p-5" style={{ backgroundColor: colors.accentTint }}>
+          <Text variant="headline" className="text-ink">
             In progress: {run.sections.map((s) => SUBJECT_LABEL[s]).join(' and ')}
           </Text>
-          <Text variant="subhead" style={{ color: colors.secondaryText }}>
+          <Text variant="subhead" style={{ color: colors.ink2 }}>
             Part {run.stage + 1}. The clock is stopped until you continue.
           </Text>
           <Button
@@ -154,18 +157,18 @@ export default function PracticeTestScreen() {
                   onPress={() => setChoice(c.value)}
                   accessibilityRole="radio"
                   accessibilityState={{ checked: selected }}
-                  style={({ pressed }) => ({ backgroundColor: pressed ? 'rgba(255, 255, 255, 0.06)' : 'transparent' })}>
-                  <View className="ml-5" style={i ? { borderTopWidth: 1, borderTopColor: colors.separator } : undefined}>
+                  style={({ pressed }) => ({ backgroundColor: pressed ? colors.surface2 : 'transparent' })}>
+                  <View className="ml-5" style={i ? { borderTopWidth: 1, borderTopColor: colors.line } : undefined}>
                     <View className="min-h-[52px] flex-row items-center gap-3 py-3 pr-5">
-                      <Text variant="body" className="flex-1 text-white">
+                      <Text variant="body" className="flex-1 text-ink">
                         {c.label}
                       </Text>
-                      <Text variant="subhead" style={{ color: colors.secondaryText }}>
+                      <Text variant="subhead" style={{ color: colors.ink2 }}>
                         {minutes} min
                       </Text>
                       <View
                         className="h-6 w-6 items-center justify-center rounded-full border-2"
-                        style={{ borderColor: selected ? colors.accent : colors.tertiaryText }}>
+                        style={{ borderColor: selected ? colors.accent : colors.ink3 }}>
                         {selected && <View className="h-3 w-3 rounded-full bg-accent" />}
                       </View>
                     </View>
@@ -180,7 +183,7 @@ export default function PracticeTestScreen() {
 
       {mine.length > 0 && (
         <View className="gap-2">
-          <Text variant="footnote" style={{ color: colors.secondaryText, textTransform: 'uppercase' }} className="px-1">
+          <Text variant="footnote" style={{ color: colors.ink2, textTransform: 'uppercase' }} className="px-1">
             Your results
           </Text>
           <View className="overflow-hidden rounded-3xl bg-surface">
@@ -189,23 +192,21 @@ export default function PracticeTestScreen() {
                 key={a.id}
                 onPress={() => router.push({ pathname: '/practice/result/[id]', params: { id: a.id } })}
                 accessibilityRole="button"
-                style={({ pressed }) => ({ backgroundColor: pressed ? 'rgba(255, 255, 255, 0.06)' : 'transparent' })}>
-                <View className="ml-5" style={i ? { borderTopWidth: 1, borderTopColor: colors.separator } : undefined}>
+                style={({ pressed }) => ({ backgroundColor: pressed ? colors.surface2 : 'transparent' })}>
+                <View className="ml-5" style={i ? { borderTopWidth: 1, borderTopColor: colors.line } : undefined}>
                   <View className="min-h-[52px] flex-row items-center gap-3 py-3 pr-5">
                     <View className="flex-1">
-                      <Text variant="body" className="text-white">
+                      <Text variant="body" className="text-ink">
                         {a.sections.map((s) => SUBJECT_LABEL[s]).join(' and ')}
                       </Text>
-                      <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+                      <Text variant="footnote" style={{ color: colors.ink3 }}>
                         {new Date(a.finished_at).toLocaleDateString()}
                       </Text>
                     </View>
                     <Text variant="headline" style={{ color: colors.accent, fontVariant: ['tabular-nums'] }}>
                       {a.total ?? Object.values(a.scores)[0]?.score}
                     </Text>
-                    <Text variant="body" style={{ color: colors.tertiaryText }}>
-                      ›
-                    </Text>
+                    <Icon as={ChevronRight} size={18} color={colors.ink3} />
                   </View>
                 </View>
               </Pressable>

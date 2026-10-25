@@ -10,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import { attendanceLink, fromBase64Url, sign, WINDOW_SECONDS, windowAt } from '@/lib/attendance/code';
 import { useFastNow } from '@/lib/clock';
 
@@ -29,6 +29,7 @@ const WINDOW_MS = WINDOW_SECONDS * 1000;
 // The bar under it empties as the code's time runs out — continuous, linear
 // motion that says "this changes on its own", rather than a jump every 10 s.
 export function RotatingQR({ sessionId, secret, clockOffsetMs }: RotatingQRProps) {
+  const colors = useColors();
   const { width } = useWindowDimensions();
   const size = Math.min(width - 72, 340);
   const now = useFastNow() + clockOffsetMs;
@@ -52,14 +53,15 @@ export function RotatingQR({ sessionId, secret, clockOffsetMs }: RotatingQRProps
         accessible
         accessibilityRole="image"
         accessibilityLabel="Attendance QR code. Students scan it with MakonBook.">
-        <QRCode value={value} size={size} color={colors.brand} backgroundColor="#ffffff" ecl="M" />
+        {/* Always navy on white, in both themes, so every camera reads it. */}
+        <QRCode value={value} size={size} color="#122d47" backgroundColor="#ffffff" ecl="M" />
       </View>
       {reduceMotion ? (
-        <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+        <Text variant="footnote" style={{ color: colors.ink3 }}>
           The code changes every {WINDOW_SECONDS} seconds.
         </Text>
       ) : (
-        <View className="h-1 overflow-hidden rounded-full" style={{ width: size, backgroundColor: colors.separator }}>
+        <View className="h-1 overflow-hidden rounded-full" style={{ width: size, backgroundColor: colors.line }}>
           <Animated.View
             style={[{ height: '100%', width: '100%', backgroundColor: colors.accent, transformOrigin: 'left' }, barStyle]}
           />

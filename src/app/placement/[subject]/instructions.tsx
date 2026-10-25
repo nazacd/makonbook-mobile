@@ -43,14 +43,14 @@ export default function InstructionsScreen() {
       <SafeAreaView style={{ flex: 1 }}>
         <View className="flex-1 justify-between px-6 py-8">
           <View className="gap-4">
-            <Text className="text-sm font-semibold uppercase tracking-wide text-white/60">
+            <Text className="text-sm font-semibold uppercase tracking-wide text-ink-2">
               {SUBJECT_LABEL[subject]} Level Check
             </Text>
-            <Text className="text-3xl font-bold text-white">Before you begin</Text>
+            <Text className="text-3xl font-bold text-ink">Before you begin</Text>
             <View className="gap-3 rounded-2xl bg-surface p-5">
-              <Text className="text-base text-white">50 questions</Text>
-              <Text className="text-base text-white">60 minutes</Text>
-              <Text className="text-base text-white">One attempt — answer to the best of your ability</Text>
+              <Text className="text-base text-ink">50 questions</Text>
+              <Text className="text-base text-ink">60 minutes</Text>
+              <Text className="text-base text-ink">One attempt — answer to the best of your ability</Text>
             </View>
           </View>
 
@@ -59,8 +59,8 @@ export default function InstructionsScreen() {
               beginTest();
               router.replace({ pathname: '/placement/[subject]/test', params: { subject } });
             }}
-            className="items-center rounded-xl bg-accent py-4">
-            <Text className="text-lg font-semibold text-white">Begin</Text>
+            className="items-center rounded-xl bg-primary py-4">
+            <Text className="text-lg font-semibold text-on-primary">Begin</Text>
           </Pressable>
         </View>
       </SafeAreaView>

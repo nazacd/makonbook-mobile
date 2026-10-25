@@ -2,7 +2,8 @@ import { Modal, Pressable, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import Svg, { Line } from 'react-native-svg';
+import { X } from 'lucide-react-native';
+import { Icon } from '@/components/Icon';
 
 type ImageViewerModalProps = {
   visible: boolean;
@@ -17,15 +18,6 @@ const DOUBLE_TAP_SCALE = 2.5;
 function clamp(value: number, min: number, max: number): number {
   'worklet';
   return Math.min(Math.max(value, min), max);
-}
-
-function CloseIcon() {
-  return (
-    <Svg width={16} height={16} viewBox="0 0 14 14" fill="none">
-      <Line x1={2} y1={2} x2={12} y2={12} stroke="#ffffff" strokeWidth={2} strokeLinecap="round" />
-      <Line x1={12} y1={2} x2={2} y2={12} stroke="#ffffff" strokeWidth={2} strokeLinecap="round" />
-    </Svg>
-  );
 }
 
 export function ImageViewerModal({ visible, source, onClose }: ImageViewerModalProps) {
@@ -107,8 +99,8 @@ export function ImageViewerModal({ visible, source, onClose }: ImageViewerModalP
             <Pressable
               onPress={onClose}
               hitSlop={10}
-              className="m-3 h-9 w-9 items-center justify-center rounded-full bg-surface/80">
-              <CloseIcon />
+              className="m-3 h-11 w-11 items-center justify-center rounded-full bg-black/50">
+              <Icon as={X} size={18} color="#fffcf6" strokeWidth={2.25} />
             </Pressable>
           </SafeAreaView>
         </View>

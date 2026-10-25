@@ -6,7 +6,7 @@ import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
 import { TextField } from '@/components/TextField';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { ApiError } from '@/lib/api/client';
 import { describeError } from '@/lib/api/errors';
@@ -14,6 +14,7 @@ import { useAuth } from '@/lib/auth/session';
 import { useParent } from '@/lib/parent/session';
 
 export default function SignInScreen() {
+  const colors = useColors();
   const { signIn } = useAuth();
   const parent = useParent();
   const passwordRef = useRef<TextInput>(null);
@@ -53,7 +54,7 @@ export default function SignInScreen() {
       contentInsetAdjustmentBehavior="automatic"
       keyboardShouldPersistTaps="handled"
       contentContainerClassName="gap-5 px-5 pb-10 pt-4">
-      <Text variant="body" style={{ color: colors.secondaryText }}>
+      <Text variant="body" style={{ color: colors.ink2 }}>
         Use the phone number the office has for you, or your username if you set one.
       </Text>
 
@@ -100,7 +101,7 @@ export default function SignInScreen() {
         <Button label="Sign in" onPress={submit} loading={busy} disabled={!canSubmit && !busy} />
       </View>
 
-      <Text variant="footnote" style={{ color: colors.tertiaryText, textAlign: 'center' }}>
+      <Text variant="footnote" style={{ color: colors.ink3, textAlign: 'center' }}>
         Forgot your password, or your number changed? Ask the office to reset it.
       </Text>
 

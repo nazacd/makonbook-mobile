@@ -3,21 +3,20 @@ import { router, useFocusEffect, useIsFocused, useLocalSearchParams } from 'expo
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ActivityIndicator, AppState, Modal, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Bookmark, Calculator, House } from 'lucide-react-native';
 
 import { AnswerChoice } from '@/components/AnswerChoice';
-import { BookmarkIcon } from '@/components/BookmarkIcon';
 import { BottomNavBar } from '@/components/BottomNavBar';
 import { Button } from '@/components/Button';
-import { CalculatorIcon } from '@/components/CalculatorIcon';
 import { CalculatorWidget } from '@/components/CalculatorWidget';
 import { GridInInput } from '@/components/GridInInput';
-import { HomeIcon } from '@/components/HomeIcon';
+import { Icon } from '@/components/Icon';
 import { Notice } from '@/components/Notice';
 import { RichContent } from '@/components/practice/RichContent';
 import { QuestionNavigatorGrid } from '@/components/QuestionNavigatorGrid';
-import { Text } from '@/components/Text';
+import { FixedTextScale, Text } from '@/components/Text';
 import { Timer } from '@/components/Timer';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import { usePackage, usePerson, useRefreshLocal, useRun, useRunStore } from '@/lib/practice/hooks';
 import { saveAttempt, type Run } from '@/lib/practice/local';
 import { finishRun, questionKey, stagesOf, SUBJECT_LABEL } from '@/lib/practice/run';
@@ -34,6 +33,7 @@ const PERSIST_INTERVAL_MS = 5000;
 // its time runs out). Leaving pauses the time; everything is saved on the
 // phone, so the test can be resumed later, offline.
 export default function PracticeRunScreen() {
+  const colors = useColors();
   const { code } = useLocalSearchParams<{ code: string }>();
   const stored = useRun(code);
   const pkg = usePackage(code, stored.data?.version);
@@ -53,10 +53,16 @@ export default function PracticeRunScreen() {
       </View>
     );
   }
-  return <Runner initial={stored.data} pkg={pkg.data} />;
+  // Laid out for fixed sizes, like the paper test: ignores the phone's font size.
+  return (
+    <FixedTextScale>
+      <Runner initial={stored.data} pkg={pkg.data} />
+    </FixedTextScale>
+  );
 }
 
 function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<typeof usePackage>['data']> }) {
+  const colors = useColors();
   const person = usePerson();
   const runs = useRunStore();
   const refresh = useRefreshLocal();
@@ -216,7 +222,7 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
     return (
       <View className="flex-1 items-center justify-center gap-3 bg-brand">
         <ActivityIndicator color={colors.accent} />
-        <Text variant="subhead" style={{ color: colors.secondaryText }}>
+        <Text variant="subhead" style={{ color: colors.ink2 }}>
           Scoring your test…
         </Text>
       </View>
@@ -230,26 +236,26 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
         <SafeAreaView style={{ flex: 1 }}>
           <View className="flex-1 justify-between px-6 py-4">
             <Pressable onPress={() => router.back()} hitSlop={10} className="self-start p-2" accessibilityRole="button" accessibilityLabel="Close">
-              <HomeIcon size={20} />
+              <Icon as={House} size={20} />
             </Pressable>
             <View className="gap-3">
               <Text variant="caption" style={{ color: colors.accent, textTransform: 'uppercase' }}>
                 {pkg.title} · Part {run.stage + 1} of {stages.length}
               </Text>
-              <Text variant="title" className="text-white">
+              <Text variant="title" className="text-ink">
                 {moduleLabel}
               </Text>
-              <Text variant="body" style={{ color: colors.secondaryText }}>
+              <Text variant="body" style={{ color: colors.ink2 }}>
                 {questions.length} questions · {minutes} minutes
                 {stage.subject === 'math' ? ' · calculator allowed' : ''}
               </Text>
               {newSection ? (
-                <Text variant="subhead" style={{ color: colors.secondaryText }}>
+                <Text variant="subhead" style={{ color: colors.ink2 }}>
                   On the real SAT you get a 10-minute break here. Take one if you like: the clock starts only when you
                   tap Start.
                 </Text>
               ) : run.stage > 0 ? (
-                <Text variant="subhead" style={{ color: colors.secondaryText }}>
+                <Text variant="subhead" style={{ color: colors.ink2 }}>
                   The previous module is submitted. Its answers can’t be changed now.
                 </Text>
               ) : null}
@@ -278,9 +284,9 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
     <View className="flex-1 bg-brand">
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
         <View className="flex-1">
-          <View className="flex-row items-center border-b border-white/10 bg-brand px-2">
+          <View className="flex-row items-center border-b border-line bg-brand px-2">
             <Pressable onPress={leave} hitSlop={10} className="p-2" accessibilityRole="button" accessibilityLabel="Leave the test">
-              <HomeIcon size={20} />
+              <Icon as={House} size={20} />
             </Pressable>
             <View className="flex-1">
               <Timer remainingMs={remainingMs} />
@@ -291,7 +297,7 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
                 hitSlop={10}
                 className="p-2"
                 accessibilityLabel="Calculator">
-                <CalculatorIcon size={20} />
+                <Icon as={Calculator} size={20} />
               </Pressable>
             ) : null}
             <Pressable
@@ -304,13 +310,13 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
               hitSlop={10}
               className="p-2"
               accessibilityLabel={marked ? 'Unmark for review' : 'Mark for review'}>
-              <BookmarkIcon size={20} color={marked ? '#fbbf24' : '#ffffff'} filled={marked} />
+              <Icon as={Bookmark} size={20} color={marked ? colors.fillWatch : colors.ink} fill={marked ? colors.fillWatch : 'none'} />
             </Pressable>
           </View>
 
           <ScrollView className="flex-1" key={qKey}>
             <View className="gap-4 p-4">
-              <Text variant="footnote" style={{ color: colors.secondaryText }}>
+              <Text variant="footnote" style={{ color: colors.ink2 }}>
                 {moduleLabel} · Question {run.index + 1} of {questions.length}
               </Text>
               {question.passage ? (
@@ -367,7 +373,7 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
               nextLabel={isLast ? 'Review' : 'Next'}
               centerSlot={
                 <Pressable onPress={() => setShowNavigator(true)} accessibilityLabel="All questions">
-                  <Text className="text-sm font-medium text-white">
+                  <Text className="text-sm font-medium text-ink">
                     {run.index + 1} of {questions.length} ▾
                   </Text>
                 </Pressable>
@@ -388,7 +394,7 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
           <SafeAreaView style={{ flex: 1 }}>
             <View className="flex-1 gap-4 p-4">
               <View className="flex-row items-center justify-between">
-                <Text variant="headline" className="text-white">
+                <Text variant="headline" className="text-ink">
                   {showReview ? 'Check your work' : moduleLabel}
                 </Text>
                 <Pressable
@@ -401,13 +407,13 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
                 </Pressable>
               </View>
               <View className="flex-row gap-4">
-                <Text variant="footnote" style={{ color: colors.secondaryText }}>
+                <Text variant="footnote" style={{ color: colors.ink2 }}>
                   Answered: {answered}
                 </Text>
-                <Text variant="footnote" style={{ color: colors.secondaryText }}>
+                <Text variant="footnote" style={{ color: colors.ink2 }}>
                   Blank: {questions.length - answered}
                 </Text>
-                <Text variant="footnote" style={{ color: colors.secondaryText }}>
+                <Text variant="footnote" style={{ color: colors.ink2 }}>
                   For review: {grid.filter((g) => g.marked).length}
                 </Text>
               </View>
