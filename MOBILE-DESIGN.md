@@ -58,6 +58,6 @@ Bitter (slab, Latin + Cyrillic + Uzbek ʻ) for titles and big numbers; the syste
 - **Violet as accent, not identity** (user decision, round two): the logo's purple marks what you tap; the palette's warm neutrals and navy carry the app.
 - **Light theme first**, dark as a navy night; Appearance setting in Profile.
 - **No textbook covers** (tried in round two, dropped in round three) and **no tinted cards** (round three, dropped in round four): classes are type on the page.
-- **Font scaling on** (capped): risks the Honor text-clipping bug right after the phone's font size changes while the app is open; a screen re-render fixes it.
+- **Font scaling on** (capped). The Honor text-clipping bug after a system theme or font-size change is handled by re-measuring all text on those events (`TextConfigEpoch`); verified on the test phone with repeated theme switches.
 
 Preview of the direction: `.design/specimen.html` (git-ignored; published as a private artifact).

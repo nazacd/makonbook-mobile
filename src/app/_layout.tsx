@@ -10,6 +10,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { LaunchScreen, LAUNCH_LOGO } from '@/components/LaunchScreen';
+import { TextConfigEpoch } from '@/components/Text';
 import { UpdateRequired } from '@/components/UpdateRequired';
 import { placementImages } from '@/data/assetMap';
 import { useColors, useScheme } from '@/design/colors';
@@ -53,10 +54,12 @@ export default function RootLayout() {
         <AuthProvider>
           <ParentProvider>
             <AppearanceProvider>
-              <Themed>
-                <RootNavigator />
-                <Launch assetsReady={assetsReady && (fontsLoaded || !!fontError)} />
-              </Themed>
+              <TextConfigEpoch>
+                <Themed>
+                  <RootNavigator />
+                  <Launch assetsReady={assetsReady && (fontsLoaded || !!fontError)} />
+                </Themed>
+              </TextConfigEpoch>
             </AppearanceProvider>
           </ParentProvider>
         </AuthProvider>
