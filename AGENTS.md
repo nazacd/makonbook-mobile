@@ -20,7 +20,7 @@ src/
       _layout.tsx                                loads /v1/me; guards choose-password vs everything else
       choose-password.tsx                        forced: the only screen until the temporary password is replaced
       password.tsx, username.tsx                 sheets from Profile
-      attendance/[id].tsx                        teacher: rotating QR + live list while open; results + corrections after
+      attendance/[id].tsx                        teacher: rotating QR (tap: full screen, full brightness) + live list while open; results + corrections after
       scan.tsx                                   student: camera scanner (full-screen modal from the tab bar's Scan button)
       att/[sessionId]/[window]/[sig].tsx         the QR's deep link (makonbookmobile://att/…): check in from the phone's camera
       my-attendance/[groupId].tsx                student: attendance in one group (opened from the group card on Classes)
@@ -57,7 +57,7 @@ src/
                                                    placement: session-context, scoring, gradeAnswer, timer, storage, types
   components/                                     Button, PressableScale, TextField, Notice, ListRow, GroupCard,
                                                    PasswordForm, UpdateRequired, StateChip; attendance: TeacherToday,
-                                                   StudentClasses, RotatingQR, MarkSheet, AppTabBar, TabIcons,
+                                                   StudentClasses, RotatingQR, FullScreenQR, MarkSheet, AppTabBar, TabIcons,
                                                    CheckInResult; placement: QuestionCard, AnswerChoice,
                                                    GridInInput, Timer, QuestionNavigatorGrid, BottomNavBar, MathText, …;
                                                    practice/: RichContent, StudentPractice, TeacherPractice; parent/: CodeForm (5 boxes), LangSwitch (flags), Flag;

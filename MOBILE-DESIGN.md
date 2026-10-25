@@ -53,6 +53,14 @@ Bitter (slab, Latin + Cyrillic + Uzbek ʻ) for titles and big numbers; the syste
 - `SubjectSpill`: the subject's objects spill in from the screen's right edge behind a class: densest at the edge, fading inward, kept clear of the measured text and the bar, cut only by the screen edge, never between blocks. Seeded from the group ID. The level shows in what spills, never how much: 9 objects at every level. Math: digits and + − × ÷ = (operations outweigh digits) at Foundation; italic x, y, f(x), x², √, %, ≥ and axes at Pre-SAT; italic π α β θ, √, ∑, ∫, ∞, unit circle and parabola at Advanced. English (outlined serif, never Bitter): , ! ; & ? ’ and quotes at Foundation; ¶ « ( ) ə, bookmark, speech bubble and open book at Pre-SAT; § ə ◊ æ, nib, quill and handwriting at Advanced. Private lessons spill like Foundation and show "1:1". The same sets carry to Practice and Words later.
 - `SegmentedControl`, `Skeleton`, `EmptyState`, `ErrorState`, `Button` (primary / secondary / plain / destructive), `TextField`, `ListRow`, `Notice`.
 
+## Attendance
+
+- **Teacher, open:** the class name as title; the live count in Bitter over the total ("Checked in"), with the late cut-off; the QR on its white tile. Tapping it opens `FullScreenQR`: the code filling a white screen at full brightness (`expo-brightness`, this app's window only, no permission; handed back on close), same 10 s bar, tap anywhere to close. The class below, not-yet first; Finish in a fixed footer.
+- **Teacher, finished:** attended = present + late, over the total, so the figure matches the list. Only problems get a colour and a word (absent, late); present rows are silent. Correctable-until or Final. The correction sheet marks the current state with a filled radio on a highlighted row.
+- **Student, scanner:** the hint sits on the camera; a wrong code or a code that just changed turns it mustard ("Code changed, scan again") instead of opening a result screen. A pill names the lesson on now.
+- **Student, result:** icon badges (check, clock, cross); "Attendance is closed" is a neutral lock, since nothing went wrong on the student's side. An on-time check-in scatters the class's own objects in one subject colour and goes back to Classes by itself after 2 s; Done stays.
+- **Student, class screen:** only the percentage in its band colour with a larger bar; then every lesson; "Something wrong? Ask your teacher."
+
 ## Decisions and risks
 
 - **Violet as accent, not identity** (user decision, round two): the logo's purple marks what you tap; the palette's warm neutrals and navy carry the app.
