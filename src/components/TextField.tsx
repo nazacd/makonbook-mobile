@@ -30,7 +30,7 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
       </Text>
       <View
         className="flex-row items-center overflow-hidden rounded-[14px] bg-surface"
-        style={{ minHeight: 52, borderWidth: 1.5, borderColor: border }}>
+        style={{ height: 52, borderWidth: 1.5, borderColor: border }}>
         <TextInput
           ref={ref}
           {...props}
