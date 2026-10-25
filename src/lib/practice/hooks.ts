@@ -196,10 +196,12 @@ export function useServerAttempts(enabled: boolean) {
   });
 }
 
+export const groupPracticeKey = (groupId: string) => ['practice-group', groupId] as const;
+
+export async function fetchGroupPractice(groupId: string) {
+  return (await api.get<{ students: GroupStudent[] }>(`/v1/teacher/groups/${encodeURIComponent(groupId)}/practice`)).students;
+}
+
 export function useGroupPractice(groupId: string) {
-  return useQuery({
-    queryKey: ['practice-group', groupId],
-    queryFn: async () =>
-      (await api.get<{ students: GroupStudent[] }>(`/v1/teacher/groups/${encodeURIComponent(groupId)}/practice`)).students,
-  });
+  return useQuery({ queryKey: groupPracticeKey(groupId), queryFn: () => fetchGroupPractice(groupId) });
 }

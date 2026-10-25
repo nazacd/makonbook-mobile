@@ -16,9 +16,10 @@ const scoreOf = (a: ServerAttempt) => a.total ?? Object.values(a.scores)[0]?.sco
 // every attempt one tap away.
 export default function GroupPracticeScreen() {
   const colors = useColors();
-  const { id, name } = useLocalSearchParams<{ id: string; name?: string }>();
+  const { id, name, student } = useLocalSearchParams<{ id: string; name?: string; student?: string }>();
   const query = useGroupPractice(id);
-  const [open, setOpen] = useState<number | null>(null);
+  // Opened from a new result: that student's attempts start open.
+  const [open, setOpen] = useState<number | null>(student ? Number(student) : null);
   const students = query.data ?? [];
   const active = students.filter((s) => s.attempts.length > 0).length;
 

@@ -95,6 +95,11 @@ export async function loadRuns(p: Person): Promise<Record<string, Run>> {
 }
 
 /** Finished attempts, latest first. */
+/** When this teacher last left the Practice tab on this phone (ISO); results after it count as new. */
+export const loadLastVisit = (p: Person) => read<string | null>(key(p, 'teacher-last-visit'), null);
+
+export const saveLastVisit = (p: Person, at: string) => AsyncStorage.setItem(key(p, 'teacher-last-visit'), JSON.stringify(at));
+
 export const loadAttempts = (p: Person) => read<LocalAttempt[]>(key(p, 'attempts'), []);
 
 export async function saveAttempt(p: Person, attempt: LocalAttempt) {
