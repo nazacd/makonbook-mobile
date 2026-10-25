@@ -40,7 +40,10 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
   // Validated as people type, not after they press the button.
   const longEnough = next.length >= MIN_LENGTH;
   const matches = confirm !== '' && confirm === next;
-  const canSubmit = current !== '' && longEnough && matches && !change.isPending;
+  // The server rejects the person's own phone number; the app doesn't know it,
+  // so anything shaped like a phone number is flagged as it's typed.
+  const looksLikePhone = /^\+?\d{9,12}$/.test(next.replace(/[\s()-]/g, ''));
+  const canSubmit = current !== '' && longEnough && matches && !looksLikePhone && !change.isPending;
 
   function submit() {
     if (!canSubmit) return;
@@ -107,7 +110,7 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
         <TextField
           ref={newRef}
           label="New password"
-          error={nextError}
+          error={nextError ?? (looksLikePhone ? 'Your phone number can’t be your password.' : null)}
           secure
           value={next}
           onChangeText={(v) => {
@@ -138,7 +141,6 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
         <View className="gap-1.5 pt-1" accessibilityLiveRegion="polite">
           <Requirement met={longEnough} label={`At least ${MIN_LENGTH} characters`} />
           <Requirement met={matches} label="Both passwords match" />
-          <Requirement met={null} label="Not your phone number" />
         </View>
       </View>
 
@@ -163,15 +165,13 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
   );
 }
 
-// met: true/false while it can be checked here, null for rules only the
-// server checks (it knows the phone number; the app doesn't).
-function Requirement({ met, label }: { met: boolean | null; label: string }) {
+function Requirement({ met, label }: { met: boolean; label: string }) {
   const colors = useColors();
   const color = met ? colors.good : colors.ink3;
   return (
     <View
       className="flex-row items-center gap-2"
-      accessibilityLabel={met === null ? label : `${label}: ${met ? 'done' : 'not yet'}`}>
+      accessibilityLabel={`${label}: ${met ? 'done' : 'not yet'}`}>
       <Icon as={met ? CircleCheck : Circle} size={16} color={color} strokeWidth={met ? 2 : 1.75} />
       <Text variant="subhead" style={{ color: met ? colors.ink : colors.ink2 }}>
         {label}
