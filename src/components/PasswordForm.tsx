@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react';
+import { Circle, CircleCheck, LogOut } from 'lucide-react-native';
 import { ScrollView, View, type TextInput } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
+import { Icon } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { TextField } from '@/components/TextField';
 import { useColors } from '@/design/colors';
@@ -150,9 +152,12 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
       />
 
       {!forced && (
-        <Text variant="footnote" style={{ color: colors.ink3, textAlign: 'center' }}>
-          Your other devices will be signed out.
-        </Text>
+        <View className="flex-row items-center justify-center gap-2">
+          <Icon as={LogOut} size={15} color={colors.ink3} />
+          <Text variant="footnote" style={{ color: colors.ink3 }}>
+            Your other devices will be signed out.
+          </Text>
+        </View>
       )}
     </ScrollView>
   );
@@ -167,10 +172,8 @@ function Requirement({ met, label }: { met: boolean | null; label: string }) {
     <View
       className="flex-row items-center gap-2"
       accessibilityLabel={met === null ? label : `${label}: ${met ? 'done' : 'not yet'}`}>
-      <Text variant="footnote" style={{ color, width: 14, textAlign: 'center' }}>
-        {met ? '✓' : '•'}
-      </Text>
-      <Text variant="footnote" style={{ color: met ? colors.ink : colors.ink2 }}>
+      <Icon as={met ? CircleCheck : Circle} size={16} color={color} strokeWidth={met ? 2 : 1.75} />
+      <Text variant="subhead" style={{ color: met ? colors.ink : colors.ink2 }}>
         {label}
       </Text>
     </View>

@@ -13,10 +13,12 @@ type TextFieldProps = Omit<TextInputProps, 'style' | 'placeholderTextColor' | 's
   hint?: string;
   /** A password field, with a Show/Hide control. */
   secure?: boolean;
+  /** Shown before the text, inside the field (e.g. "@" for a username). */
+  prefix?: string;
   ref?: Ref<TextInput>;
 };
 
-export function TextField({ label, error, hint, secure = false, ref, onFocus, onBlur, ...props }: TextFieldProps) {
+export function TextField({ label, error, hint, secure = false, prefix, ref, onFocus, onBlur, ...props }: TextFieldProps) {
   const colors = useColors();
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -31,6 +33,11 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
       <View
         className="flex-row items-center overflow-hidden rounded-[14px] bg-surface"
         style={{ height: 52, borderWidth: 1.5, borderColor: border }}>
+        {prefix && (
+          <Text variant="body" style={{ color: colors.ink3, paddingLeft: 16 }}>
+            {prefix}
+          </Text>
+        )}
         <TextInput
           ref={ref}
           {...props}
@@ -53,7 +60,7 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
           // left edge. minWidth 0 lets the input shrink to leave room for the
           // eye button. On web, the browser's focus outline would draw a
           // second, square ring.
-          style={[styles.input, { color: colors.ink }, Platform.OS === 'web' && { outlineWidth: 0 }]}
+          style={[styles.input, { color: colors.ink }, prefix ? { paddingLeft: 2 } : null, Platform.OS === 'web' && { outlineWidth: 0 }]}
         />
         {secure && (
           <Pressable
