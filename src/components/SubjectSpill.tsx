@@ -58,7 +58,7 @@ const fill = (d: string): Shape =>
 const QUOTE =
   'M-10 -3 a4.5 4.5 0 1 1 9 0 c0 6 -3 10 -8 12 l-1 -2 c3 -2 4 -4 4 -6 a4.5 4.5 0 0 1 -4 -4 z M2 -3 a4.5 4.5 0 1 1 9 0 c0 6 -3 10 -8 12 l-1 -2 c3 -2 4 -4 4 -6 a4.5 4.5 0 0 1 -4 -4 z';
 
-const SHAPES: Record<string, Shape> = {
+export const SHAPES: Record<string, Shape> = {
   // Math · Foundation: digits and the four operations.
   ...Object.fromEntries('0123456789'.split('').map((d) => [d, glyph(d, 26)])),
   plus: glyph('+', 32),
@@ -120,9 +120,9 @@ const SHAPES: Record<string, Shape> = {
   script: stroke('M-13 5 C-9 -11 -5 13 -1 1 S7 -9 9 3 S12 6 14 0', 2.2),
 };
 
-type Pool = [shape: string, weight: number][];
+export type Pool = [shape: string, weight: number][];
 
-const SETS: Record<Subject, Record<Level, Pool>> = {
+export const SETS: Record<Subject, Record<Level, Pool>> = {
   Math: {
     // Operations outweigh the digits, so it reads as arithmetic, not a number pile.
     foundation: [...'0123456789'.split('').map((d): [string, number] => [d, 0.45]), ['plus', 1.3], ['minus', 1.3], ['times', 1.3], ['divide', 1.3], ['equals', 0.8]],
@@ -139,7 +139,7 @@ const SETS: Record<Subject, Record<Level, Pool>> = {
 /** The same number of objects at every level; only what they are changes. */
 const COUNT = 9;
 
-function random(seed: number) {
+export function random(seed: number) {
   let s = seed | 0;
   return () => {
     s = (s + 0x6d2b79f5) | 0;
@@ -149,7 +149,7 @@ function random(seed: number) {
   };
 }
 
-function pick(r: () => number, pool: Pool): string {
+export function pick(r: () => number, pool: Pool): string {
   const total = pool.reduce((sum, [, w]) => sum + w, 0);
   let x = r() * total;
   for (const [shape, w] of pool) {

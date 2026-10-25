@@ -8,6 +8,7 @@ import { MARK_LABEL } from '@/components/StateChip';
 import { EmptyState, ErrorState, Skeleton } from '@/components/States';
 import { Text } from '@/components/Text';
 import { useColors, type Palette } from '@/design/colors';
+import { fonts } from '@/design/typography';
 import { useMyAttendance } from '@/lib/api/attendance';
 import { describeError } from '@/lib/api/errors';
 import type { GroupAttendance } from '@/lib/api/types';
@@ -106,7 +107,7 @@ export default function MyAttendanceScreen() {
             </View>
           ))}
           <Text variant="footnote" style={{ color: colors.ink3 }}>
-            From the school’s records in HolliHop, for the last four months. If something looks wrong, ask your teacher or the office.
+            Something wrong? Ask your teacher.
           </Text>
         </>
       )}
@@ -114,28 +115,27 @@ export default function MyAttendanceScreen() {
   );
 }
 
+// Only the figure, in its band colour, with the Classes bar under it, larger.
+// The lessons below say which were missed.
 function Overview({ group }: { group: GroupAttendance }) {
   const colors = useColors();
-  const { lessons, present, late, absent } = group.summary;
+  const { lessons, present, late } = group.summary;
   const rate = (present + late) / lessons;
-  const tone: keyof Palette = attendanceBand(rate) === 'bad' ? 'bad' : attendanceBand(rate) === 'watch' ? 'watch' : 'good';
-  const problems = [absent > 0 && `${absent} absent`, late > 0 && `${late} late`].filter(Boolean).join(' · ');
+  const band = attendanceBand(rate);
+  const tone: keyof Palette = band === 'bad' ? 'bad' : band === 'watch' ? 'watch' : 'good';
+  const fill: keyof Palette = band === 'bad' ? 'fillBad' : band === 'watch' ? 'fillWatch' : 'fillGood';
+  const pct = Math.round(rate * 100);
   return (
-    <View className="gap-1">
-      <View className="flex-row items-baseline gap-3">
-        <Text variant="largeTitle" style={{ color: colors[tone], fontSize: 48, lineHeight: 54, fontVariant: ['tabular-nums'] }}>
-          {Math.round(rate * 100)}%
+    <View>
+      <View accessible accessibilityLabel={`Attendance ${pct}%`}>
+        <Text style={{ fontFamily: fonts.displayBold, fontSize: 56, lineHeight: 62, color: colors[tone], fontVariant: ['tabular-nums'] }} maxFontSizeMultiplier={1.2}>
+          {pct}%
         </Text>
-        <Text variant="subhead" style={{ color: colors.ink2 }}>
-          {present + late} of {lessons} lessons
-        </Text>
+        <View style={{ width: 160, height: 10, borderRadius: 5, backgroundColor: colors.track, overflow: 'hidden', marginTop: 10 }}>
+          <View style={{ width: `${pct}%`, height: 10, borderRadius: 5, backgroundColor: colors[fill] }} />
+        </View>
       </View>
-      {problems ? (
-        <Text variant="callout" style={{ color: colors[tone], fontWeight: '600' }}>
-          {problems}
-        </Text>
-      ) : null}
-      <Text variant="caption" selectable style={{ color: colors.ink3, marginTop: 8 }}>
+      <Text variant="caption" selectable style={{ color: colors.ink3, marginTop: 14 }}>
         {group.group_name}
       </Text>
     </View>
