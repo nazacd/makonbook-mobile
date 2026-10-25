@@ -23,10 +23,7 @@ export default function NewResultsScreen() {
   const profile = useMe().data as Profile;
   const now = useNow();
   const since = useLastVisit();
-  const summary = usePracticeSummary(
-    profile.groups.map((g) => g.id),
-    since,
-  );
+  const summary = usePracticeSummary(profile.groups, since, now);
   const titles = new Map(profile.groups.map((g) => [g.id, teacherTitle(parseClassName(g.name, g.discipline))]));
 
   return (

@@ -5,10 +5,15 @@ import { ActivityIndicator, Pressable, RefreshControl, ScrollView, View } from '
 import { Notice } from '@/components/Notice';
 import { Text } from '@/components/Text';
 import { useColors } from '@/design/colors';
+import { fonts } from '@/design/typography';
 import { describeError } from '@/lib/api/errors';
+import { useMe } from '@/lib/api/queries';
+import { useNow } from '@/lib/clock';
 import { useGroupPractice } from '@/lib/practice/hooks';
 import { SUBJECT_LABEL } from '@/lib/practice/run';
+import { practicedSince } from '@/lib/practice/summary';
 import type { ServerAttempt } from '@/lib/practice/types';
+import { lastClass, pastDay } from '@/lib/schedule';
 
 const scoreOf = (a: ServerAttempt) => a.total ?? Object.values(a.scores)[0]?.score;
 
@@ -21,7 +26,10 @@ export default function GroupPracticeScreen() {
   // Opened from a new result: that student's attempts start open.
   const [open, setOpen] = useState<number | null>(student ? Number(student) : null);
   const students = query.data ?? [];
-  const active = students.filter((s) => s.attempts.length > 0).length;
+  const now = useNow();
+  const group = useMe().data?.groups.find((g) => String(g.id) === id);
+  // Practised since the group's last lesson (none in the past week: no figure).
+  const lesson = group ? lastClass(group, now) : null;
 
   return (
     <ScrollView
@@ -46,9 +54,20 @@ export default function GroupPracticeScreen() {
         <Notice tone="info" message="No students in this group right now." />
       ) : (
         <>
-          <Text variant="subhead" style={{ color: colors.ink2 }}>
-            {active} of {students.length} students have taken a practice test. Scores are estimates, 200–800 per section.
-          </Text>
+          {lesson && (
+            <View
+              className="flex-row items-baseline gap-3"
+              accessible
+              accessibilityLabel={`${practicedSince(students, lesson.end)} of ${students.length} practiced since ${pastDay(lesson.end, now, true)}’s lesson`}>
+              <Text style={{ fontFamily: fonts.displayBold, fontSize: 44, lineHeight: 50, color: colors.ink, fontVariant: ['tabular-nums'] }} maxFontSizeMultiplier={1.2}>
+                {practicedSince(students, lesson.end)}
+                <Text style={{ fontFamily: fonts.displaySemiBold, fontSize: 24, color: colors.ink3 }}> / {students.length}</Text>
+              </Text>
+              <Text variant="subhead" className="flex-1" style={{ color: colors.ink2 }}>
+                practiced since {pastDay(lesson.end, now, true)}’s lesson
+              </Text>
+            </View>
+          )}
           <View className="overflow-hidden rounded-3xl bg-surface">
             {students.map((s, i) => {
               const latest = s.attempts[0];

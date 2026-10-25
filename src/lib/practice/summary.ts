@@ -1,11 +1,15 @@
 import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import type { Group } from '@/lib/api/types';
+import { lastClass } from '@/lib/schedule';
+
 import { fetchGroupPractice, groupPracticeKey, usePerson } from './hooks';
 import { loadLastVisit, saveLastVisit } from './local';
 import type { GroupStudent, ServerAttempt } from './types';
 
 // The teacher's Practice tab at a glance: per group, how many students have
-// practised and which results came in since the teacher last looked.
+// practised since the group's last lesson, and which results came in since
+// the teacher last looked.
 //
 // The screens only use usePracticeSummary. Today it asks for each group's
 // results (in parallel, each row filling in as its answer arrives); a single
@@ -21,9 +25,22 @@ export type FreshResult = {
   previousTotal: number | null;
 };
 
-export type GroupSummary = { students: number; practiced: number; fresh: FreshResult[] };
+export type GroupSummary = {
+  students: number;
+  /** Students with an attempt (full test or a section) since `since`; null when the group had no lesson in the past week. */
+  practiced: number | null;
+  /** When the group's most recent lesson ended. */
+  since: number | null;
+  fresh: FreshResult[];
+};
 
-function summarize(groupId: number, students: GroupStudent[], since: number | null): GroupSummary {
+/** Students with at least one attempt finished at or after `from`. */
+export function practicedSince(students: GroupStudent[], from: number): number {
+  return students.filter((s) => s.attempts.some((a) => Date.parse(a.finished_at) >= from)).length;
+}
+
+function summarize(group: Group, students: GroupStudent[], since: number | null, now: number): GroupSummary {
+  const groupId = group.id;
   const fresh: FreshResult[] = [];
   for (const s of students) {
     // Attempts come newest first.
@@ -38,26 +55,28 @@ function summarize(groupId: number, students: GroupStudent[], since: number | nu
       });
     });
   }
-  return { students: students.length, practiced: students.filter((s) => s.attempts.length > 0).length, fresh };
+  const lesson = lastClass(group, now)?.end ?? null;
+  return { students: students.length, practiced: lesson == null ? null : practicedSince(students, lesson), since: lesson, fresh };
 }
 
 /**
  * Each group's summary as it arrives (a group whose request failed has none),
  * and every result newer than `since`, newest first. `since` null (no visit
- * recorded yet) means nothing counts as new.
+ * recorded yet) means nothing counts as new. `now` places each group's last
+ * lesson.
  */
-export function usePracticeSummary(groupIds: number[], since: number | null) {
+export function usePracticeSummary(groupList: Group[], since: number | null, now: number) {
   const queries = useQueries({
-    queries: groupIds.map((id) => ({
-      queryKey: groupPracticeKey(String(id)),
-      queryFn: () => fetchGroupPractice(String(id)),
+    queries: groupList.map((g) => ({
+      queryKey: groupPracticeKey(String(g.id)),
+      queryFn: () => fetchGroupPractice(String(g.id)),
       staleTime: KEEP_MS,
     })),
   });
   const groups: Record<number, GroupSummary | undefined> = {};
-  groupIds.forEach((id, i) => {
+  groupList.forEach((g, i) => {
     const students = queries[i]?.data;
-    if (students) groups[id] = summarize(id, students, since);
+    if (students) groups[g.id] = summarize(g, students, since, now);
   });
   const fresh = Object.values(groups)
     .flatMap((g) => g?.fresh ?? [])
