@@ -29,9 +29,9 @@ const LEVEL_NAME: Record<Level, string> = { foundation: 'Foundation', presat: 'P
 // Words that end a list of names: times ("17:00", "10;30") and day codes.
 const STOP = /^(\d{1,2}[:;.]\d{2}|TTS|MWF|TT|MW|SAT|SUN|DAILY)$/;
 
-/** A class as a teacher tells it apart: private lessons name their students ("Math 1:1 · Diyora Adilova"). */
+/** A class as a teacher tells it apart: individual lessons by their students ("IV · Diyora Adilova"). */
 export function teacherTitle(name: ClassName): string {
-  return name.isPrivate && name.students.length ? `${name.title} 1:1 · ${name.students.join(', ')}` : name.title;
+  return name.isPrivate && name.students.length ? `IV · ${name.students.join(', ')}` : name.title;
 }
 
 /** "DIYORA ADILOVA" -> "Diyora Adilova"; keeps Uzbek apostrophes (oʻ, gʻ) in the word. */
