@@ -1,15 +1,16 @@
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
+import { BookOpen, Calendar, Layers, ScanLine, User, type LucideIcon } from 'lucide-react-native';
 import { Platform, View } from 'react-native';
 
+import { Icon } from '@/components/Icon';
 import { PressableScale } from '@/components/PressableScale';
-import { BookIcon, CalendarIcon, CardsIcon, PersonIcon, ScanIcon } from '@/components/TabIcons';
 import { Text } from '@/components/Text';
 import { useColors } from '@/design/colors';
 
-const BAR_HEIGHT = 58;
-const SCAN_SIZE = 62;
+const BAR_HEIGHT = 60;
+const SCAN_SIZE = 64;
 
-const ICONS: Record<string, typeof CalendarIcon> = { index: CalendarIcon, practice: BookIcon, words: CardsIcon, profile: PersonIcon };
+const ICONS: Record<string, LucideIcon> = { index: Calendar, practice: BookOpen, words: Layers, profile: User };
 
 type AppTabBarProps = BottomTabBarProps & {
   /** Shows the raised Scan button in the middle (students). */
@@ -25,8 +26,7 @@ export function AppTabBar({ state, descriptors, navigation, insets, onScan }: Ap
     const { options } = descriptors[route.key];
     const focused = state.index === index;
     const label = typeof options.title === 'string' ? options.title : route.name;
-    const Icon = ICONS[route.name] ?? CalendarIcon;
-    const color = focused ? colors.accent : colors.ink2;
+    const color = focused ? colors.ink : colors.ink3;
 
     const onPress = () => {
       const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
@@ -39,12 +39,12 @@ export function AppTabBar({ state, descriptors, navigation, insets, onScan }: Ap
         onPress={onPress}
         pressedScale={0.9}
         style={{ flex: 1 }}
-        className="h-full items-center justify-center gap-0.5"
+        className="h-full items-center justify-center gap-1"
         accessibilityRole="tab"
         accessibilityState={{ selected: focused }}
         accessibilityLabel={label}>
-        <Icon color={color} filled={focused} />
-        <Text variant="caption" style={{ color, fontWeight: focused ? '600' : '500' }}>
+        <Icon as={ICONS[route.name] ?? Calendar} size={24} color={color} strokeWidth={focused ? 2 : 1.75} />
+        <Text variant="caption" maxFontSizeMultiplier={1.2} style={{ color, fontSize: 11, fontWeight: focused ? '700' : '500' }}>
           {label}
         </Text>
       </PressableScale>
@@ -57,7 +57,7 @@ export function AppTabBar({ state, descriptors, navigation, insets, onScan }: Ap
       style={{
         height: BAR_HEIGHT + insets.bottom,
         paddingBottom: insets.bottom,
-        backgroundColor: colors.surface,
+        backgroundColor: colors.bg,
         borderTopWidth: 1,
         borderTopColor: colors.line,
         flexDirection: 'row',
@@ -80,12 +80,12 @@ export function AppTabBar({ state, descriptors, navigation, insets, onScan }: Ap
 function ScanButton({ onPress }: { onPress: () => void }) {
   const colors = useColors();
   return (
-    <View style={{ width: SCAN_SIZE + 28, alignItems: 'center' }}>
+    <View style={{ width: SCAN_SIZE + 24, alignItems: 'center' }}>
       {/* The ring in the background colour makes the button look set into
           the bar's edge rather than floating over it. */}
       <View
         style={{
-          marginTop: -SCAN_SIZE / 2 - 4,
+          marginTop: -SCAN_SIZE / 2 - 6,
           padding: 5,
           borderRadius: SCAN_SIZE,
           backgroundColor: colors.bg,
@@ -97,19 +97,19 @@ function ScanButton({ onPress }: { onPress: () => void }) {
           style={{
             borderRadius: SCAN_SIZE / 2,
             ...Platform.select({
-              ios: { shadowColor: colors.accent, shadowOpacity: 0.5, shadowRadius: 14, shadowOffset: { width: 0, height: 4 } },
-              default: { elevation: 10 },
+              ios: { shadowColor: '#7a4590', shadowOpacity: 0.35, shadowRadius: 12, shadowOffset: { width: 0, height: 5 } },
+              default: { elevation: 8 },
             }),
           }}
           accessibilityRole="button"
           accessibilityLabel="Scan attendance code"
           accessibilityHint="Opens the camera to check in to your lesson">
           <View style={{ width: SCAN_SIZE, height: SCAN_SIZE, alignItems: 'center', justifyContent: 'center' }}>
-            <ScanIcon color={colors.ink} />
+            <Icon as={ScanLine} size={28} color={colors.onAccent} strokeWidth={2} />
           </View>
         </PressableScale>
       </View>
-      <Text variant="caption" style={{ color: colors.ink2, marginTop: 1 }}>
+      <Text variant="caption" maxFontSizeMultiplier={1.2} style={{ color: colors.ink3, fontSize: 11, fontWeight: '500', marginTop: 1 }}>
         Scan
       </Text>
     </View>

@@ -21,7 +21,7 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
-  const border = error ? colors.bad : focused ? colors.accent : 'transparent';
+  const border = error ? colors.bad : focused ? colors.accent : colors.lineStrong;
 
   return (
     <View className="gap-2">
@@ -29,8 +29,8 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
         {label}
       </Text>
       <View
-        className="h-14 flex-row items-center overflow-hidden rounded-2xl bg-surface"
-        style={{ borderWidth: 1.5, borderColor: border }}>
+        className="flex-row items-center overflow-hidden rounded-[14px] bg-surface"
+        style={{ minHeight: 52, borderWidth: 1.5, borderColor: border }}>
         <TextInput
           ref={ref}
           {...props}
