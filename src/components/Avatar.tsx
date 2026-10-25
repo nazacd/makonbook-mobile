@@ -2,7 +2,7 @@ import { Image, View } from 'react-native';
 
 import { Text } from '@/components/Text';
 import { fonts } from '@/design/typography';
-import { swatches } from '@/design/colors';
+import { swatches, useColors } from '@/design/colors';
 
 // Students: one of twenty illustrated avatars, chosen by the first letter of
 // their first name (A is 01 ... T is 20, then U starts again at 01). Choosing
@@ -58,6 +58,7 @@ type AvatarProps = {
 };
 
 export function Avatar({ kind, firstName, lastName, id, size = 44, photoUrl }: AvatarProps) {
+  const colors = useColors();
   const circle = { width: size, height: size, borderRadius: size / 2, overflow: 'hidden' as const };
   if (kind === 'student' || photoUrl) {
     return (
@@ -71,7 +72,8 @@ export function Avatar({ kind, firstName, lastName, id, size = 44, photoUrl }: A
   const [bg, fg] = TEACHER_COLORS[Math.abs(id) % TEACHER_COLORS.length];
   const initials = `${firstName.trim()[0] ?? ''}${lastName.trim()[0] ?? ''}`.toUpperCase();
   return (
-    <View style={[circle, { backgroundColor: bg, alignItems: 'center', justifyContent: 'center' }]}>
+    // A hairline ring keeps a navy circle visible on the dark theme's navy ground.
+    <View style={[circle, { backgroundColor: bg, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.line }]}>
       <Text maxFontSizeMultiplier={1} style={{ color: fg, fontFamily: fonts.displaySemiBold, fontSize: size * 0.38 }}>
         {initials}
       </Text>
