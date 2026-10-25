@@ -6,8 +6,8 @@
     "icon": "./assets/app-icon.png",
     "orientation": "portrait",
     "scheme": "makonbookmobile",
-    "userInterfaceStyle": "dark",
-    "backgroundColor": "#01000f",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#f5efe3",
     "ios": {},
     "android": {
       "adaptiveIcon": {
@@ -33,9 +33,13 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#01000f",
+          "backgroundColor": "#f5efe3",
           "image": "./assets/makonbook-icon.png",
-          "imageWidth": 140
+          "imageWidth": 140,
+          "dark": {
+            "backgroundColor": "#0b1a2a",
+            "image": "./assets/makonbook-icon.png"
+          }
         }
       ],
       "expo-asset",
