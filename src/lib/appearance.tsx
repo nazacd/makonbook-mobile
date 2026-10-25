@@ -4,8 +4,15 @@ import { Appearance } from 'react-native';
 import { colorScheme as cssColorScheme } from 'react-native-css';
 
 // The Appearance choice in Profile: follow the phone, or always light / dark.
-// Saved on this phone only. Applied through React Native's Appearance, which
-// NativeWind and useColorScheme() both follow, so every token switches at once.
+// Saved on this phone only.
+//
+// React Native's Appearance is left alone, so it always reports the phone's
+// own setting (useColorScheme() follows it live). Overriding it from JS would
+// hide that setting: after Appearance.setColorScheme('light'), switching back
+// to 'unspecified' reads the old value until Android catches up, and nothing
+// re-renders when it does. Instead the choice reaches the two places that
+// draw colour: react-native-css's colour scheme (classNames' variables) and
+// useScheme() in src/design/colors.ts (raw values), through this context.
 
 export type AppearanceMode = 'system' | 'light' | 'dark';
 
@@ -15,14 +22,14 @@ type AppearanceState = { mode: AppearanceMode; ready: boolean; setMode: (mode: A
 
 const AppearanceContext = createContext<AppearanceState | null>(null);
 
-function apply(mode: AppearanceMode) {
-  // 'unspecified' hands the decision back to the phone's setting.
-  const scheme = mode === 'system' ? 'unspecified' : mode;
-  // Native chrome and useColorScheme() follow React Native's Appearance. The
-  // classNames' colour variables follow react-native-css, which only hears
-  // scheme changes that come from the native side, so it is told directly.
-  Appearance.setColorScheme(scheme);
-  cssColorScheme.set(scheme);
+function phoneScheme(): 'light' | 'dark' {
+  return Appearance.getColorScheme() === 'dark' ? 'dark' : 'light';
+}
+
+function applyToCss(mode: AppearanceMode) {
+  // react-native-css compares its own value with prefers-color-scheme; with no
+  // value it would count as light, so 'system' passes the phone's scheme.
+  cssColorScheme.set(mode === 'system' ? phoneScheme() : mode);
 }
 
 export function AppearanceProvider({ children }: { children: ReactNode }) {
@@ -30,15 +37,16 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    // Builds made while the app was dark-only force dark natively; hand the
+    // decision back to the phone once, at start.
+    Appearance.setColorScheme('unspecified');
     let cancelled = false;
     AsyncStorage.getItem(KEY)
       .catch(() => null)
       .then((saved) => {
         if (cancelled) return;
         const next: AppearanceMode = saved === 'light' || saved === 'dark' ? saved : 'system';
-        // Always apply, 'system' included: builds made while the app was dark-only
-        // force dark until told otherwise.
-        apply(next);
+        applyToCss(next);
         setModeState(next);
         setReady(true);
       });
@@ -47,8 +55,15 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // When the phone's setting changes, react-native-css follows it on its own.
+  // That is right for 'system'; for a fixed choice, put the choice back.
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => applyToCss(mode));
+    return () => sub.remove();
+  }, [mode]);
+
   const setMode = (next: AppearanceMode) => {
-    apply(next);
+    applyToCss(next);
     setModeState(next);
     AsyncStorage.setItem(KEY, next).catch(() => {});
   };
