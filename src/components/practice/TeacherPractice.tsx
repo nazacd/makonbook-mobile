@@ -1,5 +1,5 @@
 import { router, useFocusEffect, useNavigation } from 'expo-router';
-import { ChevronRight, Users } from 'lucide-react-native';
+import { Bell, ChevronRight, Users } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -85,7 +85,7 @@ export function TeacherPractice() {
           accessibilityRole="button"
           style={({ pressed }) => ({ marginHorizontal: -20, paddingHorizontal: 20, marginBottom: 8, backgroundColor: pressed ? colors.surface2 : 'transparent' })}>
           <View className="flex-row items-center gap-3" style={{ minHeight: 52 }}>
-            <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.accent }} />
+            <Icon as={Bell} size={20} color={colors.accent} />
             <Text variant="body" className="flex-1" style={{ color: colors.ink, fontWeight: '500' }}>
               {fresh} new {fresh === 1 ? 'result' : 'results'} {sinceLabel(since, now)}
             </Text>
@@ -143,11 +143,8 @@ function GroupRow({ group, summary, first }: { group: Group; summary?: GroupSumm
         </View>
         {summary && (
           <View className="items-end gap-1">
-            <Text variant="subhead" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
-              <Text variant="subhead" style={{ color: colors.ink, fontWeight: '600' }}>
-                {summary.practiced}/{summary.students}
-              </Text>{' '}
-              practiced
+            <Text variant="subhead" style={{ color: colors.ink, fontWeight: '600', fontVariant: ['tabular-nums'] }}>
+              {summary.practiced}/{summary.students}
             </Text>
             {fresh > 0 && (
               <Text variant="subhead" style={{ color: colors.accent, fontWeight: '600' }}>
