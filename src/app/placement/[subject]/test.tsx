@@ -2,17 +2,17 @@ import { router, useFocusEffect, useIsFocused, useLocalSearchParams } from 'expo
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Alert, AppState, Modal, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Bookmark, Calculator, House } from 'lucide-react-native';
 
 import { AnswerChoice } from '@/components/AnswerChoice';
-import { BookmarkIcon } from '@/components/BookmarkIcon';
 import { BottomNavBar } from '@/components/BottomNavBar';
-import { CalculatorIcon } from '@/components/CalculatorIcon';
 import { CalculatorWidget } from '@/components/CalculatorWidget';
 import { GridInInput } from '@/components/GridInInput';
-import { HomeIcon } from '@/components/HomeIcon';
+import { Icon } from '@/components/Icon';
 import { QuestionCard } from '@/components/QuestionCard';
 import { QuestionNavigatorGrid } from '@/components/QuestionNavigatorGrid';
-import { Text } from '@/components/Text';
+import { FixedTextScale, Text } from '@/components/Text';
+import { useColors } from '@/design/colors';
 import { Timer } from '@/components/Timer';
 import { useGoHome } from '@/lib/navigation';
 import { useSession } from '@/lib/session-context';
@@ -25,6 +25,7 @@ const OPTION_LETTERS: OptionLetter[] = ['A', 'B', 'C', 'D'];
 const PERSIST_INTERVAL_MS = 5000;
 
 export default function TestRunnerScreen() {
+  const colors = useColors();
   const { subject } = useLocalSearchParams<{ subject: PlacementSubject }>();
   const { state, setAnswer, toggleMark, toggleEliminated, goto, submitTest, shiftStart, persistNow } = useSession();
   const isFocused = useIsFocused();
@@ -135,148 +136,151 @@ export default function TestRunnerScreen() {
   const answeredCount = state.questions.filter((q) => state.answers[q.id] != null && state.answers[q.id] !== '').length;
   const markedCount = state.marked.length;
 
+  // Laid out for fixed sizes, like the paper test: ignores the phone's font size.
   return (
-    <View className="flex-1 bg-brand">
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-        <View className="flex-1">
-          <View className="flex-row items-center border-b border-white/10 bg-brand px-2">
-            <Pressable onPress={handleExit} hitSlop={10} className="p-2">
-              <HomeIcon size={20} />
-            </Pressable>
-            <View className="flex-1">
-              <Timer remainingMs={remainingMs} />
-            </View>
-            {subject === 'math' ? (
-              <Pressable onPress={() => setShowCalculator((prev) => !prev)} hitSlop={10} className="p-2">
-                <CalculatorIcon size={20} />
+    <FixedTextScale>
+      <View className="flex-1 bg-brand">
+        <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+          <View className="flex-1">
+            <View className="flex-row items-center border-b border-line bg-brand px-2">
+              <Pressable onPress={handleExit} hitSlop={10} className="p-2">
+                <Icon as={House} size={20} />
               </Pressable>
-            ) : null}
-            <Pressable onPress={() => toggleMark(question.id)} hitSlop={10} className="p-2">
-              <BookmarkIcon size={20} color={marked ? '#fbbf24' : '#ffffff'} filled={marked} />
-            </Pressable>
-          </View>
-
-          <ScrollView className="flex-1">
-            <View className="gap-4 p-4">
-              <Text className="text-sm text-white/50">
-                Question {state.currentIndex + 1} of {total}
-              </Text>
-
-              <QuestionCard question={question} />
-
-              {question.options ? (
-                <View className="gap-3">
-                  {OPTION_LETTERS.map((letter) => (
-                    <AnswerChoice
-                      key={letter}
-                      letter={letter}
-                      text={question.options![letter]}
-                      selected={answerValue === letter}
-                      eliminated={eliminatedLetters.includes(letter)}
-                      onSelect={() => setAnswer(question.id, letter)}
-                      onToggleEliminate={() => toggleEliminated(question.id, letter)}
-                    />
-                  ))}
-                </View>
-              ) : (
-                <GridInInput
-                  value={answerValue == null ? '' : String(answerValue)}
-                  onChange={(value) => setAnswer(question.id, value)}
-                />
-              )}
+              <View className="flex-1">
+                <Timer remainingMs={remainingMs} />
+              </View>
+              {subject === 'math' ? (
+                <Pressable onPress={() => setShowCalculator((prev) => !prev)} hitSlop={10} className="p-2">
+                  <Icon as={Calculator} size={20} />
+                </Pressable>
+              ) : null}
+              <Pressable onPress={() => toggleMark(question.id)} hitSlop={10} className="p-2">
+                <Icon as={Bookmark} size={20} color={marked ? colors.fillWatch : colors.ink} fill={marked ? colors.fillWatch : 'none'} />
+              </Pressable>
             </View>
-          </ScrollView>
 
-          <BottomNavBar
-            onBack={isFirst ? undefined : () => goto(state.currentIndex - 1)}
-            backDisabled={isFirst}
-            onNext={isLast ? () => setShowReviewGrid(true) : () => goto(state.currentIndex + 1)}
-            nextLabel={isLast ? 'Review & Submit' : 'Next'}
-            centerSlot={
-              <Pressable onPress={() => setShowNavigator(true)}>
-                <Text className="text-sm font-medium text-white">
+            <ScrollView className="flex-1">
+              <View className="gap-4 p-4">
+                <Text className="text-sm text-ink-3">
                   Question {state.currentIndex + 1} of {total}
                 </Text>
-              </Pressable>
-            }
-          />
-        </View>
-      </SafeAreaView>
 
-      <Modal visible={showNavigator} animationType="slide" onRequestClose={() => setShowNavigator(false)}>
-        <View className="flex-1 bg-brand">
-          <SafeAreaView style={{ flex: 1 }}>
-            <View className="flex-1 gap-4 p-4">
-              <View className="flex-row items-center justify-between">
-                <Text className="text-lg font-semibold text-white">Questions</Text>
-                <Pressable onPress={() => setShowNavigator(false)} hitSlop={8}>
-                  <Text className="text-base font-medium text-accent">Close</Text>
+                <QuestionCard question={question} />
+
+                {question.options ? (
+                  <View className="gap-3">
+                    {OPTION_LETTERS.map((letter) => (
+                      <AnswerChoice
+                        key={letter}
+                        letter={letter}
+                        text={question.options![letter]}
+                        selected={answerValue === letter}
+                        eliminated={eliminatedLetters.includes(letter)}
+                        onSelect={() => setAnswer(question.id, letter)}
+                        onToggleEliminate={() => toggleEliminated(question.id, letter)}
+                      />
+                    ))}
+                  </View>
+                ) : (
+                  <GridInInput
+                    value={answerValue == null ? '' : String(answerValue)}
+                    onChange={(value) => setAnswer(question.id, value)}
+                  />
+                )}
+              </View>
+            </ScrollView>
+
+            <BottomNavBar
+              onBack={isFirst ? undefined : () => goto(state.currentIndex - 1)}
+              backDisabled={isFirst}
+              onNext={isLast ? () => setShowReviewGrid(true) : () => goto(state.currentIndex + 1)}
+              nextLabel={isLast ? 'Review & Submit' : 'Next'}
+              centerSlot={
+                <Pressable onPress={() => setShowNavigator(true)}>
+                  <Text className="text-sm font-medium text-ink">
+                    Question {state.currentIndex + 1} of {total}
+                  </Text>
+                </Pressable>
+              }
+            />
+          </View>
+        </SafeAreaView>
+
+        <Modal visible={showNavigator} animationType="slide" onRequestClose={() => setShowNavigator(false)}>
+          <View className="flex-1 bg-brand">
+            <SafeAreaView style={{ flex: 1 }}>
+              <View className="flex-1 gap-4 p-4">
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-lg font-semibold text-ink">Questions</Text>
+                  <Pressable onPress={() => setShowNavigator(false)} hitSlop={8}>
+                    <Text className="text-base font-medium text-accent">Close</Text>
+                  </Pressable>
+                </View>
+                <ScrollView>
+                  <QuestionNavigatorGrid
+                    variant="progress"
+                    items={state.questions.map((q, index) => ({
+                      id: q.id,
+                      current: index === state.currentIndex,
+                      answered: state.answers[q.id] != null && state.answers[q.id] !== '',
+                      marked: state.marked.includes(q.id),
+                    }))}
+                    onPress={(id) => {
+                      const index = state.questions.findIndex((q) => q.id === id);
+                      if (index >= 0) goto(index);
+                      setShowNavigator(false);
+                    }}
+                  />
+                </ScrollView>
+              </View>
+            </SafeAreaView>
+          </View>
+        </Modal>
+
+        <Modal visible={showReviewGrid} animationType="slide" onRequestClose={() => setShowReviewGrid(false)}>
+          <View className="flex-1 bg-brand">
+            <SafeAreaView style={{ flex: 1 }}>
+              <View className="flex-1 gap-4 p-4">
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-lg font-semibold text-ink">Review before submitting</Text>
+                  <Pressable onPress={() => setShowReviewGrid(false)} hitSlop={8}>
+                    <Text className="text-base font-medium text-accent">Close</Text>
+                  </Pressable>
+                </View>
+                <View className="flex-row gap-4">
+                  <Text className="text-sm text-ink-2">Answered: {answeredCount}</Text>
+                  <Text className="text-sm text-ink-2">Unanswered: {total - answeredCount}</Text>
+                  <Text className="text-sm text-ink-2">Marked: {markedCount}</Text>
+                </View>
+                <ScrollView className="flex-1">
+                  <QuestionNavigatorGrid
+                    variant="progress"
+                    items={state.questions.map((q, index) => ({
+                      id: q.id,
+                      current: index === state.currentIndex,
+                      answered: state.answers[q.id] != null && state.answers[q.id] !== '',
+                      marked: state.marked.includes(q.id),
+                    }))}
+                    onPress={(id) => {
+                      const index = state.questions.findIndex((q) => q.id === id);
+                      if (index >= 0) goto(index);
+                      setShowReviewGrid(false);
+                    }}
+                  />
+                </ScrollView>
+                <Pressable
+                  onPress={handleSubmit}
+                  disabled={submitting}
+                  className={`items-center rounded-xl bg-primary py-4 ${submitting ? 'opacity-50' : ''}`}>
+                  <Text className="text-lg font-semibold text-on-primary">{submitting ? 'Submitting…' : 'Submit Test'}</Text>
                 </Pressable>
               </View>
-              <ScrollView>
-                <QuestionNavigatorGrid
-                  variant="progress"
-                  items={state.questions.map((q, index) => ({
-                    id: q.id,
-                    current: index === state.currentIndex,
-                    answered: state.answers[q.id] != null && state.answers[q.id] !== '',
-                    marked: state.marked.includes(q.id),
-                  }))}
-                  onPress={(id) => {
-                    const index = state.questions.findIndex((q) => q.id === id);
-                    if (index >= 0) goto(index);
-                    setShowNavigator(false);
-                  }}
-                />
-              </ScrollView>
-            </View>
-          </SafeAreaView>
-        </View>
-      </Modal>
+            </SafeAreaView>
+          </View>
+        </Modal>
 
-      <Modal visible={showReviewGrid} animationType="slide" onRequestClose={() => setShowReviewGrid(false)}>
-        <View className="flex-1 bg-brand">
-          <SafeAreaView style={{ flex: 1 }}>
-            <View className="flex-1 gap-4 p-4">
-              <View className="flex-row items-center justify-between">
-                <Text className="text-lg font-semibold text-white">Review before submitting</Text>
-                <Pressable onPress={() => setShowReviewGrid(false)} hitSlop={8}>
-                  <Text className="text-base font-medium text-accent">Close</Text>
-                </Pressable>
-              </View>
-              <View className="flex-row gap-4">
-                <Text className="text-sm text-white/60">Answered: {answeredCount}</Text>
-                <Text className="text-sm text-white/60">Unanswered: {total - answeredCount}</Text>
-                <Text className="text-sm text-white/60">Marked: {markedCount}</Text>
-              </View>
-              <ScrollView className="flex-1">
-                <QuestionNavigatorGrid
-                  variant="progress"
-                  items={state.questions.map((q, index) => ({
-                    id: q.id,
-                    current: index === state.currentIndex,
-                    answered: state.answers[q.id] != null && state.answers[q.id] !== '',
-                    marked: state.marked.includes(q.id),
-                  }))}
-                  onPress={(id) => {
-                    const index = state.questions.findIndex((q) => q.id === id);
-                    if (index >= 0) goto(index);
-                    setShowReviewGrid(false);
-                  }}
-                />
-              </ScrollView>
-              <Pressable
-                onPress={handleSubmit}
-                disabled={submitting}
-                className={`items-center rounded-xl bg-accent py-4 ${submitting ? 'opacity-50' : ''}`}>
-                <Text className="text-lg font-semibold text-white">{submitting ? 'Submitting…' : 'Submit Test'}</Text>
-              </Pressable>
-            </View>
-          </SafeAreaView>
-        </View>
-      </Modal>
-
-      <CalculatorWidget visible={showCalculator} onClose={() => setShowCalculator(false)} />
-    </View>
+        <CalculatorWidget visible={showCalculator} onClose={() => setShowCalculator(false)} />
+      </View>
+    </FixedTextScale>
   );
 }

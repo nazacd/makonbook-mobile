@@ -3,13 +3,16 @@ import { ActivityIndicator, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
-import { colors } from '@/design/colors';
-import { headerOptions, sheetOptions } from '@/design/navigation';
+import { useColors } from '@/design/colors';
+import { useHeaderOptions, useSheetOptions } from '@/design/navigation';
 import { describeError } from '@/lib/api/errors';
 import { useMe } from '@/lib/api/queries';
 import { useAuth } from '@/lib/auth/session';
 
 export default function SignedInLayout() {
+  const colors = useColors();
+  const headerOptions = useHeaderOptions();
+  const sheetOptions = useSheetOptions();
   const me = useMe();
   const { signOut } = useAuth();
 
@@ -41,7 +44,7 @@ export default function SignedInLayout() {
   const mustChange = me.data.must_change_password;
 
   return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.brand } }}>
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
       <Stack.Protected guard={!mustChange}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="password" options={{ ...sheetOptions, title: 'Change password' }} />

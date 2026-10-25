@@ -3,13 +3,14 @@ import { ActivityIndicator, RefreshControl, ScrollView, View } from 'react-nativ
 
 import { Notice } from '@/components/Notice';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import { describeError } from '@/lib/api/errors';
 import { useGroupVocab } from '@/lib/vocab/hooks';
 
 // A group's students and their vocabulary: words started and learned, and
 // how much they studied this week.
 export default function GroupVocabScreen() {
+  const colors = useColors();
   const { id, name } = useLocalSearchParams<{ id: string; name?: string }>();
   const query = useGroupVocab(id);
   const students = query.data?.students ?? [];
@@ -38,7 +39,7 @@ export default function GroupVocabScreen() {
         <Notice tone="info" message="No students in this group right now." />
       ) : (
         <>
-          <Text variant="subhead" style={{ color: colors.secondaryText }}>
+          <Text variant="subhead" style={{ color: colors.ink2 }}>
             {active} of {students.length} students studied words this week. Learned: the next review is three weeks or
             more away. {query.data!.words} words in all.
           </Text>
@@ -47,12 +48,12 @@ export default function GroupVocabScreen() {
               <View
                 key={s.client_id}
                 className="min-h-[60px] flex-row items-center gap-3 px-5 py-3"
-                style={i ? { borderTopWidth: 1, borderTopColor: colors.separator } : undefined}>
+                style={i ? { borderTopWidth: 1, borderTopColor: colors.line } : undefined}>
                 <View className="flex-1 gap-0.5">
-                  <Text variant="body" className="text-white">
+                  <Text variant="body" className="text-ink">
                     {s.last_name} {s.first_name}
                   </Text>
-                  <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+                  <Text variant="footnote" style={{ color: colors.ink3 }}>
                     {s.last_review
                       ? `${s.started} started · ${s.reviews_week} reviews this week · last ${new Date(s.last_review).toLocaleDateString()}`
                       : 'Hasn’t started'}
@@ -62,7 +63,7 @@ export default function GroupVocabScreen() {
                   <Text variant="headline" style={{ color: colors.accent, fontVariant: ['tabular-nums'] }}>
                     {s.learned}
                   </Text>
-                  <Text variant="caption" style={{ color: colors.tertiaryText }}>
+                  <Text variant="caption" style={{ color: colors.ink3 }}>
                     learned
                   </Text>
                 </View>

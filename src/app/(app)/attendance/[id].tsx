@@ -9,7 +9,7 @@ import { Notice } from '@/components/Notice';
 import { RotatingQR } from '@/components/RotatingQR';
 import { MARK_COLOR, MARK_LABEL, StateChip } from '@/components/StateChip';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { useAttendanceSession, useFinishSession, useSetMark, type FetchedSession } from '@/lib/api/attendance';
 import { describeError } from '@/lib/api/errors';
@@ -21,6 +21,7 @@ import { formatDate, schoolClock, schoolDate } from '@/lib/schedule';
 // count and the class list; once finished, the results, correctable for 24
 // hours after the lesson.
 export default function AttendanceScreen() {
+  const colors = useColors();
   const { id } = useLocalSearchParams<{ id: string }>();
   const session = useAttendanceSession(id);
   const finish = useFinishSession(id);
@@ -84,42 +85,42 @@ export default function AttendanceScreen() {
           <>
             <View className="flex-row items-end justify-between">
               <View>
-                <Text variant="footnote" style={{ color: colors.secondaryText }}>
+                <Text variant="footnote" style={{ color: colors.ink2 }}>
                   Checked in
                 </Text>
                 <Text
                   variant="largeTitle"
-                  className="text-white"
+                  className="text-ink"
                   style={{ fontVariant: ['tabular-nums'] }}
                   accessibilityLabel={`${checkedIn} of ${s.counts.total} checked in`}
                   accessibilityLiveRegion="polite">
                   {checkedIn}
-                  <Text variant="title2" style={{ color: colors.tertiaryText }}>
+                  <Text variant="title2" style={{ color: colors.ink3 }}>
                     {' '}/ {s.counts.total}
                   </Text>
                 </Text>
               </View>
-              <Text variant="footnote" style={{ color: colors.secondaryText, textAlign: 'right' }}>
+              <Text variant="footnote" style={{ color: colors.ink2, textAlign: 'right' }}>
                 Late after {schoolClock(Date.parse(s.late_after))}
                 {s.counts.late > 0 ? `\n${s.counts.late} late` : ''}
               </Text>
             </View>
             <RotatingQR sessionId={s.id} secret={s.qr.secret} clockOffsetMs={Date.parse(s.qr.server_time) - s.receivedAt} />
-            <Text variant="footnote" style={{ color: colors.tertiaryText, textAlign: 'center' }}>
+            <Text variant="footnote" style={{ color: colors.ink3, textAlign: 'center' }}>
               Students scan this with MakonBook. Someone without a phone? Tap their name to mark them.
             </Text>
           </>
         ) : (
           <View className="gap-3">
-            <Text variant="subhead" style={{ color: colors.secondaryText }}>
+            <Text variant="subhead" style={{ color: colors.ink2 }}>
               {formatDate(s.date)} · {schoolClock(Date.parse(s.starts_at))}–{schoolClock(Date.parse(s.ends_at))}
             </Text>
             <View className="flex-row gap-3">
-              <Tile label="Present" value={s.counts.present} color={colors.success} />
-              <Tile label="Late" value={s.counts.late} color={colors.warning} />
-              <Tile label="Absent" value={s.counts.absent} color={colors.danger} />
+              <Tile label="Present" value={s.counts.present} color={colors.good} />
+              <Tile label="Late" value={s.counts.late} color={colors.watch} />
+              <Tile label="Absent" value={s.counts.absent} color={colors.bad} />
             </View>
-            <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+            <Text variant="footnote" style={{ color: colors.ink3 }}>
               {editable
                 ? `Tap a name to correct a mark — until ${formatDate(schoolDate(Date.parse(s.editable_until)))}, ${schoolClock(Date.parse(s.editable_until))}.`
                 : 'Marks are final. The office can still change them in HolliHop.'}
@@ -129,7 +130,7 @@ export default function AttendanceScreen() {
 
         <View className="overflow-hidden rounded-2xl bg-surface">
           {s.marks.length === 0 ? (
-            <Text variant="subhead" className="p-5" style={{ color: colors.secondaryText }}>
+            <Text variant="subhead" className="p-5" style={{ color: colors.ink2 }}>
               No students on this lesson’s list.
             </Text>
           ) : (
@@ -180,13 +181,14 @@ function KeepAwake() {
 }
 
 function Tile({ label, value, color }: { label: string; value: number; color: string }) {
+  const colors = useColors();
   return (
     <View className="flex-1 gap-1 rounded-2xl bg-surface p-4">
       <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
-      <Text variant="title2" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
+      <Text variant="title2" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
         {value}
       </Text>
-      <Text variant="footnote" style={{ color: colors.secondaryText }}>
+      <Text variant="footnote" style={{ color: colors.ink2 }}>
         {label}
       </Text>
     </View>
@@ -194,6 +196,7 @@ function Tile({ label, value, color }: { label: string; value: number; color: st
 }
 
 function StudentRow({ mark, first, onPress }: { mark: AttendanceMark; first: boolean; onPress?: () => void }) {
+  const colors = useColors();
   const detail =
     mark.source === 'scan' && mark.scanned_at
       ? `Scanned ${schoolClock(Date.parse(mark.scanned_at))}`
@@ -209,20 +212,20 @@ function StudentRow({ mark, first, onPress }: { mark: AttendanceMark; first: boo
       accessibilityRole={onPress ? 'button' : undefined}
       accessibilityLabel={`${mark.first_name} ${mark.last_name}, ${MARK_LABEL[mark.state]}`}
       accessibilityHint={onPress ? 'Change this mark' : undefined}
-      style={({ pressed }) => ({ backgroundColor: pressed ? 'rgba(255,255,255,0.06)' : 'transparent' })}>
-      <View className="ml-5" style={first ? undefined : { borderTopWidth: 1, borderTopColor: colors.separator }}>
+      style={({ pressed }) => ({ backgroundColor: pressed ? colors.surface2 : 'transparent' })}>
+      <View className="ml-5" style={first ? undefined : { borderTopWidth: 1, borderTopColor: colors.line }}>
         <View className="min-h-[56px] flex-row items-center gap-3 py-2.5 pr-4">
           <View className="flex-1">
-            <Text variant="body" className="text-white" numberOfLines={1}>
+            <Text variant="body" className="text-ink" numberOfLines={1}>
               {mark.first_name} {mark.last_name}
             </Text>
             {detail && (
-              <Text variant="caption" style={{ color: colors.tertiaryText }}>
+              <Text variant="caption" style={{ color: colors.ink3 }}>
                 {detail}
               </Text>
             )}
           </View>
-          <StateChip label={MARK_LABEL[mark.state]} color={MARK_COLOR[mark.state]} />
+          <StateChip label={MARK_LABEL[mark.state]} color={colors[MARK_COLOR[mark.state]]} />
         </View>
       </View>
     </Pressable>

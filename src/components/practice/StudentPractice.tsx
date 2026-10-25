@@ -1,11 +1,13 @@
 import { router } from 'expo-router';
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ChevronRight } from 'lucide-react-native';
 
+import { Icon } from '@/components/Icon';
 import { Notice } from '@/components/Notice';
 import { PressableScale } from '@/components/PressableScale';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import { describeError } from '@/lib/api/errors';
 import { useCatalog, useDownloads, useLocalAttempts, useRuns, useUploadAttempts } from '@/lib/practice/hooks';
 import { formatBytes, SUBJECT_LABEL } from '@/lib/practice/run';
@@ -14,6 +16,7 @@ import type { CatalogTest } from '@/lib/practice/types';
 // The student's Practice tab: tests to take (downloaded ones work offline),
 // what is in progress, and their latest results.
 export function StudentPractice() {
+  const colors = useColors();
   const insets = useSafeAreaInsets();
   const catalog = useCatalog();
   const downloads = useDownloads();
@@ -60,10 +63,10 @@ export function StudentPractice() {
         />
       }>
       <View className="gap-1 pb-2">
-        <Text variant="subhead" style={{ color: colors.secondaryText }}>
+        <Text variant="subhead" style={{ color: colors.ink2 }}>
           SAT practice tests
         </Text>
-        <Text variant="largeTitle" className="text-white" accessibilityRole="header">
+        <Text variant="largeTitle" className="text-ink" accessibilityRole="header">
           Practice
         </Text>
       </View>
@@ -81,16 +84,16 @@ export function StudentPractice() {
           pressedScale={0.98}
           onPress={() => router.push({ pathname: '/practice/run/[code]', params: { code: run.code } })}
           className="gap-1 rounded-3xl px-5 py-5"
-          style={{ backgroundColor: 'rgba(139, 92, 246, 0.16)' }}
+          style={{ backgroundColor: colors.accentTint }}
           accessibilityRole="button"
           accessibilityHint="Continues the test where you left it">
           <Text variant="caption" style={{ color: colors.accent, textTransform: 'uppercase' }}>
             Continue
           </Text>
-          <Text variant="title3" className="text-white">
+          <Text variant="title3" className="text-ink">
             {run.title}
           </Text>
-          <Text variant="subhead" style={{ color: colors.secondaryText }}>
+          <Text variant="subhead" style={{ color: colors.ink2 }}>
             {run.sections.map((s) => SUBJECT_LABEL[s]).join(' and ')} · part {run.stage + 1}
           </Text>
         </PressableScale>
@@ -105,10 +108,10 @@ export function StudentPractice() {
           {catalog.isError && <Notice tone="warning" message="You’re offline: showing the tests on your phone." />}
           {open.length === 0 && (
             <View className="items-center gap-2 px-4 py-12">
-              <Text variant="title3" className="text-white">
+              <Text variant="title3" className="text-ink">
                 No tests yet
               </Text>
-              <Text variant="subhead" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+              <Text variant="subhead" style={{ color: colors.ink2, textAlign: 'center' }}>
                 Teachers are checking the questions. Tests appear here one by one as they’re ready.
               </Text>
             </View>
@@ -138,7 +141,7 @@ export function StudentPractice() {
           )}
           {locked.length > 0 && (
             <View className="gap-2">
-              <Text variant="footnote" style={{ color: colors.secondaryText, textTransform: 'uppercase' }} className="px-1">
+              <Text variant="footnote" style={{ color: colors.ink2, textTransform: 'uppercase' }} className="px-1">
                 Coming soon
               </Text>
               <View className="overflow-hidden rounded-3xl bg-surface">
@@ -152,7 +155,7 @@ export function StudentPractice() {
                   />
                 ))}
               </View>
-              <Text variant="footnote" style={{ color: colors.tertiaryText }} className="px-1">
+              <Text variant="footnote" style={{ color: colors.ink3 }} className="px-1">
                 Teachers check every question before a test opens.
               </Text>
             </View>
@@ -180,14 +183,15 @@ function TestRow({
   muted?: boolean;
   onPress?: () => void;
 }) {
+  const colors = useColors();
   const body = (
-    <View className="ml-5" style={separator ? { borderTopWidth: 1, borderTopColor: colors.separator } : undefined}>
+    <View className="ml-5" style={separator ? { borderTopWidth: 1, borderTopColor: colors.line } : undefined}>
       <View className="min-h-[60px] flex-row items-center gap-3 py-3 pr-5">
         <View className="flex-1 gap-0.5">
-          <Text variant="body" style={{ color: muted ? colors.secondaryText : colors.text }}>
+          <Text variant="body" style={{ color: muted ? colors.ink2 : colors.ink }}>
             {title}
           </Text>
-          <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+          <Text variant="footnote" style={{ color: colors.ink3 }}>
             {status}
           </Text>
         </View>
@@ -197,9 +201,7 @@ function TestRow({
           </Text>
         )}
         {onPress && (
-          <Text variant="body" style={{ color: colors.tertiaryText }}>
-            ›
-          </Text>
+          <Icon as={ChevronRight} size={18} color={colors.ink3} />
         )}
       </View>
     </View>
@@ -211,7 +213,7 @@ function TestRow({
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`${title}, ${status}`}
-      style={({ pressed }) => ({ backgroundColor: pressed ? 'rgba(255, 255, 255, 0.06)' : 'transparent' })}>
+      style={({ pressed }) => ({ backgroundColor: pressed ? colors.surface2 : 'transparent' })}>
       {body}
     </Pressable>
   );

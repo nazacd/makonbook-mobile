@@ -5,7 +5,7 @@ import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
 import { Text } from '@/components/Text';
 import { TextField } from '@/components/TextField';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { ApiError } from '@/lib/api/client';
 import { describeError } from '@/lib/api/errors';
@@ -23,6 +23,7 @@ type PasswordFormProps = {
 // is done; the route guard then opens the app on its own) and (app)/password
 // (from Profile, a sheet that closes when done).
 export function PasswordForm({ forced, onDone }: PasswordFormProps) {
+  const colors = useColors();
   const change = useChangePassword();
   const newRef = useRef<TextInput>(null);
   const confirmRef = useRef<TextInput>(null);
@@ -74,7 +75,7 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
       keyboardShouldPersistTaps="handled"
       contentContainerClassName="gap-5 px-5 pb-10 pt-4">
       {forced && (
-        <Text variant="body" style={{ color: colors.secondaryText }}>
+        <Text variant="body" style={{ color: colors.ink2 }}>
           You signed in with the temporary password. Choose your own to continue — only you will
           know it.
         </Text>
@@ -149,7 +150,7 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
       />
 
       {!forced && (
-        <Text variant="footnote" style={{ color: colors.tertiaryText, textAlign: 'center' }}>
+        <Text variant="footnote" style={{ color: colors.ink3, textAlign: 'center' }}>
           Your other devices will be signed out.
         </Text>
       )}
@@ -160,7 +161,8 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
 // met: true/false while it can be checked here, null for rules only the
 // server checks (it knows the phone number; the app doesn't).
 function Requirement({ met, label }: { met: boolean | null; label: string }) {
-  const color = met ? colors.success : colors.tertiaryText;
+  const colors = useColors();
+  const color = met ? colors.good : colors.ink3;
   return (
     <View
       className="flex-row items-center gap-2"
@@ -168,7 +170,7 @@ function Requirement({ met, label }: { met: boolean | null; label: string }) {
       <Text variant="footnote" style={{ color, width: 14, textAlign: 'center' }}>
         {met ? '✓' : '•'}
       </Text>
-      <Text variant="footnote" style={{ color: met ? colors.text : colors.secondaryText }}>
+      <Text variant="footnote" style={{ color: met ? colors.ink : colors.ink2 }}>
         {label}
       </Text>
     </View>

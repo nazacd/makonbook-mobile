@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GroupCard } from '@/components/GroupCard';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import { useMyAttendance } from '@/lib/api/attendance';
 import { useMe } from '@/lib/api/queries';
 import type { Profile } from '@/lib/api/types';
@@ -13,6 +13,7 @@ import { describeDay, nextClass } from '@/lib/schedule';
 
 // The student's home: next class and their groups. (Teachers get TeacherToday.)
 export function StudentClasses() {
+  const colors = useColors();
   const insets = useSafeAreaInsets();
   const me = useMe();
   const profile = me.data as Profile; // the signed-in layout only renders with a profile
@@ -39,10 +40,10 @@ export function StudentClasses() {
         />
       }>
       <View className="gap-1 pb-2">
-        <Text variant="subhead" style={{ color: colors.secondaryText }}>
+        <Text variant="subhead" style={{ color: colors.ink2 }}>
           Hi, {profile.first_name}
         </Text>
-        <Text variant="largeTitle" className="text-white" accessibilityRole="header">
+        <Text variant="largeTitle" className="text-ink" accessibilityRole="header">
           Classes
         </Text>
       </View>
@@ -50,17 +51,17 @@ export function StudentClasses() {
       {next && (
         <View
           className="gap-1 rounded-3xl px-5 py-5"
-          style={{ backgroundColor: 'rgba(139, 92, 246, 0.16)' }}
+          style={{ backgroundColor: colors.accentTint }}
           accessibilityRole="summary">
           <Text variant="caption" style={{ color: colors.accent, textTransform: 'uppercase' }}>
             {next.start <= now ? 'Happening now' : 'Next class'}
           </Text>
-          <Text variant="title2" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
+          <Text variant="title2" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
             {next.start <= now
               ? `Until ${next.slot.end_time}`
               : `${describeDay(next.start, now)}, ${next.slot.begin_time}`}
           </Text>
-          <Text variant="subhead" style={{ color: colors.secondaryText }}>
+          <Text variant="subhead" style={{ color: colors.ink2 }}>
             {[next.group.name, next.slot.classroom && `Room ${next.slot.classroom}`].filter(Boolean).join(' · ')}
           </Text>
         </View>
@@ -68,10 +69,10 @@ export function StudentClasses() {
 
       {profile.groups.length === 0 ? (
         <View className="items-center gap-2 px-4 py-16">
-          <Text variant="title3" className="text-white">
+          <Text variant="title3" className="text-ink">
             No classes yet
           </Text>
-          <Text variant="subhead" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+          <Text variant="subhead" style={{ color: colors.ink2, textAlign: 'center' }}>
             When the office adds you to a group, it shows up here with its schedule.
           </Text>
         </View>

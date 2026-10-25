@@ -4,34 +4,36 @@ import { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { Grade } from 'ts-fsrs';
+import { House } from 'lucide-react-native';
 
 import { Button } from '@/components/Button';
-import { HomeIcon } from '@/components/HomeIcon';
+import { Icon } from '@/components/Icon';
 import { PressableScale } from '@/components/PressableScale';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors, type Palette } from '@/design/colors';
 import { usePerson } from '@/lib/practice/hooks';
 import { hasImage, imageUri } from '@/lib/vocab/files';
 import { useDeck, useRecordReview, useSettings, useVocabState } from '@/lib/vocab/hooks';
 import { activeLists, GRADES, newToday, preview, queue } from '@/lib/vocab/scheduler';
 import type { VocabWord } from '@/lib/vocab/types';
 
-const GRADE_COLOR: Record<number, string> = {
-  1: colors.danger,
-  2: colors.warning,
-  3: colors.success,
-  4: colors.accent,
+const GRADE_COLOR: Record<number, keyof Palette> = {
+  1: 'bad',
+  2: 'watch',
+  3: 'good',
+  4: 'accent',
 };
 
 // The word in the example sentence in bold: "abate" also in "abated".
 function Example({ text, word }: { text: string; word: string }) {
+  const colors = useColors();
   const stem = word.toLowerCase().replace(/e$/, '');
   const parts = text.split(/(\s+)/);
   return (
-    <Text variant="body" style={{ color: colors.secondaryText, fontStyle: 'italic' }}>
+    <Text variant="body" style={{ color: colors.ink2, fontStyle: 'italic' }}>
       {parts.map((p, i) =>
         stem.length > 2 && p.toLowerCase().replace(/^[^a-z]+/, '').startsWith(stem) ? (
-          <Text key={i} style={{ fontWeight: '700', color: colors.text }}>
+          <Text key={i} style={{ fontWeight: '700', color: colors.ink }}>
             {p}
           </Text>
         ) : (
@@ -47,6 +49,7 @@ function Example({ text, word }: { text: string; word: string }) {
 // it; FSRS decides when it comes back. Every rating is saved at once, so the
 // session can be left at any point.
 export default function StudyScreen() {
+  const colors = useColors();
   const person = usePerson();
   const queryClient = useQueryClient();
   const deck = useDeck();
@@ -98,9 +101,9 @@ export default function StudyScreen() {
         <View className="flex-1 px-5">
           <View className="flex-row items-center justify-between py-2">
             <Pressable onPress={close} hitSlop={10} className="p-2" accessibilityRole="button" accessibilityLabel="Finish studying">
-              <HomeIcon size={20} />
+              <Icon as={House} size={20} />
             </Pressable>
-            <Text variant="subhead" style={{ color: colors.secondaryText, fontVariant: ['tabular-nums'] }}>
+            <Text variant="subhead" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
               {word ? `${done} done · ${left} left` : ''}
             </Text>
             <View style={{ width: 36 }} />
@@ -108,10 +111,10 @@ export default function StudyScreen() {
 
           {!word ? (
             <View className="flex-1 justify-center gap-4">
-              <Text variant="title" className="text-white">
+              <Text variant="title" className="text-ink">
                 {done > 0 ? 'Well done' : 'Nothing to study'}
               </Text>
-              <Text variant="body" style={{ color: colors.secondaryText }}>
+              <Text variant="body" style={{ color: colors.ink2 }}>
                 {done > 0
                   ? `You studied ${done} ${done === 1 ? 'word' : 'words'}. They come back when you are about to forget them.`
                   : 'No words are due. Come back later, or turn on another list.'}
@@ -127,18 +130,18 @@ export default function StudyScreen() {
                       New word
                     </Text>
                   )}
-                  <Text variant="largeTitle" className="text-white">
+                  <Text variant="largeTitle" className="text-ink">
                     {word.word}
                   </Text>
                   {word.part_of_speech && (
-                    <Text variant="subhead" style={{ color: colors.secondaryText, fontStyle: 'italic' }}>
+                    <Text variant="subhead" style={{ color: colors.ink2, fontStyle: 'italic' }}>
                       {word.part_of_speech}
                     </Text>
                   )}
                 </View>
                 {shown ? (
                   <View className="gap-4">
-                    <Text variant="title3" className="text-white" style={{ fontWeight: '500' }}>
+                    <Text variant="title3" className="text-ink" style={{ fontWeight: '500' }}>
                       {word.definition}
                     </Text>
                     <Example text={word.example} word={word.word} />
@@ -152,7 +155,7 @@ export default function StudyScreen() {
                     )}
                   </View>
                 ) : (
-                  <Text variant="subhead" style={{ color: colors.tertiaryText }}>
+                  <Text variant="subhead" style={{ color: colors.ink3 }}>
                     Say what it means, then check.
                   </Text>
                 )}
@@ -169,10 +172,10 @@ export default function StudyScreen() {
                         className="h-16 items-center justify-center gap-0.5 rounded-2xl bg-surface"
                         accessibilityRole="button"
                         accessibilityLabel={`${g.label}, comes back in ${gaps[g.rating]}`}>
-                        <Text variant="headline" style={{ color: GRADE_COLOR[g.rating] }}>
+                        <Text variant="headline" style={{ color: colors[GRADE_COLOR[g.rating]] }}>
                           {g.label}
                         </Text>
-                        <Text variant="caption" style={{ color: colors.tertiaryText }}>
+                        <Text variant="caption" style={{ color: colors.ink3 }}>
                           {gaps[g.rating]}
                         </Text>
                       </PressableScale>

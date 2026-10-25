@@ -6,7 +6,7 @@ import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
 import { Text } from '@/components/Text';
 import { TextField } from '@/components/TextField';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { ApiError } from '@/lib/api/client';
 import { describeError } from '@/lib/api/errors';
@@ -27,6 +27,7 @@ function problemWith(value: string): string | null {
 }
 
 export default function UsernameScreen() {
+  const colors = useColors();
   const currentUsername = useMe().data?.username ?? '';
   const save = useSetUsername();
   const [value, setValue] = useState(currentUsername);
@@ -65,7 +66,7 @@ export default function UsernameScreen() {
       contentInsetAdjustmentBehavior="automatic"
       keyboardShouldPersistTaps="handled"
       contentContainerClassName="gap-5 px-5 pb-10 pt-4">
-      <Text variant="body" style={{ color: colors.secondaryText }}>
+      <Text variant="body" style={{ color: colors.ink2 }}>
         A username is optional. With one, you can sign in without typing your phone number — the
         phone number keeps working too.
       </Text>

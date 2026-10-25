@@ -7,7 +7,7 @@ import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
 import { PressableScale } from '@/components/PressableScale';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import { describeError } from '@/lib/api/errors';
 import { useNow } from '@/lib/clock';
 import { useDeck, useSaveSettings, useSettings, useVocabState, useVocabSync } from '@/lib/vocab/hooks';
@@ -17,6 +17,7 @@ import { activeLists, formatGap, isLearned, newToday, queue } from '@/lib/vocab/
 // The student's Words tab: what to study today, the lists (each turned on or
 // off), and how many words a day are new. Works offline once the deck is here.
 export function StudentWords() {
+  const colors = useColors();
   const insets = useSafeAreaInsets();
   const now = new Date(useNow());
   const deck = useDeck();
@@ -67,10 +68,10 @@ export function StudentWords() {
         />
       }>
       <View className="gap-1 pb-2">
-        <Text variant="subhead" style={{ color: colors.secondaryText }}>
+        <Text variant="subhead" style={{ color: colors.ink2 }}>
           SAT vocabulary
         </Text>
-        <Text variant="largeTitle" className="text-white" accessibilityRole="header">
+        <Text variant="largeTitle" className="text-ink" accessibilityRole="header">
           Words
         </Text>
       </View>
@@ -87,26 +88,26 @@ export function StudentWords() {
         )
       ) : deck.data.lists.length === 0 ? (
         <View className="items-center gap-2 px-4 py-12">
-          <Text variant="title3" className="text-white">
+          <Text variant="title3" className="text-ink">
             Words are on the way
           </Text>
-          <Text variant="subhead" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+          <Text variant="subhead" style={{ color: colors.ink2, textAlign: 'center' }}>
             The word lists appear here once they are ready.
           </Text>
         </View>
       ) : (
         <>
-          <View className="gap-3 rounded-3xl px-5 py-5" style={{ backgroundColor: 'rgba(139, 92, 246, 0.16)' }}>
+          <View className="gap-3 rounded-3xl px-5 py-5" style={{ backgroundColor: colors.accentTint }}>
             <Text variant="caption" style={{ color: colors.accent, textTransform: 'uppercase' }}>
               Today
             </Text>
             {s.active.length === 0 ? (
-              <Text variant="title3" className="text-white">
+              <Text variant="title3" className="text-ink">
                 Turn on a list below to start.
               </Text>
             ) : toStudy > 0 ? (
               <>
-                <Text variant="title2" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
+                <Text variant="title2" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
                   {q!.due.length > 0 && `${q!.due.length} to review`}
                   {q!.due.length > 0 && q!.fresh.length > 0 && ' · '}
                   {q!.fresh.length > 0 && `${q!.fresh.length} new`}
@@ -115,10 +116,10 @@ export function StudentWords() {
               </>
             ) : (
               <>
-                <Text variant="title3" className="text-white">
+                <Text variant="title3" className="text-ink">
                   All caught up
                 </Text>
-                <Text variant="subhead" style={{ color: colors.secondaryText }}>
+                <Text variant="subhead" style={{ color: colors.ink2 }}>
                   {next != null
                     ? `The next word is due in ${formatGap(next - now.getTime())}.`
                     : 'Turn on another list for more words.'}
@@ -129,13 +130,13 @@ export function StudentWords() {
           </View>
 
           {(sync.data?.pending ?? 0) > 0 && (
-            <Text variant="footnote" style={{ color: colors.tertiaryText }} className="px-1">
+            <Text variant="footnote" style={{ color: colors.ink3 }} className="px-1">
               Your progress is on this phone; it goes to your teachers when you’re online.
             </Text>
           )}
 
           <View className="gap-2">
-            <Text variant="footnote" style={{ color: colors.secondaryText, textTransform: 'uppercase' }} className="px-1">
+            <Text variant="footnote" style={{ color: colors.ink2, textTransform: 'uppercase' }} className="px-1">
               New words a day
             </Text>
             <View className="flex-row gap-2" accessibilityRole="radiogroup">
@@ -152,8 +153,8 @@ export function StudentWords() {
                     accessibilityRole="radio"
                     accessibilityState={{ checked: selected }}
                     accessibilityLabel={`${n} new words a day`}
-                    className={`h-11 items-center justify-center rounded-xl ${selected ? 'bg-accent' : 'bg-surface'}`}>
-                    <Text variant="headline" className="text-white">
+                    className={`h-11 items-center justify-center rounded-xl ${selected ? 'bg-primary' : 'bg-surface'}`}>
+                    <Text variant="headline" className={selected ? 'text-on-primary' : 'text-ink'}>
                       {n}
                     </Text>
                   </PressableScale>
@@ -163,7 +164,7 @@ export function StudentWords() {
           </View>
 
           <View className="gap-2">
-            <Text variant="footnote" style={{ color: colors.secondaryText, textTransform: 'uppercase' }} className="px-1">
+            <Text variant="footnote" style={{ color: colors.ink2, textTransform: 'uppercase' }} className="px-1">
               Lists
             </Text>
             <View className="overflow-hidden rounded-3xl bg-surface">
@@ -183,22 +184,22 @@ export function StudentWords() {
                     accessibilityRole="switch"
                     accessibilityState={{ checked: on }}
                     accessibilityLabel={l.title}
-                    style={({ pressed }) => ({ backgroundColor: pressed ? 'rgba(255, 255, 255, 0.06)' : 'transparent' })}>
-                    <View className="ml-5" style={i ? { borderTopWidth: 1, borderTopColor: colors.separator } : undefined}>
+                    style={({ pressed }) => ({ backgroundColor: pressed ? colors.surface2 : 'transparent' })}>
+                    <View className="ml-5" style={i ? { borderTopWidth: 1, borderTopColor: colors.line } : undefined}>
                       <View className="min-h-[60px] flex-row items-center gap-3 py-3 pr-5">
                         <View className="flex-1 gap-0.5">
-                          <Text variant="body" className="text-white">
+                          <Text variant="body" className="text-ink">
                             {l.title}
                           </Text>
-                          <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+                          <Text variant="footnote" style={{ color: colors.ink3 }}>
                             {l.words.length} words · {started} started · {learned} learned
                           </Text>
                         </View>
                         <Switch
                           value={on}
                           onValueChange={(v) => toggle(l.slug, v)}
-                          trackColor={{ false: 'rgba(255,255,255,0.15)', true: colors.accent }}
-                          thumbColor={colors.text}
+                          trackColor={{ false: colors.track, true: colors.accent }}
+                          thumbColor={colors.ink}
                         />
                       </View>
                     </View>
@@ -206,7 +207,7 @@ export function StudentWords() {
                 );
               })}
             </View>
-            <Text variant="footnote" style={{ color: colors.tertiaryText }} className="px-1">
+            <Text variant="footnote" style={{ color: colors.ink3 }} className="px-1">
               A word counts as learned once its next review is three weeks or more away.
             </Text>
           </View>

@@ -1,9 +1,10 @@
 import { useState, type Ref } from 'react';
 import { Platform, Pressable, StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
+import { Eye, EyeOff } from 'lucide-react-native';
 
-import { EyeIcon } from '@/components/EyeIcon';
+import { Icon } from '@/components/Icon';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 
 type TextFieldProps = Omit<TextInputProps, 'style' | 'placeholderTextColor' | 'secureTextEntry'> & {
   label: string;
@@ -16,14 +17,15 @@ type TextFieldProps = Omit<TextInputProps, 'style' | 'placeholderTextColor' | 's
 };
 
 export function TextField({ label, error, hint, secure = false, ref, onFocus, onBlur, ...props }: TextFieldProps) {
+  const colors = useColors();
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
-  const border = error ? colors.danger : focused ? colors.accent : 'transparent';
+  const border = error ? colors.bad : focused ? colors.accent : 'transparent';
 
   return (
     <View className="gap-2">
-      <Text variant="footnote" style={{ color: colors.secondaryText }}>
+      <Text variant="footnote" style={{ color: colors.ink2 }}>
         {label}
       </Text>
       <View
@@ -35,9 +37,9 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
           accessibilityLabel={label}
           accessibilityHint={error ?? hint}
           secureTextEntry={secure && !revealed}
-          placeholderTextColor={colors.tertiaryText}
+          placeholderTextColor={colors.ink3}
           selectionColor={colors.accent}
-          allowFontScaling={false}
+          maxFontSizeMultiplier={1.4}
           onFocus={(e) => {
             setFocused(true);
             onFocus?.(e);
@@ -51,7 +53,7 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
           // left edge. minWidth 0 lets the input shrink to leave room for the
           // eye button. On web, the browser's focus outline would draw a
           // second, square ring.
-          style={[styles.input, Platform.OS === 'web' && { outlineWidth: 0 }]}
+          style={[styles.input, { color: colors.ink }, Platform.OS === 'web' && { outlineWidth: 0 }]}
         />
         {secure && (
           <Pressable
@@ -62,7 +64,7 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
             {/* The icon shows what a tap does: an open eye reveals, a struck
                 eye hides again. */}
             {({ pressed }) => (
-              <EyeIcon slashed={revealed} color={pressed ? colors.text : colors.secondaryText} />
+              <Icon as={revealed ? EyeOff : Eye} size={22} color={pressed ? colors.ink : colors.ink2} />
             )}
           </Pressable>
         )}
@@ -71,7 +73,7 @@ export function TextField({ label, error, hint, secure = false, ref, onFocus, on
         <Text
           variant="footnote"
           accessibilityLiveRegion={error ? 'polite' : 'none'}
-          style={{ color: error ? colors.danger : colors.tertiaryText }}>
+          style={{ color: error ? colors.bad : colors.ink3 }}>
           {error ?? hint}
         </Text>
       )}
@@ -87,7 +89,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     // Android adds its own vertical padding, which pushes the text off-centre.
     paddingVertical: 0,
-    color: colors.text,
     fontSize: 17,
   },
 });

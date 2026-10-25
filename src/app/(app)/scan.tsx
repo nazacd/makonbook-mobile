@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { X } from 'lucide-react-native';
 
 import { Button } from '@/components/Button';
 import { CheckInResult } from '@/components/CheckInResult';
+import { Icon } from '@/components/Icon';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { parseAttendanceLink, type ScannedCode } from '@/lib/attendance/code';
 
@@ -17,6 +19,7 @@ const FRAME = 260;
 // Opened from the Scan button in the tab bar; rises from the bottom, where
 // the button is, and goes back down the same way.
 export default function ScanScreen() {
+  const colors = useColors();
   const [permission, requestPermission] = useCameraPermissions();
   const [code, setCode] = useState<ScannedCode | null>(null);
   const [wrongCode, setWrongCode] = useState<string | null>(null);
@@ -63,21 +66,20 @@ export default function ScanScreen() {
               justifyContent: 'center',
               backgroundColor: pressed ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.45)',
             })}>
-            <Text variant="headline" className="text-white">
-              ✕
-            </Text>
+            {/* Over the live camera: light in both themes. */}
+            <Icon as={X} size={22} color="#fffcf6" strokeWidth={2.25} />
           </Pressable>
 
           {!permission ? null : permission.granted ? (
             <View className="flex-1 items-center justify-center gap-6">
               <Corners />
               <View className="items-center gap-2 rounded-2xl px-4 py-3" style={{ backgroundColor: 'rgba(0,0,0,0.55)' }}>
-                <Text variant="headline" className="text-white" style={{ textAlign: 'center' }}>
+                <Text variant="headline" className="text-ink" style={{ textAlign: 'center' }}>
                   Scan the code on your teacher’s screen
                 </Text>
                 {wrongCode && (
                   <Animated.View entering={FadeIn.duration(150)} exiting={FadeOut.duration(150)}>
-                    <Text variant="subhead" style={{ color: colors.warning, textAlign: 'center' }} accessibilityLiveRegion="polite">
+                    <Text variant="subhead" style={{ color: colors.watch, textAlign: 'center' }} accessibilityLiveRegion="polite">
                       That isn’t a MakonBook attendance code.
                     </Text>
                   </Animated.View>
@@ -86,10 +88,10 @@ export default function ScanScreen() {
             </View>
           ) : (
             <View className="flex-1 justify-center gap-4">
-              <Text variant="title2" className="text-white">
+              <Text variant="title2" className="text-ink">
                 Allow the camera
               </Text>
-              <Text variant="body" style={{ color: colors.secondaryText }}>
+              <Text variant="body" style={{ color: colors.ink2 }}>
                 MakonBook uses the camera only to read your teacher’s attendance code. Nothing is recorded.
               </Text>
               {permission.canAskAgain ? (
@@ -107,8 +109,9 @@ export default function ScanScreen() {
 
 // Corner marks showing where to hold the code.
 function Corners() {
+  const colors = useColors();
   const arm = 34;
-  const line = { position: 'absolute' as const, backgroundColor: colors.text, borderRadius: 2 };
+  const line = { position: 'absolute' as const, backgroundColor: colors.ink, borderRadius: 2 };
   return (
     <View style={{ width: FRAME, height: FRAME }} accessible={false}>
       {[

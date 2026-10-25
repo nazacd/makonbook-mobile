@@ -11,19 +11,19 @@ type QuestionNavigatorGridProps =
   | { variant: 'results'; items: ResultItem[]; onPress: (id: number) => void };
 
 function progressCellClassName(item: ProgressItem): string {
-  if (item.current) return 'bg-accent border-accent';
-  if (item.answered) return 'bg-emerald-500/20 border-emerald-500';
-  return 'bg-surface border-white/10';
+  if (item.current) return 'bg-primary border-primary';
+  if (item.answered) return 'bg-good-tint border-good';
+  return 'bg-surface border-line';
 }
 
 function resultCellClassName(outcome: QuestionOutcome): string {
   switch (outcome) {
     case 'correct':
-      return 'bg-emerald-500/20 border-emerald-500';
+      return 'bg-good-tint border-good';
     case 'incorrect':
-      return 'bg-red-500/20 border-red-500';
+      return 'bg-bad-tint border-bad';
     case 'skipped':
-      return 'bg-surface border-white/10';
+      return 'bg-surface border-line';
   }
 }
 
@@ -36,8 +36,8 @@ export function QuestionNavigatorGrid(props: QuestionNavigatorGridProps) {
               key={item.id}
               onPress={() => props.onPress(item.id)}
               className={`h-11 w-11 items-center justify-center rounded-lg border ${progressCellClassName(item)}`}>
-              <Text className="text-sm font-semibold text-white">{item.id}</Text>
-              {item.marked ? <View className="absolute right-1 top-1 h-2 w-2 rounded-full bg-amber-400" /> : null}
+              <Text className={`text-sm font-semibold ${item.current ? 'text-on-primary' : 'text-ink'}`}>{item.id}</Text>
+              {item.marked ? <View className="absolute right-1 top-1 h-2 w-2 rounded-full bg-fill-watch" /> : null}
             </Pressable>
           ))
         : props.items.map((item) => (
@@ -45,7 +45,7 @@ export function QuestionNavigatorGrid(props: QuestionNavigatorGridProps) {
               key={item.id}
               onPress={() => props.onPress(item.id)}
               className={`h-11 w-11 mx-2 items-center justify-center rounded-lg border ${resultCellClassName(item.outcome)}`}>
-              <Text className="text-sm font-semibold text-white">{item.id}</Text>
+              <Text className="text-sm font-semibold text-ink">{item.id}</Text>
             </Pressable>
           ))}
     </View>
