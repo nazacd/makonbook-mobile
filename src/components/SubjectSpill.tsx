@@ -76,23 +76,22 @@ const SHAPES: Record<string, Shape> = {
   geq: glyph('≥', 28),
   axes: stroke('M-10 11 V-12 M-12 9 H12 M-8 7 L10 -9', 1.9),
   // Math · Advanced: Greek, trigonometry, calculus.
-  pi: mathItalic('π', 32),
-  alpha: mathItalic('α', 32),
-  beta: mathItalic('β', 32),
-  theta: mathItalic('θ', 32),
-  sum: glyph('∑', 28),
-  integral: glyph('∫', 32),
-  infinity: glyph('∞', 30),
+  pi: mathItalic('π', 30),
+  alpha: mathItalic('α', 30),
+  beta: mathItalic('β', 30),
+  theta: mathItalic('θ', 30),
+  sum: glyph('∑', 26),
+  integral: glyph('∫', 30),
+  infinity: glyph('∞', 28),
   unitCircle: (c) => (
     <G>
-      <Circle cx={0} cy={0} r={10} fill="none" stroke={c} strokeWidth={1.8} />
-      {stroke('M0 0 L7 -7 M-13 0 H13', 1.6)(c)}
+      <Circle cx={0} cy={0} r={9} fill="none" stroke={c} strokeWidth={1.6} />
+      {stroke('M0 0 L6 -6', 1.5)(c)}
     </G>
   ),
   parabola: (c) => (
     <G>
-      {stroke('M-12 -11 Q0 23 12 -11', 2.4)(c)}
-      {stroke('M-13 8 L13 8', 1.2)(c)}
+      {stroke('M-11 -10 Q0 20 11 -10', 2.1)(c)}
     </G>
   ),
 
@@ -114,7 +113,6 @@ const SHAPES: Record<string, Shape> = {
   book: stroke('M0 -6 C-4 -9 -8 -9 -12 -8 V9 C-8 8 -4 8 0 11 C4 8 8 8 12 9 V-8 C8 -9 4 -9 0 -6 Z M0 -6 V11', 1.8),
   // English · Advanced: the scholar's marks and the writer's tools.
   section: outline('§'),
-  dagger: outline('†'),
   ae: outline('æ'),
   lozenge: stroke('M0 -12 L8 0 L0 12 L-8 0 Z', 1.9),
   nib: fill('M0 -12 L8 1 L3 12 L-3 12 L-8 1 Z M0 -1 m-2 0 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0'),
@@ -134,12 +132,12 @@ const SETS: Record<Subject, Record<Level, Pool>> = {
   English: {
     foundation: [['comma', 1.2], ['bang', 1.2], ['semi', 1.2], ['amp', 1.2], ['question', 1], ['apostrophe', 0.8], ['quote', 1]],
     presat: [['para', 1.1], ['guillemet', 1], ['parens', 0.8], ['schwa', 1], ['bookmark', 1.1], ['bubble', 1.1], ['book', 1.1]],
-    advanced: [['section', 1.2], ['schwa', 1], ['lozenge', 1.1], ['dagger', 0.9], ['ae', 0.8], ['nib', 1.1], ['quill', 1.1], ['script', 0.9]],
+    advanced: [['section', 1.2], ['schwa', 1], ['lozenge', 1.1], ['ae', 0.8], ['nib', 1.1], ['quill', 1.1], ['script', 0.9]],
   },
 };
 
 /** The same number of objects at every level; only what they are changes. */
-const COUNT = 12;
+const COUNT = 9;
 
 function random(seed: number) {
   let s = seed | 0;
