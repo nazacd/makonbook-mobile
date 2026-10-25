@@ -55,6 +55,7 @@ export default function SignedInLayout() {
         <Stack.Screen name="practice/result/[id]" options={{ ...headerOptions, title: 'Result' }} />
         <Stack.Screen name="practice/review/[id]/[slot]" options={{ ...headerOptions, title: 'Question' }} />
         <Stack.Screen name="practice/group/[id]" options={{ ...headerOptions, title: 'Practice' }} />
+        <Stack.Screen name="practice/new" options={{ ...headerOptions, title: 'New results' }} />
         <Stack.Screen name="vocab/group/[id]" options={{ ...headerOptions, title: 'Words' }} />
         <Stack.Screen name="vocab/study" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
         {/* A test fills the screen; leaving goes through its Home button, which saves and pauses it. */}

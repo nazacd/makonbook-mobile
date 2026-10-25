@@ -18,7 +18,7 @@ import { describeError } from '@/lib/api/errors';
 import { useMe } from '@/lib/api/queries';
 import type { Profile, TeacherLesson } from '@/lib/api/types';
 import { useNow } from '@/lib/clock';
-import { parseClassName } from '@/lib/groups';
+import { parseClassName, teacherTitle } from '@/lib/groups';
 import { addDays, formatDate, schoolClock, schoolDate } from '@/lib/schedule';
 
 const LOGO = require('../../assets/makonbook-icon.png');
@@ -227,7 +227,7 @@ function Stop({
 }) {
   const colors = useColors();
   const name = parseClassName(lesson.group_name, lesson.discipline);
-  const title = name.isPrivate && name.students.length ? `${name.title} 1:1 · ${name.students.join(', ')}` : name.title;
+  const title = teacherTitle(name);
   const openSession = () => lesson.session && router.push({ pathname: '/attendance/[id]', params: { id: lesson.session.id } });
   const status: Partial<Record<Phase, { text: string; tone: keyof Palette }>> = {
     open: { text: 'In progress', tone: 'accent' },
