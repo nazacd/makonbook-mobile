@@ -1,7 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import Animated, { FadeInRight, useReducedMotion } from 'react-native-reanimated';
-import Svg, { Circle, G, Path, Rect, Text as SvgText } from 'react-native-svg';
+import Svg, { Circle, G, Path, Text as SvgText } from 'react-native-svg';
 
 import { useColors } from '@/design/colors';
 import { fonts } from '@/design/typography';
@@ -10,14 +10,16 @@ import type { Level, Subject } from '@/lib/groups';
 // A subject's objects spilling in from the screen's right edge behind a block
 // of text: densest at the edge, thinning and fading inward. Math in navy
 // tones, English in terracotta tones; only size and opacity vary. The level
-// shows in the pile: Foundation spills a few simple objects, Pre-SAT more and
-// a step harder, Advanced the richest pile. Objects are placed around the
-// measured text and controls, never under them, and fit inside the block's
-// height, so the only cut is the screen edge. Seeded from the group's ID: the
-// same layout on every open, different for every class.
+// shows in what spills, never in how much: every level throws the same number
+// of objects, Foundation the simple ones, Pre-SAT a step on, Advanced the
+// specialist ones. Objects are placed around the measured text and controls,
+// never under them, and fit inside the block's height, so the only cut is the
+// screen edge. Seeded from the group's ID: the same layout on every open,
+// different for every class.
 
 type Shape = (color: string) => ReactNode;
 
+// Arithmetic in the title face.
 const glyph = (t: string, size = 26): Shape =>
   function glyphShape(c) {
     return (
@@ -26,8 +28,17 @@ const glyph = (t: string, size = 26): Shape =>
       </SvgText>
     );
   };
-// English objects never use the title face: outlined letters in a plain serif.
-const outline = (t: string, size = 30): Shape =>
+// Variables and Greek letters set like typeset maths: serif italic.
+const mathItalic = (t: string, size = 30): Shape =>
+  function mathShape(c) {
+    return (
+      <SvgText x={0} y={size * 0.33} textAnchor="middle" fontFamily="serif" fontStyle="italic" fontSize={size} fill={c}>
+        {t}
+      </SvgText>
+    );
+  };
+// English objects never use the title face: outlined marks in a plain serif.
+const outline = (t: string, size = 32): Shape =>
   function outlineShape(c) {
     return (
       <SvgText x={0} y={size * 0.35} textAnchor="middle" fontFamily="serif" fontSize={size} fill="none" stroke={c} strokeWidth={1.3}>
@@ -35,7 +46,7 @@ const outline = (t: string, size = 30): Shape =>
       </SvgText>
     );
   };
-const stroke = (d: string, w = 2.4): Shape =>
+const stroke = (d: string, w = 2.2): Shape =>
   function strokeShape(c) {
     return <Path d={d} fill="none" stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" />;
   };
@@ -48,71 +59,87 @@ const QUOTE =
   'M-10 -3 a4.5 4.5 0 1 1 9 0 c0 6 -3 10 -8 12 l-1 -2 c3 -2 4 -4 4 -6 a4.5 4.5 0 0 1 -4 -4 z M2 -3 a4.5 4.5 0 1 1 9 0 c0 6 -3 10 -8 12 l-1 -2 c3 -2 4 -4 4 -6 a4.5 4.5 0 0 1 -4 -4 z';
 
 const SHAPES: Record<string, Shape> = {
-  ...Object.fromEntries('0123456789'.split('').map((d) => [d, glyph(d, 28)])),
-  plus: glyph('+', 30),
-  minus: glyph('−', 30),
-  times: glyph('×', 28),
-  divide: glyph('÷', 28),
-  pi: glyph('π'),
-  root: glyph('√'),
-  sum: glyph('∑'),
-  integral: glyph('∫', 30),
-  triangle: fill('M-11 9 L11 9 L-11 -11 Z M-7 5 L1 5 L-7 -3 Z'),
-  compass: (c) => (
+  // Math · Foundation: digits and the four operations.
+  ...Object.fromEntries('0123456789'.split('').map((d) => [d, glyph(d, 26)])),
+  plus: glyph('+', 32),
+  minus: glyph('−', 32),
+  times: glyph('×', 30),
+  divide: glyph('÷', 30),
+  equals: glyph('=', 30),
+  // Math · Pre-SAT: algebra and functions.
+  x: mathItalic('x', 34),
+  y: mathItalic('y', 34),
+  fx: mathItalic('f(x)', 22),
+  xSquared: mathItalic('x²', 28),
+  root: glyph('√', 30),
+  percent: glyph('%', 26),
+  geq: glyph('≥', 28),
+  axes: stroke('M-10 11 V-12 M-12 9 H12 M-8 7 L10 -9', 1.9),
+  // Math · Advanced: Greek, trigonometry, calculus.
+  pi: mathItalic('π', 32),
+  alpha: mathItalic('α', 32),
+  beta: mathItalic('β', 32),
+  theta: mathItalic('θ', 32),
+  sum: glyph('∑', 28),
+  integral: glyph('∫', 32),
+  infinity: glyph('∞', 30),
+  unitCircle: (c) => (
     <G>
-      {stroke('M0 -9 L-7 11 M0 -9 L7 11 M-4 3 L4 3', 2.3)(c)}
-      <Circle cx={0} cy={-10} r={2.6} fill={c} />
+      <Circle cx={0} cy={0} r={10} fill="none" stroke={c} strokeWidth={1.8} />
+      {stroke('M0 0 L7 -7 M-13 0 H13', 1.6)(c)}
     </G>
   ),
-  protractor: fill('M-12 6 A12 12 0 0 1 12 6 Z M-6 6 A6 6 0 0 1 6 6 Z'),
   parabola: (c) => (
     <G>
-      {stroke('M-12 -11 Q0 23 12 -11', 2.6)(c)}
+      {stroke('M-12 -11 Q0 23 12 -11', 2.4)(c)}
       {stroke('M-13 8 L13 8', 1.2)(c)}
     </G>
   ),
-  graph: (c) => (
-    <G>
-      <Rect x={-11} y={-11} width={22} height={22} rx={1.5} fill="none" stroke={c} strokeWidth={1.8} />
-      {stroke('M-11 -3.7 H11 M-11 3.7 H11 M-3.7 -11 V11 M3.7 -11 V11', 1)(c)}
-    </G>
-  ),
-  oA: outline('A'),
-  og: outline('g'),
-  oR: outline('R'),
-  oQ: outline('?'),
-  oBang: outline('!'),
-  oAmp: outline('&'),
-  oSemi: outline(';'),
-  oSect: outline('§'),
-  oPara: outline('¶'),
-  oGuill: outline('«'),
+
+  // English · Foundation: punctuation.
+  comma: outline(',', 44),
+  bang: outline('!'),
+  semi: outline(';'),
+  amp: outline('&'),
+  question: outline('?'),
+  apostrophe: outline('’', 44),
   quote: fill(QUOTE),
-  nib: fill('M0 -12 L8 1 L3 12 L-3 12 L-8 1 Z M0 -1 m-2 0 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0'),
+  // English · Pre-SAT: marks of a page, and reading.
+  para: outline('¶'),
+  guillemet: outline('«'),
+  parens: outline('( )', 26),
+  schwa: outline('ə'),
   bookmark: fill('M-7 -12 H7 V12 L0 6 L-7 12 Z'),
+  bubble: stroke('M-11 -9 H11 V5 H-2 L-8 11 V5 H-11 Z', 1.9),
+  book: stroke('M0 -6 C-4 -9 -8 -9 -12 -8 V9 C-8 8 -4 8 0 11 C4 8 8 8 12 9 V-8 C8 -9 4 -9 0 -6 Z M0 -6 V11', 1.8),
+  // English · Advanced: the scholar's marks and the writer's tools.
+  section: outline('§'),
+  dagger: outline('†'),
+  ae: outline('æ'),
+  lozenge: stroke('M0 -12 L8 0 L0 12 L-8 0 Z', 1.9),
+  nib: fill('M0 -12 L8 1 L3 12 L-3 12 L-8 1 Z M0 -1 m-2 0 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0'),
+  quill: stroke('M10 -12 C2 -10 -4 -3 -8 8 M10 -12 C9 -4 4 2 -4 4 M-8 8 L-11 12', 1.9),
   script: stroke('M-13 5 C-9 -11 -5 13 -1 1 S7 -9 9 3 S12 6 14 0', 2.2),
 };
 
 type Pool = [shape: string, weight: number][];
 
-// Foundation Math is mostly digits, with fewer + and ×.
 const SETS: Record<Subject, Record<Level, Pool>> = {
   Math: {
-    foundation: [...'0123456789'.split('').map((d): [string, number] => [d, 1]), ['minus', 1], ['divide', 1], ['plus', 0.4], ['times', 0.4]],
-    presat: [['root', 1.4], ['pi', 1.4], ['triangle', 1.2], ['graph', 1.2]],
-    advanced: [['sum', 1.6], ['integral', 1.6], ['parabola', 1.4], ['compass', 1.2], ['protractor', 1.2]],
+    // Operations outweigh the digits, so it reads as arithmetic, not a number pile.
+    foundation: [...'0123456789'.split('').map((d): [string, number] => [d, 0.45]), ['plus', 1.3], ['minus', 1.3], ['times', 1.3], ['divide', 1.3], ['equals', 0.8]],
+    presat: [['x', 1.4], ['y', 1.4], ['fx', 1], ['xSquared', 0.9], ['root', 1.2], ['percent', 1.1], ['geq', 0.8], ['axes', 0.9]],
+    advanced: [['pi', 1.2], ['alpha', 1.1], ['beta', 1.1], ['theta', 1.2], ['root', 0.8], ['sum', 0.9], ['integral', 1], ['infinity', 0.8], ['unitCircle', 0.8], ['parabola', 0.8]],
   },
   English: {
-    foundation: [['oA', 1], ['og', 1], ['oQ', 1.5], ['oBang', 1.5], ['quote', 1.5]],
-    presat: [['oAmp', 1.3], ['oSemi', 1.2], ['oGuill', 1.2], ['bookmark', 1.2], ['oR', 0.8]],
-    advanced: [['nib', 1.6], ['script', 1.4], ['oPara', 1.2], ['oSect', 1.2]],
+    foundation: [['comma', 1.2], ['bang', 1.2], ['semi', 1.2], ['amp', 1.2], ['question', 1], ['apostrophe', 0.8], ['quote', 1]],
+    presat: [['para', 1.1], ['guillemet', 1], ['parens', 0.8], ['schwa', 1], ['bookmark', 1.1], ['bubble', 1.1], ['book', 1.1]],
+    advanced: [['section', 1.2], ['schwa', 1], ['lozenge', 1.1], ['dagger', 0.9], ['ae', 0.8], ['nib', 1.1], ['quill', 1.1], ['script', 0.9]],
   },
 };
-const LEVELS: Record<Level, { count: number; pools: Level[] }> = {
-  foundation: { count: 10, pools: ['foundation'] },
-  presat: { count: 15, pools: ['foundation', 'presat'] },
-  advanced: { count: 22, pools: ['foundation', 'presat', 'advanced'] },
-};
+
+/** The same number of objects at every level; only what they are changes. */
+const COUNT = 12;
 
 function random(seed: number) {
   let s = seed | 0;
@@ -139,10 +166,9 @@ type Placed = { x: number; y: number; s: number; t: number; rot: number; shape: 
 
 function place(width: number, height: number, keepOut: Rect4[], subject: Subject, level: Level, seed: number, scale: number, countScale: number): Placed[] {
   const r = random(seed);
-  const lv = LEVELS[level];
-  const pool = lv.pools.flatMap((p) => SETS[subject][p]);
+  const pool = SETS[subject][level];
   const placed: (Placed & { rad: number })[] = [];
-  const target = Math.round(lv.count * countScale);
+  const target = Math.round(COUNT * countScale);
   for (let tries = 0; placed.length < target && tries < 3000; tries++) {
     const t = Math.pow(r(), 1.7);
     const x = width + 10 - t * width * 0.62;
