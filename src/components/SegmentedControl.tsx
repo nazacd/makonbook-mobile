@@ -1,11 +1,13 @@
+import type { LucideIcon } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 
+import { Icon } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 
 type SegmentedControlProps<T extends string> = {
-  options: { value: T; label: string }[];
+  options: { value: T; label: string; icon?: LucideIcon }[];
   value: T;
   onChange: (value: T) => void;
   /** Read by screen readers before each option, e.g. "Appearance". */
@@ -42,10 +44,13 @@ export function SegmentedControl<T extends string>({ options, value, onChange, a
               alignItems: 'center',
               justifyContent: 'center',
               paddingHorizontal: 8,
+              flexDirection: 'row',
+              gap: 6,
               backgroundColor: selected ? colors.surface : pressed ? colors.line : 'transparent',
               borderWidth: selected ? 1 : 0,
               borderColor: colors.line,
             })}>
+            {o.icon && <Icon as={o.icon} size={16} color={selected ? colors.ink : colors.ink2} />}
             <Text
               variant="subhead"
               maxFontSizeMultiplier={1.3}

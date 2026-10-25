@@ -4,9 +4,7 @@ import { ScrollView } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
-import { Text } from '@/components/Text';
 import { TextField } from '@/components/TextField';
-import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { ApiError } from '@/lib/api/client';
 import { describeError } from '@/lib/api/errors';
@@ -27,7 +25,6 @@ function problemWith(value: string): string | null {
 }
 
 export default function UsernameScreen() {
-  const colors = useColors();
   const currentUsername = useMe().data?.username ?? '';
   const save = useSetUsername();
   const [value, setValue] = useState(currentUsername);
@@ -65,12 +62,7 @@ export default function UsernameScreen() {
       className="flex-1 bg-brand"
       contentInsetAdjustmentBehavior="automatic"
       keyboardShouldPersistTaps="handled"
-      contentContainerClassName="gap-5 px-5 pb-10 pt-4">
-      <Text variant="body" style={{ color: colors.ink2 }}>
-        A username is optional. With one, you can sign in without typing your phone number — the
-        phone number keeps working too.
-      </Text>
-
+      contentContainerClassName="gap-6 px-5 pb-10 pt-6">
       <TextField
         label="Username"
         value={value}
@@ -78,7 +70,8 @@ export default function UsernameScreen() {
           setValue(v);
           setServerError(null);
         }}
-        placeholder="e.g. sat.student"
+        prefix="@"
+        placeholder="sat.student"
         autoCapitalize="none"
         autoCorrect={false}
         autoComplete="username-new"
