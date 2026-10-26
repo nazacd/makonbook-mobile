@@ -1,6 +1,6 @@
 import * as Crypto from 'expo-crypto';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { Clock, Download, History, Play, RefreshCw, RotateCcw, Trash2 } from 'lucide-react-native';
+import { Clock, Download, History, Play, RefreshCw, RotateCcw, Trash2, WifiOff } from 'lucide-react-native';
 import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -13,6 +13,7 @@ import { ThrownObjects, type Thrown } from '@/components/ThrownObjects';
 import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { fonts } from '@/design/typography';
+import { useConnection } from '@/lib/api/connection';
 import { describeError } from '@/lib/api/errors';
 import { confirm } from '@/lib/confirm';
 import { useCatalog, useDownloads, useDownloadTest, useLocalAttempts, usePackage, useRemoveDownload, useRuns, useRunStore } from '@/lib/practice/hooks';
@@ -44,6 +45,7 @@ export default function PracticeTestScreen() {
   const attempts = useLocalAttempts();
   const download = useDownloadTest();
   const remove = useRemoveDownload();
+  const { offline } = useConnection();
 
   const test = catalog.data?.find((t) => t.code === code);
   const local = downloads.data?.[code];
@@ -128,7 +130,7 @@ export default function PracticeTestScreen() {
             : `${update ? 'Update' : 'Download'} · ${formatBytes(test?.bytes ?? 0)}`,
           onPress: startDownload,
           loading: download.isPending && !download.progress?.total,
-          disabled: download.isPending || !test?.version,
+          disabled: download.isPending || !test?.version || offline,
         }
       : { label: 'Start full test', onPress: () => start(['english', 'math']), disabled: !ready };
 
@@ -210,14 +212,21 @@ export default function PracticeTestScreen() {
 
       <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: insets.bottom + 12, borderTopWidth: 1, borderTopColor: colors.line, gap: 10 }}>
         {download.isError && <Notice tone="error" message={describeError(download.error)} />}
-        {!local && !download.isPending && (
+        {(!local || update) && offline ? (
+          <View className="flex-row items-center justify-center gap-2">
+            <Icon as={WifiOff} size={16} color={colors.ink3} />
+            <Text variant="footnote" style={{ color: colors.ink2 }}>
+              {update ? 'Updating' : 'Downloading'} needs internet.
+            </Text>
+          </View>
+        ) : !local && !download.isPending ? (
           <View className="flex-row items-center justify-center gap-2">
             <Icon as={Download} size={16} color={colors.ink3} />
             <Text variant="footnote" style={{ color: colors.ink2 }}>
               Download once, then take it offline.
             </Text>
           </View>
-        )}
+        ) : null}
         <Button label={action.label} onPress={action.onPress} loading={'loading' in action ? action.loading : false} disabled={action.disabled} />
       </View>
     </View>

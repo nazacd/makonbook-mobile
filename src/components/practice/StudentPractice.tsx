@@ -5,11 +5,13 @@ import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle, Polyline } from 'react-native-svg';
 
+import { ConnectionLine } from '@/components/ConnectionLine';
 import { Icon } from '@/components/Icon';
 import { EmptyState, ErrorState, Skeleton } from '@/components/States';
 import { Text } from '@/components/Text';
 import { ThrownObjects, type Thrown } from '@/components/ThrownObjects';
 import { useColors, type Palette } from '@/design/colors';
+import { useConnection } from '@/lib/api/connection';
 import { fonts } from '@/design/typography';
 import { describeError } from '@/lib/api/errors';
 import { useCatalog, useDownloads, useLocalAttempts, useRuns, useUploadAttempts } from '@/lib/practice/hooks';
@@ -43,6 +45,7 @@ export function StudentPractice() {
   const runs = useRuns();
   const attempts = useLocalAttempts();
   const upload = useUploadAttempts(true);
+  const { offline } = useConnection();
   const [unfolded, setUnfolded] = useState(false);
   const [pulling, setPulling] = useState(false);
 
@@ -118,12 +121,12 @@ export function StudentPractice() {
           progressBackgroundColor={colors.surface}
         />
       }>
+      <ConnectionLine detail="your downloaded tests work" style={{ marginBottom: 20 }} />
       {fullScores.length > 0 && <ScoreHero scores={fullScores} play={play} />}
 
-      {(pending > 0 || (catalog.isError && open.length > 0)) && (
+      {pending > 0 && (
         <View className="gap-2" style={{ marginBottom: 20 }}>
           {pending > 0 && <Quiet icon={CloudUpload} text={`${pending} ${pending === 1 ? 'result' : 'results'} waiting to send`} />}
-          {catalog.isError && open.length > 0 && <Quiet icon={WifiOff} text="Offline: the tests on your phone" />}
         </View>
       )}
 
@@ -151,6 +154,7 @@ export function StudentPractice() {
               intoLocked={i === nodes.length - 1 && locked.length > 0}
               startHere={node.kind === 'test' && node.test.code === startHere}
               refold={unfolded && node.kind === 'test' && node.test.code === foldHead}
+              offline={offline}
               onToggleFold={() => setUnfolded((u) => !u)}
             />
           ))}
@@ -272,6 +276,7 @@ function PathNode({
   intoLocked,
   startHere,
   refold,
+  offline,
   onToggleFold,
 }: {
   node: Node;
@@ -281,6 +286,8 @@ function PathNode({
   startHere: boolean;
   /** The first of the finished tests shown unfolded: it folds them again. */
   refold: boolean;
+  /** No connection: a test not downloaded can't be. */
+  offline: boolean;
   onToggleFold: () => void;
 }) {
   const colors = useColors();
@@ -307,7 +314,7 @@ function PathNode({
   const score = latest ? (latest.total != null ? String(latest.total) : `${SUBJECT_SHORT[latest.sections[0]!]} ${latest.scores[latest.sections[0]!]?.score}`) : null;
   const where = run ? `${run.sections.length > 1 ? 'Full test' : SUBJECT_LABEL[run.sections[0]!]} · Part ${run.stage + 1}` : null;
   const sub = run ? where : update ? 'Update available' : startHere ? 'Start here' : null;
-  const label = [name, run && `in progress, ${where}`, update && 'update available', score && (run ? `last ${score}` : score), size != null && `download, ${formatBytes(size)}`, startHere && 'start here']
+  const label = [name, run && `in progress, ${where}`, update && 'update available', score && (run ? `last ${score}` : score), size != null && (offline ? 'needs internet' : `download, ${formatBytes(size)}`), startHere && 'start here']
     .filter(Boolean)
     .join(', ');
 
@@ -347,6 +354,13 @@ function PathNode({
         <Text variant="subhead" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
           {score}
         </Text>
+      ) : size != null && offline ? (
+        <View className="flex-row items-center gap-1.5" style={{ opacity: 0.6 }}>
+          <Icon as={WifiOff} size={15} color={colors.ink3} />
+          <Text variant="footnote" style={{ color: colors.ink3 }}>
+            Needs internet
+          </Text>
+        </View>
       ) : size != null ? (
         <View className="flex-row items-center gap-1.5">
           <Icon as={Download} size={18} color={colors.ink2} />

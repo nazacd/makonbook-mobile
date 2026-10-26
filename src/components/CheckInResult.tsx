@@ -1,4 +1,4 @@
-import { Check, Clock, Lock, RefreshCw, X, type LucideIcon } from 'lucide-react-native';
+import { Check, Clock, Lock, RefreshCw, WifiOff, X, type LucideIcon } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, useWindowDimensions, View } from 'react-native';
 import Animated, { FadeIn, useAnimatedStyle, useReducedMotion, useSharedValue, withSpring } from 'react-native-reanimated';
@@ -44,6 +44,14 @@ function outcomeOf(error: unknown): Outcome {
       return { badge: { fill: 'fillWatch', icon: RefreshCw }, title: 'The code just changed', message: 'Scan the one on your teacher’s screen now.', retry: true };
     case 'invalid_code':
       return { badge: BAD, title: 'Not a valid code', message: 'This isn’t a MakonBook attendance code.', retry: true };
+    case 'network':
+      // Checking in is the server's to record: nothing to keep for later.
+      return {
+        badge: { fill: null, icon: WifiOff },
+        title: 'No internet',
+        message: 'Checking in needs a connection. Turn on Wi-Fi or mobile data, then scan the code on your teacher’s screen again.',
+        retry: true,
+      };
     case 'session_closed':
       return { badge: LOCKED, title: 'Attendance is closed', message: 'Your teacher has finished attendance for this lesson. Ask them to mark you.' };
     case 'not_in_roster':

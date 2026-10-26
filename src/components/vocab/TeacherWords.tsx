@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ConnectionLine } from '@/components/ConnectionLine';
 import { EmptyState } from '@/components/States';
 import { groupTitle, TeacherGroupRow } from '@/components/TeacherGroupRow';
 import { Text } from '@/components/Text';
@@ -38,6 +39,7 @@ export function TeacherWords() {
           progressBackgroundColor={colors.surface}
         />
       }>
+      <ConnectionLine style={{ marginBottom: 12 }} />
       {profile.groups.length === 0 ? (
         <EmptyState icon={Users} title="No groups yet" message="Your groups appear here once you teach one in HolliHop." />
       ) : (
