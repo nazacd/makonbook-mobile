@@ -2,8 +2,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { router, useFocusEffect, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ActivityIndicator, AppState, Modal, Pressable, ScrollView, View } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Bookmark, Calculator, Coffee, House, ListChecks, Lock, Timer as TimerIcon, type LucideIcon } from 'lucide-react-native';
+import { ArrowRight, Bookmark, Calculator, Check, Coffee, House, ListChecks, Lock, Timer as TimerIcon, type LucideIcon } from 'lucide-react-native';
 
 import { AnswerChoice } from '@/components/AnswerChoice';
 import { BottomNavBar } from '@/components/BottomNavBar';
@@ -15,23 +16,48 @@ import { Notice } from '@/components/Notice';
 import { RichContent } from '@/components/practice/RichContent';
 import { QuestionNavigatorGrid } from '@/components/QuestionNavigatorGrid';
 import { FixedTextScale, Text } from '@/components/Text';
+import { ThrownObjects, type Thrown } from '@/components/ThrownObjects';
 import { Timer } from '@/components/Timer';
 import { useColors } from '@/design/colors';
+import { fonts } from '@/design/typography';
 import { usePackage, usePerson, useRefreshLocal, useRun, useRunStore } from '@/lib/practice/hooks';
 import { saveAttempt, type Run } from '@/lib/practice/local';
 import { finishRun, questionKey, stagesOf, SUBJECT_LABEL, testName } from '@/lib/practice/run';
+import type { Subject } from '@/lib/practice/types';
 import { confirm } from '@/lib/confirm';
-import { useRemainingTime } from '@/lib/timer';
+import { formatRemainingTime, useRemainingTime } from '@/lib/timer';
 
 const LETTERS = ['A', 'B', 'C', 'D'] as const;
 
 /** How often time used is saved while a module is on screen. */
 const PERSIST_INTERVAL_MS = 5000;
+/** The break between a full test's sections, as on the real SAT. */
+const BREAK_MS = 10 * 60_000;
+/** How long "Module 2 started" stays. */
+const NOTE_MS = 3200;
+
+// The subject's objects for the empty top of the pages around the clock:
+// English drawings for Reading and Writing, Math's set for Math. Densest at
+// the screen's right edge, fainter further in, never cut on the left.
+// [shape, scale, right, top, opacity, second tone]
+const TOP_OBJECTS: Record<Subject, [string, number, number, number, number, boolean][]> = {
+  english: [
+    ['nib', 1.6, -10, 10, 0.42, false], ['script', 1.4, 60, 0, 0.3, true], ['quote', 1.45, 18, 96, 0.36, false], ['book', 1.3, 96, 70, 0.22, true],
+    ['lozenge', 1, 64, 170, 0.2, false], ['quill', 1.15, 140, 20, 0.14, true], ['quote', 0.9, 150, 150, 0.12, false], ['nib', 0.95, 12, 210, 0.26, true],
+    ['script', 1.1, 200, 110, 0.1, false], ['quote', 0.85, 236, 24, 0.09, true], ['lozenge', 0.8, 214, 214, 0.09, true], ['quill', 0.9, 262, 160, 0.07, false],
+  ],
+  math: [
+    ['pi', 1.8, -6, 6, 0.45, false], ['integral', 2, 62, 30, 0.32, true], ['theta', 1.35, 20, 120, 0.34, false], ['sum', 1.4, 110, 0, 0.2, true],
+    ['unitCircle', 1.3, 116, 110, 0.2, false], ['alpha', 1.05, 70, 180, 0.22, true], ['root', 1.15, 168, 60, 0.14, false], ['infinity', 1.05, 16, 214, 0.26, true],
+    ['beta', 1.05, 202, 126, 0.11, false], ['sum', 0.9, 246, 30, 0.09, true], ['root', 0.9, 226, 206, 0.09, true], ['pi', 0.95, 270, 150, 0.07, false],
+  ],
+};
 
 // Taking a practice test: its modules one after another, each with its own
 // time, as in Bluebook. A module's answers are final once it is submitted (or
-// its time runs out). Leaving pauses the time; everything is saved on the
-// phone, so the test can be resumed later, offline.
+// its time runs out); the next module of the same subject starts by itself,
+// and a full test has a 10-minute break before Math. Leaving pauses the time;
+// everything is saved on the phone, so the test can be resumed later, offline.
 export default function PracticeRunScreen() {
   const colors = useColors();
   const { code } = useLocalSearchParams<{ code: string }>();
@@ -77,6 +103,8 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
   const [showReview, setShowReview] = useState(false);
   const [showCalculator, setShowCalculator] = useState(false);
   const [finishing, setFinishing] = useState(false);
+  // A short note when the next module has started by itself.
+  const [note, setNote] = useState<string | null>(null);
 
   const stages = stagesOf(pkg, run.sections);
   const stage = stages[run.stage]!;
@@ -85,6 +113,10 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
   const qKey = questionKey(stage, question);
   const minutes = stage.module.minutes;
   const { remainingMs, isExpired } = useRemainingTime(startTs, isFocused && run.ready, minutes * 60_000);
+  const brk = run.brk;
+  // The break as a countdown: as if it had started BREAK_MS before running out.
+  const breakStart = brk?.since != null ? Date.parse(brk.since) - (BREAK_MS - brk.leftMs) : null;
+  const breakClock = useRemainingTime(breakStart, isFocused && !!brk?.since, BREAK_MS);
 
   // Time on each question: counted from when it was shown until another one
   // is, or the module ends, or the screen is left.
@@ -137,12 +169,18 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
       if (r.ready) {
         setStartTs(Date.now() - r.elapsedMs);
         shownAt.current = Date.now();
+      } else if (r.brk && r.brk.since == null) {
+        // Back after leaving with Home: the break runs on from where it stopped.
+        const resumed = { ...r, brk: { leftMs: r.brk.leftMs, since: new Date().toISOString() } };
+        latest.current.run = resumed;
+        setRun(resumed);
+        runs.save(resumed);
       }
       return () => {
         persist();
         shownAt.current = null;
       };
-    }, [persist]),
+    }, [persist, runs]),
   );
 
   useEffect(() => {
@@ -165,7 +203,7 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
   const startModule = () => {
     shownAt.current = Date.now();
     setStartTs(Date.now());
-    update((r) => ({ ...r, ready: true, elapsedMs: 0, index: 0 }));
+    update((r) => ({ ...r, ready: true, elapsedMs: 0, index: 0, brk: undefined }));
   };
 
   const goto = (index: number) => update((r) => ({ ...r, index: Math.max(0, Math.min(questions.length - 1, index)) }));
@@ -181,7 +219,18 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
     shownAt.current = null;
     setStartTs(null);
     if (r.stage + 1 < stages.length) {
-      const next = { ...r, stage: r.stage + 1, ready: false, elapsedMs: 0, index: 0 };
+      const following = stages[r.stage + 1]!;
+      const sameSubject = following.subject === stage.subject;
+      // The same subject's next module starts at once; a new section first gets its break.
+      const next: Run = sameSubject
+        ? { ...r, stage: r.stage + 1, ready: true, elapsedMs: 0, index: 0 }
+        : { ...r, stage: r.stage + 1, ready: false, elapsedMs: 0, index: 0, brk: { leftMs: BREAK_MS, since: new Date().toISOString() } };
+      if (sameSubject) {
+        const now = Date.now();
+        shownAt.current = now;
+        setStartTs(now);
+        setNote(`Module ${stage.module.module} submitted · Module ${following.module.module} started`);
+      }
       latest.current.run = next;
       setRun(next);
       await runs.save(next);
@@ -206,6 +255,38 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, run.ready, isExpired]);
 
+  // The break is over: the next section starts by itself, once the app is
+  // in front (a module's clock never starts out of sight).
+  const [appActive, setAppActive] = useState(AppState.currentState === 'active');
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (next) => setAppActive(next === 'active'));
+    return () => sub.remove();
+  }, []);
+  useEffect(() => {
+    if (!isFocused || !appActive || !brk?.since || !breakClock.isExpired) return;
+    const id = setTimeout(startModule, 0);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused, appActive, brk?.since, breakClock.isExpired]);
+
+  useEffect(() => {
+    if (!note) return;
+    const id = setTimeout(() => setNote(null), NOTE_MS);
+    return () => clearTimeout(id);
+  }, [note]);
+
+  // Home during the break pauses it; the break runs on otherwise.
+  const pauseBreak = () => {
+    const r = latest.current.run;
+    if (r.brk?.since) {
+      const paused = { ...r, brk: { leftMs: breakClock.remainingMs, since: null } };
+      latest.current.run = paused;
+      setRun(paused);
+      runs.save(paused);
+    }
+    router.back();
+  };
+
   const leave = () =>
     confirm({
       title: 'Leave the test?',
@@ -229,22 +310,59 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
     );
   }
 
-  if (!run.ready) {
-    const newSection = run.stage > 0 && stages[run.stage - 1]!.subject !== stage.subject;
+  if (!run.ready && brk) {
+    const left = breakClock.remainingMs;
     return (
       <View className="flex-1 bg-brand">
+        <TopObjects subject={stage.subject} />
         <SafeAreaView style={{ flex: 1 }}>
           <View className="flex-1 px-5 py-2" style={{ paddingBottom: 16 }}>
-            <Pressable
-              onPress={() => router.back()}
-              accessibilityRole="button"
-              accessibilityLabel="Close"
-              style={({ pressed }) => ({ width: 44, height: 44, marginLeft: -10, alignItems: 'center', justifyContent: 'center', opacity: pressed ? 0.6 : 1 })}>
-              <Icon as={House} size={22} />
-            </Pressable>
+            <CloseButton onPress={pauseBreak} label="Leave and pause the break" />
+            <View style={{ marginTop: 'auto', marginBottom: 26 }}>
+              <Text variant="callout" style={{ color: colors.ink2 }}>
+                Break
+              </Text>
+              <Text
+                style={{ fontFamily: fonts.displayBold, fontSize: 76, lineHeight: 84, color: colors.ink, fontVariant: ['tabular-nums'], letterSpacing: -1 }}
+                accessibilityRole="timer"
+                accessibilityLabel={`Break, ${Math.ceil(left / 60_000)} minutes left`}>
+                {formatRemainingTime(left)}
+              </Text>
+              <View style={{ height: 6, borderRadius: 3, backgroundColor: colors.track, overflow: 'hidden', marginTop: 12, marginBottom: 10 }}>
+                <View style={{ width: `${(left / BREAK_MS) * 100}%`, height: 6, borderRadius: 3, backgroundColor: colors.primary }} />
+              </View>
+              <Text variant="callout" style={{ color: colors.ink2 }}>
+                {SUBJECT_LABEL[stage.subject]} starts by itself when the break ends.
+              </Text>
+              <View className="flex-row items-center gap-2" style={{ marginTop: 10 }}>
+                <Icon as={ArrowRight} size={17} color={colors.ink3} />
+                <Text variant="subhead" style={{ color: colors.ink2 }}>
+                  Next:{' '}
+                  <Text variant="subhead" style={{ color: colors.ink, fontWeight: '500' }}>
+                    {moduleLabel}
+                  </Text>{' '}
+                  · {minutes} min
+                </Text>
+              </View>
+            </View>
+            <Button label="Skip break" variant="secondary" onPress={startModule} />
+          </View>
+        </SafeAreaView>
+      </View>
+    );
+  }
+
+  if (!run.ready) {
+    const fullTest = stages.some((s) => s.subject !== stage.subject);
+    return (
+      <View className="flex-1 bg-brand">
+        <TopObjects subject={stage.subject} />
+        <SafeAreaView style={{ flex: 1 }}>
+          <View className="flex-1 px-5 py-2" style={{ paddingBottom: 16 }}>
+            <CloseButton onPress={() => router.back()} label="Close" />
             <View className="gap-2" style={{ marginTop: 'auto', marginBottom: 28 }}>
               <Text variant="callout" style={{ color: colors.ink2 }}>
-                {testName(pkg.title)} · Part {run.stage + 1} of {stages.length}
+                {testName(pkg.title)} · {fullTest ? 'Full test' : SUBJECT_LABEL[stage.subject]}
               </Text>
               <Text variant="title" className="text-ink" style={{ marginBottom: 8 }} accessibilityRole="header">
                 {moduleLabel}
@@ -252,8 +370,8 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
               <Fact icon={ListChecks} text={`${questions.length} questions`} />
               <Fact icon={TimerIcon} text={`${minutes} minutes`} />
               {stage.subject === 'math' && <Fact icon={Calculator} text="Calculator allowed" />}
-              {newSection ? (
-                <Note icon={Coffee} text="On the real SAT you get a 10-minute break here. Take one if you like: the clock starts only when you tap Start." />
+              {run.stage === 0 && fullTest ? (
+                <Note icon={Coffee} text="Module 2 follows straight on; a 10-minute break comes before Math." />
               ) : run.stage > 0 ? (
                 <Note icon={Lock} text="The previous module is submitted. Its answers can’t be changed now." />
               ) : null}
@@ -282,6 +400,18 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
     <View className="flex-1 bg-brand">
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
         <View className="flex-1">
+          {note && (
+            <Animated.View
+              entering={FadeIn.duration(200)}
+              exiting={FadeOut.duration(300)}
+              accessibilityLiveRegion="polite"
+              style={{ position: 'absolute', top: 64, left: 20, right: 20, zIndex: 3, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, paddingVertical: 12, borderRadius: 14, backgroundColor: colors.primary }}>
+              <Icon as={Check} size={18} color={colors.onPrimary} />
+              <Text variant="subhead" style={{ color: colors.onPrimary, fontWeight: '500', flexShrink: 1 }}>
+                {note}
+              </Text>
+            </Animated.View>
+          )}
           <View className="flex-row items-center border-b border-line bg-brand px-2">
             <Pressable onPress={leave} hitSlop={10} className="p-2" accessibilityRole="button" accessibilityLabel="Leave the test">
               <Icon as={House} size={20} />
@@ -474,6 +604,30 @@ function Note({ icon, text }: { icon: LucideIcon; text: string }) {
       <Text variant="subhead" className="flex-1" style={{ color: colors.ink2 }}>
         {text}
       </Text>
+    </View>
+  );
+}
+
+function CloseButton({ onPress, label }: { onPress: () => void; label: string }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      style={({ pressed }) => ({ width: 44, height: 44, marginLeft: -10, alignItems: 'center', justifyContent: 'center', opacity: pressed ? 0.6 : 1 })}>
+      <Icon as={House} size={22} />
+    </Pressable>
+  );
+}
+
+// The subject's objects in the page's empty top, thrown in from the right edge.
+function TopObjects({ subject }: { subject: Subject }) {
+  const colors = useColors();
+  const tone = (second: boolean) => (subject === 'math' ? (second ? colors.math2 : colors.math) : second ? colors.english2 : colors.english);
+  const items: Thrown[] = TOP_OBJECTS[subject].map(([shape, scale, right, top, opacity, second]) => ({ shape, scale, right, top, opacity, color: tone(second) }));
+  return (
+    <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, top: 110, height: 320, overflow: 'hidden' }}>
+      <ThrownObjects items={items} play={0} travel={(o) => (o.right ?? 0) + 40} />
     </View>
   );
 }

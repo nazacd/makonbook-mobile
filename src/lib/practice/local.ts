@@ -28,6 +28,12 @@ export type Run = {
   seconds: Record<string, number>;
   marked: string[];
   eliminated: Record<string, string[]>;
+  /**
+   * The break between a full test's sections, while it's on: time left as of
+   * `since` (when it last ran on), or paused (`since` null). It runs in real
+   * time, also with the app in the background; only leaving with Home pauses it.
+   */
+  brk?: { leftMs: number; since: string | null };
 };
 
 export type LocalAttempt = {
