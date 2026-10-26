@@ -156,8 +156,12 @@ export default function StudyScreen() {
                     </Text>
                   </View>
                 )}
+                {/* One line at its full size; a long word or phrase shrinks to fit instead of breaking. */}
                 <Text
                   style={{ fontFamily: fonts.displayBold, fontSize: 44, lineHeight: 50, color: colors.ink }}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.45}
                   maxFontSizeMultiplier={1.2}
                   accessibilityRole="header">
                   {word.word}
