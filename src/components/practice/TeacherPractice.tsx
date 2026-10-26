@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ConnectionLine } from '@/components/ConnectionLine';
 import { Icon } from '@/components/Icon';
 import { groupTitle, TeacherGroupRow } from '@/components/TeacherGroupRow';
 import { EmptyState } from '@/components/States';
@@ -76,6 +77,7 @@ export function TeacherPractice() {
           progressBackgroundColor={colors.surface}
         />
       }>
+      <ConnectionLine style={{ marginBottom: 12 }} />
       {fresh > 0 && since != null && (
         <Pressable
           onPress={() => router.push('/practice/new')}

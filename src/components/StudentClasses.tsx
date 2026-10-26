@@ -3,6 +3,7 @@ import { CalendarX } from 'lucide-react-native';
 import { Image, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ConnectionLine } from '@/components/ConnectionLine';
 import { Avatar } from '@/components/Avatar';
 import { ClassBlock } from '@/components/ClassBlock';
 import { EmptyState } from '@/components/States';
@@ -63,6 +64,7 @@ export function StudentClasses() {
             <Avatar kind="student" firstName={profile.first_name} lastName={profile.last_name} id={profile.id} />
           </Pressable>
         </View>
+        <ConnectionLine />
         {next && <NextClass next={next} now={now} />}
       </View>
 

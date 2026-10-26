@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ConnectionLine } from '@/components/ConnectionLine';
 import { Button } from '@/components/Button';
 import { Icon } from '@/components/Icon';
 import { EmptyState, ErrorState, Skeleton } from '@/components/States';
@@ -99,6 +100,7 @@ export function StudentWords() {
             progressBackgroundColor={colors.surface}
           />
         }>
+        <ConnectionLine detail="progress sends when online" style={{ marginBottom: 4 }} />
         {deck.data && deck.data.lists.length > 0 && (
           <View className="flex-row justify-end" style={{ marginRight: -10, marginBottom: -16, zIndex: 2 }}>
             <Pressable

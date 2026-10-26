@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Image, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ConnectionLine } from '@/components/ConnectionLine';
 import { Avatar } from '@/components/Avatar';
 import { Button } from '@/components/Button';
 import { Icon } from '@/components/Icon';
@@ -104,6 +105,8 @@ export function TeacherToday() {
           <Avatar kind="teacher" firstName={profile.first_name} lastName={profile.last_name} id={profile.id} />
         </Pressable>
       </View>
+
+      <ConnectionLine />
 
       <View className="gap-1">
         <Text variant="largeTitle" style={{ color: colors.ink }} accessibilityRole="header">

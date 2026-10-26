@@ -4,6 +4,7 @@ import { createContext, use, useEffect, useState, type ReactNode } from 'react';
 import { api, setAuthToken, setUnauthorizedHandler } from '@/lib/api/client';
 import type { LoginResponse } from '@/lib/api/types';
 import { meQueryKey } from '@/lib/api/queries';
+import { deleteSaved, keepSaved, restoreSaved } from '@/lib/api/saved';
 import { getDeviceId } from './device';
 import { deleteItem, getItem, setItem } from './secure-storage';
 
@@ -21,7 +22,8 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 // Who is signed in, as far as this device knows. The token is read from secure
 // storage once at launch; everything about the person comes from /v1/me
-// (useMe), so it is never stale for longer than a refetch.
+// (useMe). The last profile is kept on the phone (lib/api/saved), so the app
+// opens at once, also offline, and refreshes it in the background.
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [status, setStatus] = useState<AuthStatus>('loading');
@@ -30,7 +32,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     getItem(TOKEN_KEY)
       .catch(() => null)
-      .then((token) => {
+      .then(async (token) => {
+        if (token) await restoreSaved(queryClient);
         if (cancelled) return;
         setAuthToken(token);
         setStatus(token ? 'signedIn' : 'signedOut');
@@ -38,7 +41,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [queryClient]);
+
+  useEffect(() => keepSaved(queryClient), [queryClient]);
 
   // Forget the session on this device. Never fails: a broken keychain must not
   // leave someone stuck signed in.
@@ -46,6 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthToken(null);
     await deleteItem(TOKEN_KEY).catch(() => {});
     queryClient.clear();
+    await deleteSaved();
     setStatus('signedOut');
   }
 

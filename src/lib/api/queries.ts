@@ -33,6 +33,9 @@ export function useMe(enabled = true) {
     queryKey: meQueryKey,
     queryFn: () => api.get<Profile>('/v1/me'),
     enabled,
+    // Offline, try again every half minute, so the app notices the connection
+    // coming back while it's open.
+    refetchInterval: (query) => (query.state.error instanceof ApiError && query.state.error.transient ? 30_000 : false),
   });
 }
 

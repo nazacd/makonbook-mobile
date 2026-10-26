@@ -23,6 +23,7 @@ export default function SignInScreen() {
   const [busy, setBusy] = useState(false);
   const [wrongCredentials, setWrongCredentials] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
+  const [offline, setOffline] = useState(false);
 
   const canSubmit = login.trim() !== '' && password !== '' && !busy;
 
@@ -31,6 +32,7 @@ export default function SignInScreen() {
     setBusy(true);
     setWrongCredentials(false);
     setProblem(null);
+    setOffline(false);
     try {
       await signIn(login, password);
       haptics.success();
@@ -41,6 +43,8 @@ export default function SignInScreen() {
         setWrongCredentials(true);
         setPassword('');
         passwordRef.current?.focus();
+      } else if (e instanceof ApiError && e.code === 'network') {
+        setOffline(true);
       } else {
         setProblem(describeError(e));
       }
@@ -95,6 +99,7 @@ export default function SignInScreen() {
         hint="First time? Your password is the last 4 digits of your phone number."
       />
 
+      {offline && <Notice tone="warning" message="No internet connection." />}
       {problem && <Notice tone="error" message={problem} />}
 
       <View className="pt-1">
