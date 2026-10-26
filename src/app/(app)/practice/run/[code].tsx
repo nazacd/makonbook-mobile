@@ -3,7 +3,7 @@ import { router, useFocusEffect, useIsFocused, useLocalSearchParams } from 'expo
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ActivityIndicator, AppState, Modal, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Bookmark, Calculator, House } from 'lucide-react-native';
+import { Bookmark, Calculator, Coffee, House, ListChecks, Lock, Timer as TimerIcon, type LucideIcon } from 'lucide-react-native';
 
 import { AnswerChoice } from '@/components/AnswerChoice';
 import { BottomNavBar } from '@/components/BottomNavBar';
@@ -19,7 +19,7 @@ import { Timer } from '@/components/Timer';
 import { useColors } from '@/design/colors';
 import { usePackage, usePerson, useRefreshLocal, useRun, useRunStore } from '@/lib/practice/hooks';
 import { saveAttempt, type Run } from '@/lib/practice/local';
-import { finishRun, questionKey, stagesOf, SUBJECT_LABEL } from '@/lib/practice/run';
+import { finishRun, questionKey, stagesOf, SUBJECT_LABEL, testName } from '@/lib/practice/run';
 import { confirm } from '@/lib/confirm';
 import { useRemainingTime } from '@/lib/timer';
 
@@ -234,30 +234,28 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
     return (
       <View className="flex-1 bg-brand">
         <SafeAreaView style={{ flex: 1 }}>
-          <View className="flex-1 justify-between px-6 py-4">
-            <Pressable onPress={() => router.back()} hitSlop={10} className="self-start p-2" accessibilityRole="button" accessibilityLabel="Close">
-              <Icon as={House} size={20} />
+          <View className="flex-1 px-5 py-2" style={{ paddingBottom: 16 }}>
+            <Pressable
+              onPress={() => router.back()}
+              accessibilityRole="button"
+              accessibilityLabel="Close"
+              style={({ pressed }) => ({ width: 44, height: 44, marginLeft: -10, alignItems: 'center', justifyContent: 'center', opacity: pressed ? 0.6 : 1 })}>
+              <Icon as={House} size={22} />
             </Pressable>
-            <View className="gap-3">
-              <Text variant="caption" style={{ color: colors.accent, textTransform: 'uppercase' }}>
-                {pkg.title} · Part {run.stage + 1} of {stages.length}
+            <View className="gap-2" style={{ marginTop: 'auto', marginBottom: 28 }}>
+              <Text variant="callout" style={{ color: colors.ink2 }}>
+                {testName(pkg.title)} · Part {run.stage + 1} of {stages.length}
               </Text>
-              <Text variant="title" className="text-ink">
+              <Text variant="title" className="text-ink" style={{ marginBottom: 8 }} accessibilityRole="header">
                 {moduleLabel}
               </Text>
-              <Text variant="body" style={{ color: colors.ink2 }}>
-                {questions.length} questions · {minutes} minutes
-                {stage.subject === 'math' ? ' · calculator allowed' : ''}
-              </Text>
+              <Fact icon={ListChecks} text={`${questions.length} questions`} />
+              <Fact icon={TimerIcon} text={`${minutes} minutes`} />
+              {stage.subject === 'math' && <Fact icon={Calculator} text="Calculator allowed" />}
               {newSection ? (
-                <Text variant="subhead" style={{ color: colors.ink2 }}>
-                  On the real SAT you get a 10-minute break here. Take one if you like: the clock starts only when you
-                  tap Start.
-                </Text>
+                <Note icon={Coffee} text="On the real SAT you get a 10-minute break here. Take one if you like: the clock starts only when you tap Start." />
               ) : run.stage > 0 ? (
-                <Text variant="subhead" style={{ color: colors.ink2 }}>
-                  The previous module is submitted. Its answers can’t be changed now.
-                </Text>
+                <Note icon={Lock} text="The previous module is submitted. Its answers can’t be changed now." />
               ) : null}
             </View>
             <Button label={`Start module ${stage.module.module}`} onPress={startModule} />
@@ -452,6 +450,30 @@ function Runner({ initial, pkg }: { initial: Run; pkg: NonNullable<ReturnType<ty
       </Modal>
 
       <CalculatorWidget visible={showCalculator} onClose={() => setShowCalculator(false)} />
+    </View>
+  );
+}
+
+function Fact({ icon, text }: { icon: LucideIcon; text: string }) {
+  const colors = useColors();
+  return (
+    <View className="flex-row items-center gap-3" style={{ minHeight: 32 }}>
+      <Icon as={icon} size={20} color={colors.ink3} />
+      <Text variant="body" style={{ color: colors.ink }}>
+        {text}
+      </Text>
+    </View>
+  );
+}
+
+function Note({ icon, text }: { icon: LucideIcon; text: string }) {
+  const colors = useColors();
+  return (
+    <View className="flex-row gap-2.5" style={{ marginTop: 10 }}>
+      <Icon as={icon} size={18} color={colors.ink3} />
+      <Text variant="subhead" className="flex-1" style={{ color: colors.ink2 }}>
+        {text}
+      </Text>
     </View>
   );
 }
