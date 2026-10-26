@@ -19,6 +19,11 @@ import { useCatalog, useDownloads, useDownloadTest, useLocalAttempts, usePackage
 import { formatBytes, newRun, SUBJECT_LABEL, testName } from '@/lib/practice/run';
 import type { Subject } from '@/lib/practice/types';
 
+// The Digital SAT's sections: two modules each, 32 min for Reading and Writing
+// and 35 for Math. Shown until the test's package (with its own times) is on
+// the phone, since the catalogue has no times.
+const SAT_MINUTES: Record<Subject, number> = { english: 64, math: 70 };
+
 /** "2 h 14 min", or "64 min" under an hour (or always, when `short`). */
 function duration(minutes: number, short = false): string {
   if (short || minutes < 60) return `${minutes} min`;
@@ -50,7 +55,11 @@ export default function PracticeTestScreen() {
   const update = !!(local && test?.version && test.version > local.version);
   const ready = !!(local && pkg.data);
   const minutes = (subject?: Subject) =>
-    (pkg.data?.sections ?? []).filter((s) => !subject || s.subject === subject).reduce((n, s) => n + s.modules.reduce((m, mod) => m + mod.minutes, 0), 0);
+    pkg.data
+      ? pkg.data.sections.filter((s) => !subject || s.subject === subject).reduce((n, s) => n + s.modules.reduce((m, mod) => m + mod.minutes, 0), 0)
+      : subject
+        ? SAT_MINUTES[subject]
+        : SAT_MINUTES.english + SAT_MINUTES.math;
 
   const begin = async (sections: Subject[]) => {
     if (!pkg.data) return;
@@ -168,14 +177,12 @@ export default function PracticeTestScreen() {
                 </Pressable>
               )}
             </View>
-            {ready && (
-              <View className="flex-row items-center gap-1.5" style={{ marginTop: 4 }}>
-                <Icon as={Clock} size={16} color={colors.ink3} />
-                <Text variant="callout" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
-                  {duration(minutes())}
-                </Text>
-              </View>
-            )}
+            <View className="flex-row items-center gap-1.5" style={{ marginTop: 4 }}>
+              <Icon as={Clock} size={16} color={colors.ink3} />
+              <Text variant="callout" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
+                {duration(minutes())}
+              </Text>
+            </View>
           </>
         )}
 
@@ -204,7 +211,7 @@ export default function PracticeTestScreen() {
       <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: insets.bottom + 12, borderTopWidth: 1, borderTopColor: colors.line, gap: 10 }}>
         {download.isError && <Notice tone="error" message={describeError(download.error)} />}
         {!local && !download.isPending && (
-          <View className="flex-row items-center gap-2">
+          <View className="flex-row items-center justify-center gap-2">
             <Icon as={Download} size={16} color={colors.ink3} />
             <Text variant="footnote" style={{ color: colors.ink2 }}>
               Download once, then take it offline.
@@ -247,7 +254,7 @@ function Halves({ ready, minutes, onStart }: { ready: boolean; minutes: (s?: Sub
       onPress={() => onStart(subject)}
       disabled={!ready}
       accessibilityRole="button"
-      accessibilityLabel={`${SUBJECT_LABEL[subject]} only${ready ? `, ${minutes(subject)} minutes` : ''}`}
+      accessibilityLabel={`${SUBJECT_LABEL[subject]} only, ${minutes(subject)} minutes`}
       accessibilityState={{ disabled: !ready }}
       style={({ pressed }) => ({
         flex: 1,
@@ -267,14 +274,12 @@ function Halves({ ready, minutes, onStart }: { ready: boolean; minutes: (s?: Sub
       <Text variant="title3" numberOfLines={1} style={{ color: colors.ink, fontSize: 17, lineHeight: 22 }}>
         {name}
       </Text>
-      {ready && (
-        <View className="flex-row items-center gap-1.5" style={{ marginTop: 4 }}>
-          <Icon as={Clock} size={15} color={colors.ink3} />
-          <Text variant="subhead" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
-            {duration(minutes(subject), true)}
-          </Text>
-        </View>
-      )}
+      <View className="flex-row items-center gap-1.5" style={{ marginTop: 4 }}>
+        <Icon as={Clock} size={15} color={colors.ink3} />
+        <Text variant="subhead" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
+          {duration(minutes(subject), true)}
+        </Text>
+      </View>
     </Pressable>
   );
   return (

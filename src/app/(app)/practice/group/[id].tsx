@@ -14,7 +14,7 @@ import { useMe } from '@/lib/api/queries';
 import { useNow } from '@/lib/clock';
 import { normalCase } from '@/lib/groups';
 import { useGroupPractice } from '@/lib/practice/hooks';
-import { SUBJECT_LABEL, SUBJECT_SHORT } from '@/lib/practice/run';
+import { SUBJECT_LABEL, SUBJECT_SHORT, testName } from '@/lib/practice/run';
 import { practicedSince, useLastVisit } from '@/lib/practice/summary';
 import type { GroupStudent, ServerAttempt } from '@/lib/practice/types';
 import { lastClass, pastDay, relativeDay } from '@/lib/schedule';
@@ -159,7 +159,7 @@ function StudentRow({
   const name = normalCase(`${s.first_name} ${s.last_name}`);
   const { latest, full, change, section } = standing(s);
   const latestLine = latest
-    ? `${latest.title}${isFull(latest) ? '' : `, ${SUBJECT_SHORT[latest.sections[0]!]}`} · ${relativeDay(Date.parse(latest.finished_at), now)}`
+    ? `${testName(latest.title)} · ${relativeDay(Date.parse(latest.finished_at), now)}`
     : '';
 
   return (
@@ -217,7 +217,7 @@ function History({ attempts, now }: { attempts: ServerAttempt[]; now: number }) 
           ? `${when} · ${a.sections.map((x) => `${SUBJECT_SHORT[x]} ${a.scores[x]?.score}`).join(' · ')}`
           : `${when} · ${a.scores[subject]?.raw} of ${a.scores[subject]?.questions} right`;
         return (
-          <View key={a.id} className="flex-row items-center gap-3" style={{ minHeight: 52 }} accessible accessibilityLabel={`${a.title}, ${full ? 'full test' : SUBJECT_LABEL[subject]}, ${detail}, ${full ? a.total : `${SUBJECT_SHORT[subject]} ${a.scores[subject]?.score}`}`}>
+          <View key={a.id} className="flex-row items-center gap-3" style={{ minHeight: 52 }} accessible accessibilityLabel={`${testName(a.title)}, ${full ? 'full test' : SUBJECT_LABEL[subject]}, ${detail}, ${full ? a.total : `${SUBJECT_SHORT[subject]} ${a.scores[subject]?.score}`}`}>
             <View
               style={{
                 position: 'absolute',
@@ -232,7 +232,7 @@ function History({ attempts, now }: { attempts: ServerAttempt[]; now: number }) 
             />
             <View className="flex-1">
               <Text variant="subhead" style={{ color: colors.ink }}>
-                {a.title} · {full ? 'Full test' : SUBJECT_LABEL[subject]}
+                {testName(a.title)} · {full ? 'Full test' : SUBJECT_LABEL[subject]}
               </Text>
               <Text variant="caption" style={{ color: colors.ink3, fontWeight: '400', fontVariant: ['tabular-nums'] }}>
                 {detail}
@@ -243,8 +243,8 @@ function History({ attempts, now }: { attempts: ServerAttempt[]; now: number }) 
                 {a.total}
               </Text>
             ) : (
-              <Text variant="footnote" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
-                {SUBJECT_SHORT[subject]} {a.scores[subject]?.score}
+              <Text variant="subhead" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
+                {a.scores[subject]?.score}
               </Text>
             )}
           </View>

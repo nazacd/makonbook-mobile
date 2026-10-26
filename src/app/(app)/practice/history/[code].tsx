@@ -8,7 +8,7 @@ import { useColors } from '@/design/colors';
 import { fonts } from '@/design/typography';
 import { useNow } from '@/lib/clock';
 import { useLocalAttempts } from '@/lib/practice/hooks';
-import { SUBJECT_LABEL, SUBJECT_SHORT, testName } from '@/lib/practice/run';
+import { SUBJECT_LABEL, testName } from '@/lib/practice/run';
 import { relativeDay } from '@/lib/schedule';
 
 // Every attempt of one test on this phone, newest first; each opens its result.
@@ -30,7 +30,7 @@ export default function PracticeHistoryScreen() {
           const subject = a.sections[0]!;
           const what = full ? 'Full test' : SUBJECT_LABEL[subject];
           const when = relativeDay(Date.parse(a.finished_at), now);
-          const score = full ? String(a.total) : `${SUBJECT_SHORT[subject]} ${a.scores[subject]?.score ?? '–'}`;
+          const score = String((full ? a.total : a.scores[subject]?.score) ?? '–');
           return (
             <Pressable
               key={a.id}

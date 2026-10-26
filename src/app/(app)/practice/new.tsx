@@ -12,7 +12,7 @@ import { useMe } from '@/lib/api/queries';
 import type { Profile } from '@/lib/api/types';
 import { useNow } from '@/lib/clock';
 import { normalCase, parseClassName, teacherTitle } from '@/lib/groups';
-import { SUBJECT_SHORT } from '@/lib/practice/run';
+import { SUBJECT_SHORT, testName } from '@/lib/practice/run';
 import { useLastVisit, usePracticeSummary, type FreshResult } from '@/lib/practice/summary';
 import { formatDate, schoolClock, schoolDate } from '@/lib/schedule';
 
@@ -47,7 +47,7 @@ function ResultRow({ result, group, now, first }: { result: FreshResult; group: 
   const section = attempt.total == null ? attempt.sections[0] : null;
   const score = section ? attempt.scores[section]?.score : attempt.total;
   const change = attempt.total != null && previousTotal != null ? attempt.total - previousTotal : 0;
-  const what = section ? `${attempt.title}, ${SUBJECT_SHORT[section]}` : attempt.title;
+  const what = testName(attempt.title);
 
   return (
     <Pressable
