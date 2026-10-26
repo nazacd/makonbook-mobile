@@ -177,10 +177,11 @@ export function useVocabSync(enabled: boolean) {
   });
 }
 
+export const groupVocabKey = (groupId: string) => ['vocab-group', groupId] as const;
+
+export const fetchGroupVocab = (groupId: string) =>
+  api.get<{ words: number; students: GroupVocabStudent[] }>(`/v1/teacher/groups/${encodeURIComponent(groupId)}/vocab`);
+
 export function useGroupVocab(groupId: string) {
-  return useQuery({
-    queryKey: ['vocab-group', groupId],
-    queryFn: () =>
-      api.get<{ words: number; students: GroupVocabStudent[] }>(`/v1/teacher/groups/${encodeURIComponent(groupId)}/vocab`),
-  });
+  return useQuery({ queryKey: groupVocabKey(groupId), queryFn: () => fetchGroupVocab(groupId) });
 }
