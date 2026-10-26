@@ -121,6 +121,14 @@ export function formatDate(date: string): string {
   return `${SHORT[WEEKDAYS[d.getUTCDay()]]}, ${d.getUTCDate()} ${month}`;
 }
 
+/** "today", "yesterday" or "12 Oct" for an instant in the past. */
+export function relativeDay(t: number, now: number): string {
+  const days = Math.round((schoolMidnight(now) - schoolMidnight(t)) / DAY_MS);
+  if (days === 0) return 'today';
+  if (days === 1) return 'yesterday';
+  return formatDate(schoolDate(t)).slice(5);
+}
+
 /** "14:05" at the school for an instant. */
 export function schoolClock(ms: number): string {
   const d = new Date(ms + SCHOOL_UTC_OFFSET_MS);

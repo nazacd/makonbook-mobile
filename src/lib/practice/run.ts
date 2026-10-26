@@ -4,6 +4,9 @@ import type { Package, PackageModule, PackageQuestion, Subject } from './types';
 
 export const SUBJECT_LABEL: Record<Subject, string> = { english: 'Reading and Writing', math: 'Math' };
 
+/** Where space is short: next to a score. */
+export const SUBJECT_SHORT: Record<Subject, string> = { english: 'R&W', math: 'Math' };
+
 /** A timed module, in the order a run takes them: Reading and Writing first, as in Bluebook. */
 export type Stage = { subject: Subject; module: PackageModule };
 
