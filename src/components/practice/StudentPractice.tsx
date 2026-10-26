@@ -217,7 +217,7 @@ function ScoreHero({ scores, play }: { scores: number[]; play: number }) {
       accessible
       accessibilityLabel={`Latest full test ${last}${change ? `, ${change > 0 ? 'up' : 'down'} ${Math.abs(change)}` : ''}`}>
       <View style={{ position: 'absolute', top: 0, bottom: 0, right: -20, width: 170 }}>
-        <ThrownObjects items={objects} play={play} travel={(o) => o.right + 40} />
+        <ThrownObjects items={objects} play={play} travel={(o) => (o.right ?? 0) + 40} />
       </View>
       <Text variant="subhead" style={{ color: colors.ink2 }}>
         Latest full test

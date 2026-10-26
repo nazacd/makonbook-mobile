@@ -134,7 +134,7 @@ export function StudentWords() {
           <>
             <View style={{ minHeight: 120, marginBottom: 28 }}>
               <View style={{ position: 'absolute', top: 0, height: 112, right: -20, width: 150 }}>
-                <ThrownObjects items={objects} play={play} travel={(o) => o.right + 40} />
+                <ThrownObjects items={objects} play={play} travel={(o) => (o.right ?? 0) + 40} />
               </View>
               <Text variant="subhead" style={{ color: colors.ink2 }}>
                 Today

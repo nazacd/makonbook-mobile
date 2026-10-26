@@ -269,7 +269,7 @@ function Halves({ ready, minutes, onStart }: { ready: boolean; minutes: (s?: Sub
         overflow: rightSide ? 'visible' : 'hidden',
       })}>
       <View style={{ position: 'absolute', top: 0, bottom: 0, right: rightSide ? -20 : 0, width: 120 }}>
-        <ThrownObjects items={objects} play={0} travel={(o) => (rightSide ? o.right + 40 : o.right + 6)} delay={rightSide ? 0 : 140} />
+        <ThrownObjects items={objects} play={0} travel={(o) => (o.right ?? 0) + (rightSide ? 40 : 6)} delay={rightSide ? 0 : 140} />
       </View>
       <Text variant="title3" numberOfLines={1} style={{ color: colors.ink, fontSize: 17, lineHeight: 22 }}>
         {name}

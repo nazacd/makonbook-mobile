@@ -5,8 +5,8 @@ import Svg, { G } from 'react-native-svg';
 import { SHAPES } from '@/components/SubjectSpill';
 import { spring } from '@/design/motion';
 
-/** One object at rest: a SubjectSpill shape, its colour, scale and place (from the layer's right edge). */
-export type Thrown = { shape: string; color: string; scale: number; right: number; top?: number; bottom?: number; opacity: number };
+/** One object at rest: a SubjectSpill shape, its colour, scale and place, from the layer's right edge (or left, to come in from the left). */
+export type Thrown = { shape: string; color: string; scale: number; right?: number; left?: number; top?: number; bottom?: number; opacity: number };
 
 // A thrown object settles like anything that just appears: no bounce, a
 // navigation carries no momentum. Slower than a tap's response, so it reads as a throw.
@@ -26,8 +26,9 @@ function enter(travel: number, turn: number, delay: number, opacity: number): En
   };
 }
 
-// Objects thrown in from the right each time `play` changes, landing where
-// they rest. `travel` is how far right of its resting place each one starts
+// Objects thrown in from the right (or, placed by `left`, from the left) each
+// time `play` changes, landing where they rest. `travel` is how far outside
+// its resting place each one starts
 // (past the screen edge, or just past its layer's edge when the layer clips);
 // nearer ones land first. Under Reduce Motion they only fade in.
 export function ThrownObjects({ items, play, travel, delay = 0 }: { items: Thrown[]; play: number; travel: (item: Thrown) => number; delay?: number }) {
@@ -39,8 +40,8 @@ export function ThrownObjects({ items, play, travel, delay = 0 }: { items: Throw
         return (
           <Animated.View
             key={`${play}-${i}`}
-            entering={reduceMotion ? FadeIn.duration(300) : enter(travel(o) + size, i % 2 ? 60 : -50, delay + i * 45, o.opacity)}
-            style={{ position: 'absolute', right: o.right, top: o.top, bottom: o.bottom, width: size, height: size, opacity: o.opacity }}>
+            entering={reduceMotion ? FadeIn.duration(300) : enter((travel(o) + size) * (o.left != null ? -1 : 1), (i % 2 ? 60 : -50) * (o.left != null ? -1 : 1), delay + i * 45, o.opacity)}
+            style={{ position: 'absolute', right: o.right, left: o.left, top: o.top, bottom: o.bottom, width: size, height: size, opacity: o.opacity }}>
             <Svg width={size} height={size}>
               <G transform={`translate(${size / 2} ${size / 2}) scale(${o.scale})`}>{SHAPES[o.shape]!(o.color)}</G>
             </Svg>
