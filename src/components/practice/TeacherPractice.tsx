@@ -5,13 +5,13 @@ import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/Icon';
+import { groupTitle, TeacherGroupRow } from '@/components/TeacherGroupRow';
 import { EmptyState } from '@/components/States';
 import { Text } from '@/components/Text';
 import { useColors } from '@/design/colors';
 import { useMe } from '@/lib/api/queries';
 import type { Group, Profile } from '@/lib/api/types';
 import { useNow } from '@/lib/clock';
-import { dayLetters, parseClassName, teacherTitle } from '@/lib/groups';
 import { useLastVisit, useMarkVisited, usePracticeSummary, type GroupSummary } from '@/lib/practice/summary';
 import { addDays, formatDate, pastDay, schoolClock, schoolDate } from '@/lib/schedule';
 
@@ -101,46 +101,20 @@ export function TeacherPractice() {
 
 function GroupRow({ group, summary, now, first }: { group: Group; summary?: GroupSummary; now: number; first: boolean }) {
   const colors = useColors();
-  const name = parseClassName(group.name, group.discipline);
-  const title = teacherTitle(name);
-  const slot = group.schedule[0];
-  const time = slot ? `${slot.begin_time} · ${dayLetters(slot.weekdays)}` : null;
-  const dot = name.subject === 'Math' ? colors.math : name.subject === 'English' ? colors.english : colors.ink3;
   const fresh = summary?.fresh.length ?? 0;
   // Practised since the group's last lesson; nothing while that's still none.
   const practiced = summary?.practiced && summary.since != null ? { count: summary.practiced, day: pastDay(summary.since, now) } : null;
-  const label = [
-    title,
-    time,
-    practiced && summary && `${practiced.count} of ${summary.students} practiced since ${pastDay(summary.since!, now, true)}`,
-    fresh > 0 && `${fresh} new`,
-  ]
-    .filter(Boolean)
-    .join(', ');
-
   return (
-    <Pressable
-      onPress={() => router.push({ pathname: '/practice/group/[id]', params: { id: String(group.id), name: title } })}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      style={({ pressed }) => ({ marginHorizontal: -20, paddingHorizontal: 20, backgroundColor: pressed ? colors.surface2 : 'transparent' })}>
-      <View
-        className="flex-row items-center gap-3"
-        style={{ minHeight: 72, paddingVertical: 12, borderTopWidth: first ? 0 : 1, borderTopColor: colors.line }}>
-        <View className="flex-1 gap-1">
-          <Text variant="title3" style={{ color: colors.ink }}>
-            {title}
-          </Text>
-          {time && (
-            <View className="flex-row items-center gap-2">
-              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: dot }} />
-              <Text variant="subhead" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
-                {time}
-              </Text>
-            </View>
-          )}
-        </View>
-        {summary && (practiced || fresh > 0) && (
+    <TeacherGroupRow
+      group={group}
+      first={first}
+      onPress={() => router.push({ pathname: '/practice/group/[id]', params: { id: String(group.id), name: groupTitle(group) } })}
+      details={[practiced && summary && `${practiced.count} of ${summary.students} practiced since ${pastDay(summary.since!, now, true)}`, fresh > 0 && `${fresh} new`]
+        .filter(Boolean)
+        .join(', ')}
+      right={
+        summary &&
+        (practiced || fresh > 0) && (
           <View className="items-end gap-1">
             {practiced && (
               <Text variant="subhead" style={{ color: colors.ink, fontWeight: '600', fontVariant: ['tabular-nums'] }}>
@@ -156,8 +130,8 @@ function GroupRow({ group, summary, now, first }: { group: Group; summary?: Grou
               </Text>
             )}
           </View>
-        )}
-      </View>
-    </Pressable>
+        )
+      }
+    />
   );
 }
