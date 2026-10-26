@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react';
+import { Circle, CircleCheck, LogOut } from 'lucide-react-native';
 import { ScrollView, View, type TextInput } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
+import { Icon } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { TextField } from '@/components/TextField';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { ApiError } from '@/lib/api/client';
 import { describeError } from '@/lib/api/errors';
@@ -23,6 +25,7 @@ type PasswordFormProps = {
 // is done; the route guard then opens the app on its own) and (app)/password
 // (from Profile, a sheet that closes when done).
 export function PasswordForm({ forced, onDone }: PasswordFormProps) {
+  const colors = useColors();
   const change = useChangePassword();
   const newRef = useRef<TextInput>(null);
   const confirmRef = useRef<TextInput>(null);
@@ -37,7 +40,10 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
   // Validated as people type, not after they press the button.
   const longEnough = next.length >= MIN_LENGTH;
   const matches = confirm !== '' && confirm === next;
-  const canSubmit = current !== '' && longEnough && matches && !change.isPending;
+  // The server rejects the person's own phone number; the app doesn't know it,
+  // so anything shaped like a phone number is flagged as it's typed.
+  const looksLikePhone = /^\+?\d{9,12}$/.test(next.replace(/[\s()-]/g, ''));
+  const canSubmit = current !== '' && longEnough && matches && !looksLikePhone && !change.isPending;
 
   function submit() {
     if (!canSubmit) return;
@@ -74,7 +80,7 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
       keyboardShouldPersistTaps="handled"
       contentContainerClassName="gap-5 px-5 pb-10 pt-4">
       {forced && (
-        <Text variant="body" style={{ color: colors.secondaryText }}>
+        <Text variant="body" style={{ color: colors.ink2 }}>
           You signed in with the temporary password. Choose your own to continue — only you will
           know it.
         </Text>
@@ -104,7 +110,7 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
         <TextField
           ref={newRef}
           label="New password"
-          error={nextError}
+          error={nextError ?? (looksLikePhone ? 'Your phone number can’t be your password.' : null)}
           secure
           value={next}
           onChangeText={(v) => {
@@ -135,7 +141,6 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
         <View className="gap-1.5 pt-1" accessibilityLiveRegion="polite">
           <Requirement met={longEnough} label={`At least ${MIN_LENGTH} characters`} />
           <Requirement met={matches} label="Both passwords match" />
-          <Requirement met={null} label="Not your phone number" />
         </View>
       </View>
 
@@ -149,26 +154,26 @@ export function PasswordForm({ forced, onDone }: PasswordFormProps) {
       />
 
       {!forced && (
-        <Text variant="footnote" style={{ color: colors.tertiaryText, textAlign: 'center' }}>
-          Your other devices will be signed out.
-        </Text>
+        <View className="flex-row items-center justify-center gap-2">
+          <Icon as={LogOut} size={15} color={colors.ink3} />
+          <Text variant="footnote" style={{ color: colors.ink3 }}>
+            Your other devices will be signed out.
+          </Text>
+        </View>
       )}
     </ScrollView>
   );
 }
 
-// met: true/false while it can be checked here, null for rules only the
-// server checks (it knows the phone number; the app doesn't).
-function Requirement({ met, label }: { met: boolean | null; label: string }) {
-  const color = met ? colors.success : colors.tertiaryText;
+function Requirement({ met, label }: { met: boolean; label: string }) {
+  const colors = useColors();
+  const color = met ? colors.good : colors.ink3;
   return (
     <View
       className="flex-row items-center gap-2"
-      accessibilityLabel={met === null ? label : `${label}: ${met ? 'done' : 'not yet'}`}>
-      <Text variant="footnote" style={{ color, width: 14, textAlign: 'center' }}>
-        {met ? '✓' : '•'}
-      </Text>
-      <Text variant="footnote" style={{ color: met ? colors.text : colors.secondaryText }}>
+      accessibilityLabel={`${label}: ${met ? 'done' : 'not yet'}`}>
+      <Icon as={met ? CircleCheck : Circle} size={16} color={color} strokeWidth={met ? 2 : 1.75} />
+      <Text variant="subhead" style={{ color: met ? colors.ink : colors.ink2 }}>
         {label}
       </Text>
     </View>

@@ -26,12 +26,12 @@ export function BottomNavBar({
   const nextInactive = nextDisabled || !onNext;
 
   return (
-    <View className="flex-row items-center justify-between border-t border-white/10 bg-brand px-4 py-3">
+    <View className="flex-row items-center justify-between border-t border-line bg-brand px-4 py-3">
       <Pressable
         onPress={onBack}
         disabled={backInactive}
         className={`rounded-lg px-4 py-2 ${backInactive ? 'opacity-30' : ''}`}>
-        <Text className="text-base font-medium text-white">{backLabel}</Text>
+        <Text className="text-base font-medium text-ink">{backLabel}</Text>
       </Pressable>
 
       {centerSlot}
@@ -39,8 +39,8 @@ export function BottomNavBar({
       <Pressable
         onPress={onNext}
         disabled={nextInactive}
-        className={`rounded-lg bg-accent px-4 py-2 ${nextInactive ? 'opacity-30' : ''}`}>
-        <Text className="text-base font-medium text-white">{nextLabel}</Text>
+        className={`rounded-lg bg-primary px-4 py-2 ${nextInactive ? 'opacity-30' : ''}`}>
+        <Text className="text-base font-medium text-on-primary">{nextLabel}</Text>
       </Pressable>
     </View>
   );

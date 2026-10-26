@@ -28,6 +28,12 @@ export type Run = {
   seconds: Record<string, number>;
   marked: string[];
   eliminated: Record<string, string[]>;
+  /**
+   * The break between a full test's sections, while it's on: time left as of
+   * `since` (when it last ran on), or paused (`since` null). It runs in real
+   * time, also with the app in the background; only leaving with Home pauses it.
+   */
+  brk?: { leftMs: number; since: string | null };
 };
 
 export type LocalAttempt = {
@@ -95,6 +101,11 @@ export async function loadRuns(p: Person): Promise<Record<string, Run>> {
 }
 
 /** Finished attempts, latest first. */
+/** When this teacher last left the Practice tab on this phone (ISO); results after it count as new. */
+export const loadLastVisit = (p: Person) => read<string | null>(key(p, 'teacher-last-visit'), null);
+
+export const saveLastVisit = (p: Person, at: string) => AsyncStorage.setItem(key(p, 'teacher-last-visit'), JSON.stringify(at));
+
 export const loadAttempts = (p: Person) => read<LocalAttempt[]>(key(p, 'attempts'), []);
 
 export async function saveAttempt(p: Person, attempt: LocalAttempt) {

@@ -4,6 +4,25 @@ import type { Package, PackageModule, PackageQuestion, Subject } from './types';
 
 export const SUBJECT_LABEL: Record<Subject, string> = { english: 'Reading and Writing', math: 'Math' };
 
+/** Where space is short: next to a score. */
+export const SUBJECT_SHORT: Record<Subject, string> = { english: 'R&W', math: 'Math' };
+
+/** "DAY1" -> "Day 1"; other titles as they are. Display only. */
+export function testName(title: string): string {
+  const day = /^day\s*(\d+)$/i.exec(title.trim());
+  return day ? `Day ${Number(day[1])}` : title;
+}
+
+/** Several tests as one line: "Days 3–5", "Day 3", or "Diagnostic – Day 4". */
+export function testRange(titles: string[]): string {
+  const first = titles[0] ?? '';
+  const last = titles[titles.length - 1] ?? '';
+  if (titles.length <= 1) return testName(first);
+  const a = /^day\s*(\d+)$/i.exec(first.trim());
+  const b = /^day\s*(\d+)$/i.exec(last.trim());
+  return a && b ? `Days ${Number(a[1])}–${Number(b[1])}` : `${testName(first)} – ${testName(last)}`;
+}
+
 /** A timed module, in the order a run takes them: Reading and Writing first, as in Bluebook. */
 export type Stage = { subject: Subject; module: PackageModule };
 

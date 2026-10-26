@@ -1,9 +1,11 @@
 import { router } from 'expo-router';
 import { ScrollView, View } from 'react-native';
+import { ChevronRight } from 'lucide-react-native';
 
+import { Icon } from '@/components/Icon';
 import { PressableScale } from '@/components/PressableScale';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import type { PlacementSubject } from '@/lib/types';
 
 const SUBJECTS: { subject: PlacementSubject; label: string; detail: string }[] = [
@@ -12,12 +14,13 @@ const SUBJECTS: { subject: PlacementSubject; label: string; detail: string }[] =
 ];
 
 export default function LevelCheckScreen() {
+  const colors = useColors();
   return (
     <ScrollView
       className="flex-1 bg-brand"
       contentInsetAdjustmentBehavior="automatic"
       contentContainerClassName="gap-4 px-5 pb-10 pt-4">
-      <Text variant="body" style={{ color: colors.secondaryText }}>
+      <Text variant="body" style={{ color: colors.ink2 }}>
         Choose a subject. The test recommends a starting class; nothing is saved or sent anywhere.
       </Text>
 
@@ -32,14 +35,12 @@ export default function LevelCheckScreen() {
           accessibilityLabel={`${label} Level Check`}
           accessibilityHint={detail}>
           <View className="flex-row items-center justify-between">
-            <Text variant="title2" className="text-white">
+            <Text variant="title2" className="text-ink">
               {label}
             </Text>
-            <Text variant="title3" style={{ color: colors.accent }}>
-              ›
-            </Text>
+            <Icon as={ChevronRight} size={18} color={colors.accent} />
           </View>
-          <Text variant="subhead" style={{ color: colors.secondaryText }}>
+          <Text variant="subhead" style={{ color: colors.ink2 }}>
             {detail}
           </Text>
         </PressableScale>

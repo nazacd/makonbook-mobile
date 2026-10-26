@@ -2,7 +2,7 @@ import { View } from 'react-native';
 
 import { Flag } from '@/components/parent/Flag';
 import { PressableScale } from '@/components/PressableScale';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { LANG_NAME, type Lang } from '@/lib/parent/i18n';
 import { useParent } from '@/lib/parent/session';
@@ -12,6 +12,7 @@ const LANGS: Lang[] = ['uz', 'ru'];
 // Two flags at the top of the parent's screens: Uzbek and Russian. The
 // chosen one is ringed in accent, the other dimmed.
 export function LangSwitch() {
+  const colors = useColors();
   const { lang, setLang } = useParent();
   return (
     <View className="flex-row gap-1 rounded-full bg-surface p-1" accessibilityRole="radiogroup">

@@ -1,8 +1,10 @@
 import { ActivityIndicator, Image, View } from 'react-native';
 import Animated, { FadeOut } from 'react-native-reanimated';
 
+import { useColors } from '@/design/colors';
+
 // Must match the expo-splash-screen config in app.json (same image, same
-// `imageWidth`, centered on the same `#01000f` background) so the hand-off
+// `imageWidth`, centered on the same background for the colour scheme) so the hand-off
 // from the static native splash to this screen is invisible — the only change
 // the user sees is the spinner appearing under the logo.
 export const LAUNCH_LOGO = require('../../assets/makonbook-icon.png');
@@ -14,6 +16,7 @@ type LaunchScreenProps = {
 };
 
 export function LaunchScreen({ onLayout }: LaunchScreenProps) {
+  const colors = useColors();
   return (
     <Animated.View
       exiting={FadeOut.duration(250)}
@@ -26,7 +29,7 @@ export function LaunchScreen({ onLayout }: LaunchScreenProps) {
         left: 0,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#01000f',
+        backgroundColor: colors.bg,
       }}>
       <Image source={LAUNCH_LOGO} style={{ width: LOGO_SIZE, height: LOGO_SIZE }} resizeMode="contain" />
       {/* Absolutely positioned so it doesn't push the logo off-center and out
@@ -34,7 +37,7 @@ export function LaunchScreen({ onLayout }: LaunchScreenProps) {
       <View
         style={{ position: 'absolute', top: '50%', marginTop: LOGO_SIZE / 2 + SPINNER_GAP }}
         accessibilityLabel="Loading">
-        <ActivityIndicator size="large" color="#8b5cf6" />
+        <ActivityIndicator size="large" color={colors.ink3} />
       </View>
     </Animated.View>
   );

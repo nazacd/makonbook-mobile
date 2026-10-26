@@ -7,7 +7,7 @@ import { Notice } from '@/components/Notice';
 import { PressableScale } from '@/components/PressableScale';
 import { StateChip } from '@/components/StateChip';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { useChildReports, useChildView, useSendReport } from '@/lib/parent/hooks';
 import { dateTimeIn, describeParentError } from '@/lib/parent/i18n';
@@ -18,6 +18,7 @@ const MAX = 2000;
 // "Report a problem": the message goes to the admins of the child's branch
 // (the admin panel and their Telegram chat); their answer shows here.
 export default function ReportScreen() {
+  const colors = useColors();
   const { child } = useLocalSearchParams<{ child: string }>();
   const { t, lang, kids } = useParent();
   const kid = kids.find((k) => String(k.client_id) === child);
@@ -56,13 +57,13 @@ export default function ReportScreen() {
       keyboardShouldPersistTaps="handled"
       contentContainerClassName="gap-5 px-5 pb-12 pt-4">
       <Stack.Screen options={{ title: t.reportTitle }} />
-      <Text variant="body" style={{ color: colors.secondaryText }}>
+      <Text variant="body" style={{ color: colors.ink2 }}>
         {t.reportIntro}
       </Text>
 
       {groups.length > 0 && (
         <View className="gap-2">
-          <Text variant="footnote" style={{ color: colors.secondaryText }}>
+          <Text variant="footnote" style={{ color: colors.ink2 }}>
             {t.aboutClass}
           </Text>
           <View className="flex-row flex-wrap gap-2" accessibilityRole="radiogroup">
@@ -71,7 +72,7 @@ export default function ReportScreen() {
               return (
                 <PressableScale
                   key={g.id ?? 'general'}
-                  className={`min-h-9 items-center justify-center rounded-full px-4 py-2 ${on ? 'bg-accent' : 'bg-surface'}`}
+                  className={`min-h-9 items-center justify-center rounded-full px-4 py-2 ${on ? 'bg-primary' : 'bg-surface'}`}
                   onPress={() => {
                     if (on) return;
                     haptics.selection();
@@ -79,7 +80,7 @@ export default function ReportScreen() {
                   }}
                   accessibilityRole="radio"
                   accessibilityState={{ checked: on }}>
-                  <Text variant="subhead" style={{ color: on ? colors.text : colors.secondaryText, fontWeight: '600' }}>
+                  <Text variant="subhead" style={{ color: on ? colors.onPrimary : colors.ink2, fontWeight: '600' }}>
                     {g.name}
                   </Text>
                 </PressableScale>
@@ -90,12 +91,12 @@ export default function ReportScreen() {
       )}
 
       <View className="gap-2">
-        <Text variant="footnote" style={{ color: colors.secondaryText }}>
+        <Text variant="footnote" style={{ color: colors.ink2 }}>
           {t.message}
         </Text>
         <View
           className="rounded-2xl bg-surface"
-          style={{ borderWidth: 1.5, borderColor: tooLong ? colors.danger : focused ? colors.accent : 'transparent' }}>
+          style={{ borderWidth: 1.5, borderColor: tooLong ? colors.bad : focused ? colors.accent : 'transparent' }}>
           <TextInput
             value={message}
             onChangeText={(v) => {
@@ -104,16 +105,16 @@ export default function ReportScreen() {
             }}
             multiline
             placeholder={t.messagePlaceholder}
-            placeholderTextColor={colors.tertiaryText}
+            placeholderTextColor={colors.ink3}
             selectionColor={colors.accent}
             accessibilityLabel={t.message}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            style={[styles.input, Platform.OS === 'web' && { outlineWidth: 0 }]}
+            style={[styles.input, { color: colors.ink }, Platform.OS === 'web' && { outlineWidth: 0 }]}
           />
         </View>
         {tooLong && (
-          <Text variant="footnote" style={{ color: colors.danger }}>
+          <Text variant="footnote" style={{ color: colors.bad }}>
             {t.messageTooLong}
           </Text>
         )}
@@ -126,29 +127,29 @@ export default function ReportScreen() {
 
       {(reports.data?.reports.length ?? 0) > 0 && (
         <View className="gap-2 pt-4">
-          <Text variant="footnote" className="px-5" style={{ color: colors.secondaryText, textTransform: 'uppercase' }}>
+          <Text variant="footnote" className="px-5" style={{ color: colors.ink2, textTransform: 'uppercase' }}>
             {t.sentReports}
           </Text>
           {reports.data!.reports.map((r) => (
             <View key={r.id} className="gap-2 rounded-2xl bg-surface p-4">
               <View className="flex-row items-center justify-between gap-3">
-                <Text variant="footnote" className="flex-1" style={{ color: colors.tertiaryText }}>
+                <Text variant="footnote" className="flex-1" style={{ color: colors.ink3 }}>
                   {[dateTimeIn(lang, r.created_at), r.group_name].filter(Boolean).join(' · ')}
                 </Text>
                 <StateChip
                   label={r.handled_at ? t.handled : t.open}
-                  color={r.handled_at ? colors.success : colors.warning}
+                  color={r.handled_at ? colors.good : colors.watch}
                 />
               </View>
-              <Text variant="body" className="text-white">
+              <Text variant="body" className="text-ink">
                 {r.message}
               </Text>
               {r.reply && (
-                <View className="gap-1 pt-2" style={{ borderTopWidth: 1, borderTopColor: colors.separator }}>
+                <View className="gap-1 pt-2" style={{ borderTopWidth: 1, borderTopColor: colors.line }}>
                   <Text variant="footnote" style={{ color: colors.accent }}>
                     {t.answer}
                   </Text>
-                  <Text variant="body" className="text-white">
+                  <Text variant="body" className="text-ink">
                     {r.reply}
                   </Text>
                 </View>
@@ -168,7 +169,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 14,
     paddingBottom: 14,
-    color: colors.text,
     fontSize: 17,
     textAlignVertical: 'top',
   },

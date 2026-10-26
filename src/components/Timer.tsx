@@ -12,7 +12,7 @@ export function Timer({ remainingMs }: TimerProps) {
 
   return (
     <View className="items-center py-3">
-      <Text className={`text-2xl font-bold ${low ? 'text-red-400' : 'text-white'}`}>
+      <Text className={`text-2xl font-bold ${low ? 'text-bad' : 'text-ink'}`}>
         {formatRemainingTime(remainingMs)}
       </Text>
     </View>

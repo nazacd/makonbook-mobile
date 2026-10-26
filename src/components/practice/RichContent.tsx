@@ -4,7 +4,7 @@ import { MathJaxSvg } from 'react-native-mathjax-html-to-svg';
 
 import { ImageViewerModal } from '@/components/ImageViewerModal';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import { imageUri } from '@/lib/practice/files';
 import type { PackageImage } from '@/lib/practice/types';
 
@@ -53,11 +53,11 @@ function atoms(src: string, style: Style = {}): Atom[] {
 // MathJaxSvg reads its input as HTML first.
 const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-const Formula = memo(function Formula({ tex, display, fontSize }: { tex: string; display: boolean; fontSize: number }) {
+const Formula = memo(function Formula({ tex, display, fontSize, color }: { tex: string; display: boolean; fontSize: number; color: string }) {
   // Choices and display formulas draw fractions full size, as Bluebook does.
   const body = display ? `\\displaystyle ${tex}` : tex;
   return (
-    <MathJaxSvg fontSize={fontSize} color="#f5f5f5" fontCache>
+    <MathJaxSvg fontSize={fontSize} color={color} fontCache>
       {`\\(${escapeHtml(body)}\\)`}
     </MathJaxSvg>
   );
@@ -71,11 +71,12 @@ type Ctx = {
 };
 
 function Figure({ imageKey, alt, ctx }: { imageKey: string; alt: string; ctx: Ctx }) {
+  const colors = useColors();
   const [open, setOpen] = useState(false);
   const img = ctx.images[imageKey];
   if (!img) {
     return (
-      <Text variant="footnote" style={{ color: colors.secondaryText }}>
+      <Text variant="footnote" style={{ color: colors.ink2 }}>
         [{alt || 'image'}]
       </Text>
     );
@@ -129,14 +130,14 @@ function Inline({ src, ctx }: { src: string; ctx: Ctx }) {
     } else if (a.kind === 'math' && !a.display) {
       line.push(
         <View key={i} style={{ minHeight: lineHeight, justifyContent: 'center', marginRight: 3 }}>
-          <Formula tex={a.tex} display={ctx.displayMath} fontSize={ctx.fontSize} />
+          <Formula tex={a.tex} display={ctx.displayMath} fontSize={ctx.fontSize} color={ctx.color} />
         </View>,
       );
     } else if (a.kind === 'math') {
       flush();
       rows.push(
         <View key={`d${i}`} style={{ alignItems: 'center', paddingVertical: 6 }}>
-          <Formula tex={a.tex} display fontSize={ctx.fontSize} />
+          <Formula tex={a.tex} display fontSize={ctx.fontSize} color={ctx.color} />
         </View>,
       );
     } else if (a.kind === 'image') {
@@ -174,10 +175,12 @@ export const RichContent = memo(function RichContent({
   text,
   images,
   fontSize = 16,
-  color = colors.text,
+  color: colorProp,
   displayMath = false,
 }: RichContentProps) {
+  const colors = useColors();
   if (!text) return null;
+  const color = colorProp ?? colors.ink;
   const ctx: Ctx = { fontSize, color, images, displayMath };
   const blocks = text.trim().split(/\n[ \t]*\n/);
   return (
@@ -188,20 +191,20 @@ export const RichContent = memo(function RichContent({
         if (lines.length > 1 && lines.every((l) => l.trim().startsWith('|'))) {
           const rows = lines.filter((l) => !/^\s*\|?\s*:?-{2,}/.test(l)).map(cells);
           return (
-            <View key={i} className="overflow-hidden rounded-lg" style={{ borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' }}>
+            <View key={i} className="overflow-hidden rounded-lg" style={{ borderWidth: 1, borderColor: colors.lineStrong }}>
               {rows.map((row, r) => (
                 <View
                   key={r}
                   style={{
                     flexDirection: 'row',
                     borderTopWidth: r ? 1 : 0,
-                    borderColor: 'rgba(255,255,255,0.25)',
-                    backgroundColor: r === 0 ? 'rgba(255,255,255,0.06)' : undefined,
+                    borderColor: colors.lineStrong,
+                    backgroundColor: r === 0 ? colors.surface2 : undefined,
                   }}>
                   {row.map((c, j) => (
                     <View
                       key={j}
-                      style={{ flex: 1, padding: 8, borderLeftWidth: j ? 1 : 0, borderColor: 'rgba(255,255,255,0.25)' }}>
+                      style={{ flex: 1, padding: 8, borderLeftWidth: j ? 1 : 0, borderColor: colors.lineStrong }}>
                       <Inline src={r === 0 && c ? `**${c}**` : c} ctx={{ ...ctx, fontSize: fontSize - 2 }} />
                     </View>
                   ))}

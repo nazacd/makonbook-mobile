@@ -13,10 +13,10 @@ export function QuestionCard({ question }: { question: Question }) {
 
   return (
     <View className="gap-4">
-      <MathText text={question.question} className="text-lg font-semibold text-white" fontSize={18} />
+      <MathText text={question.question} className="text-lg font-semibold text-ink" fontSize={18} />
       {question.content.text ? (
         <View className="rounded-xl bg-surface p-4">
-          <MathText text={question.content.text} className="text-base text-white" fontSize={16} />
+          <MathText text={question.content.text} className="text-base text-ink" fontSize={16} />
         </View>
       ) : null}
       {image ? (

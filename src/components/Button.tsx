@@ -2,7 +2,7 @@ import { ActivityIndicator, View, type StyleProp, type ViewStyle } from 'react-n
 
 import { PressableScale } from '@/components/PressableScale';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors, type Palette } from '@/design/colors';
 
 type Variant = 'primary' | 'secondary' | 'plain' | 'destructive';
 
@@ -17,22 +17,23 @@ type ButtonProps = {
   accessibilityHint?: string;
 };
 
-const SURFACE: Record<Variant, string> = {
-  primary: 'h-14 items-center justify-center rounded-2xl bg-accent px-6',
-  secondary: 'h-14 items-center justify-center rounded-2xl bg-surface px-6',
-  plain: 'h-11 items-center justify-center rounded-xl px-4',
-  destructive: 'h-11 items-center justify-center rounded-xl px-4',
+// Heights in dp, not classes: NativeWind's rem is 14 px on native and 16 on web.
+const SURFACE: Record<Variant, { className: string; height: number }> = {
+  primary: { className: 'items-center justify-center rounded-[14px] bg-primary px-6', height: 52 },
+  secondary: { className: 'items-center justify-center rounded-[14px] bg-surface-2 px-6', height: 52 },
+  plain: { className: 'items-center justify-center rounded-[12px] px-4', height: 44 },
+  destructive: { className: 'items-center justify-center rounded-[12px] px-4', height: 44 },
 };
 
-const LABEL_COLOR: Record<Variant, string> = {
-  primary: colors.text,
-  secondary: colors.text,
-  plain: colors.accent,
-  destructive: colors.danger,
+const LABEL: Record<Variant, keyof Palette> = {
+  primary: 'onPrimary',
+  secondary: 'ink',
+  plain: 'accent',
+  destructive: 'bad',
 };
 
-// Accent is reserved for what can be tapped; a near-black button on the
-// near-black background would be invisible (see AGENTS.md, Design system).
+// Primary is navy in light and off-white in dark: the one strong surface on a
+// screen. Secondary sits on the off-white step; plain and destructive are text.
 export function Button({
   label,
   onPress,
@@ -42,12 +43,15 @@ export function Button({
   style,
   accessibilityHint,
 }: ButtonProps) {
+  const colors = useColors();
   const inactive = disabled || loading;
+  const { className, height } = SURFACE[variant];
+  const labelColor = colors[LABEL[variant]];
   return (
     <PressableScale
       onPress={onPress}
       disabled={inactive}
-      className={disabled ? `${SURFACE[variant]} opacity-40` : SURFACE[variant]}
+      className={disabled ? `${className} opacity-40` : className}
       style={style}
       accessibilityRole="button"
       accessibilityLabel={label}
@@ -55,15 +59,16 @@ export function Button({
       accessibilityState={{ disabled: inactive, busy: loading }}>
       {/* The label keeps its space while loading so the button never changes
           size under the finger. */}
-      <View>
+      <View style={{ minHeight: height, justifyContent: 'center' }}>
         <Text
           variant="headline"
-          style={{ color: LABEL_COLOR[variant], opacity: loading ? 0 : 1, textAlign: 'center' }}>
+          maxFontSizeMultiplier={1.3}
+          style={{ color: labelColor, opacity: loading ? 0 : 1, textAlign: 'center' }}>
           {label}
         </Text>
         {loading && (
           <View className="absolute inset-0 items-center justify-center">
-            <ActivityIndicator color={LABEL_COLOR[variant]} />
+            <ActivityIndicator color={labelColor} />
           </View>
         )}
       </View>

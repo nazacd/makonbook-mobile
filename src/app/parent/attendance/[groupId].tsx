@@ -4,7 +4,7 @@ import { ActivityIndicator, RefreshControl, ScrollView, View } from 'react-nativ
 import { Notice } from '@/components/Notice';
 import { MARK_COLOR, StateChip } from '@/components/StateChip';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import type { GroupAttendance } from '@/lib/api/types';
 import { useChildAttendance } from '@/lib/parent/hooks';
 import { dateIn, describeParentError, monthIn, type Lang, type Strings } from '@/lib/parent/i18n';
@@ -23,6 +23,7 @@ function byMonth(lang: Lang, days: GroupAttendance['days']) {
 // The child's attendance in one group, as the student sees their own
 // (my-attendance/[groupId]), in the parent's language.
 export default function ChildAttendanceScreen() {
+  const colors = useColors();
   const { groupId, child } = useLocalSearchParams<{ groupId: string; child: string }>();
   const { t, lang, kids } = useParent();
   const kid = kids.find((k) => String(k.client_id) === child);
@@ -52,10 +53,10 @@ export default function ChildAttendanceScreen() {
         <Notice tone="error" title={t.loadFailed} message={describeParentError(t, query.error)} />
       ) : !group || group.days.length === 0 ? (
         <View className="items-center gap-2 px-4 py-16">
-          <Text variant="title3" className="text-white">
+          <Text variant="title3" className="text-ink">
             {t.noLessons}
           </Text>
-          <Text variant="subhead" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+          <Text variant="subhead" style={{ color: colors.ink2, textAlign: 'center' }}>
             {t.noLessonsBody}
           </Text>
         </View>
@@ -64,7 +65,7 @@ export default function ChildAttendanceScreen() {
           <Overview group={group} t={t} />
           {byMonth(lang, group.days).map((month) => (
             <View key={month.title} className="gap-2">
-              <Text variant="footnote" className="px-5" style={{ color: colors.secondaryText, textTransform: 'uppercase' }}>
+              <Text variant="footnote" className="px-5" style={{ color: colors.ink2, textTransform: 'uppercase' }}>
                 {month.title}
               </Text>
               <View className="overflow-hidden rounded-2xl bg-surface">
@@ -72,19 +73,19 @@ export default function ChildAttendanceScreen() {
                   <View
                     key={d.date}
                     className="ml-5 min-h-[50px] flex-row items-center pr-4"
-                    style={i > 0 ? { borderTopWidth: 1, borderTopColor: colors.separator } : undefined}
+                    style={i > 0 ? { borderTopWidth: 1, borderTopColor: colors.line } : undefined}
                     accessible
                     accessibilityLabel={`${dateIn(lang, d.date)}: ${label[d.state]}`}>
-                    <Text variant="body" className="flex-1 text-white">
+                    <Text variant="body" className="flex-1 text-ink">
                       {dateIn(lang, d.date)}
                     </Text>
-                    <StateChip label={label[d.state]} color={MARK_COLOR[d.state]} />
+                    <StateChip label={label[d.state]} color={colors[MARK_COLOR[d.state]]} />
                   </View>
                 ))}
               </View>
             </View>
           ))}
-          <Text variant="footnote" style={{ color: colors.tertiaryText }}>
+          <Text variant="footnote" style={{ color: colors.ink3 }}>
             {t.attendanceSource}
           </Text>
         </>
@@ -94,35 +95,37 @@ export default function ChildAttendanceScreen() {
 }
 
 function Overview({ group, t }: { group: GroupAttendance; t: Strings }) {
+  const colors = useColors();
   const { lessons, present, late, absent } = group.summary;
   const rate = Math.round(((present + late) / Math.max(1, lessons)) * 100);
   return (
     <View className="gap-3">
       <View>
-        <Text variant="largeTitle" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
+        <Text variant="largeTitle" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
           {rate}%
         </Text>
-        <Text variant="subhead" style={{ color: colors.secondaryText }}>
+        <Text variant="subhead" style={{ color: colors.ink2 }}>
           {t.attendedLine(present + late, lessons)}
         </Text>
       </View>
       <View className="flex-row gap-3">
-        <Tile label={t.presentTile} value={present} color={colors.success} />
-        <Tile label={t.lateTile} value={late} color={colors.warning} />
-        <Tile label={t.absentTile} value={absent} color={colors.danger} />
+        <Tile label={t.presentTile} value={present} color={colors.good} />
+        <Tile label={t.lateTile} value={late} color={colors.watch} />
+        <Tile label={t.absentTile} value={absent} color={colors.bad} />
       </View>
     </View>
   );
 }
 
 function Tile({ label, value, color }: { label: string; value: number; color: string }) {
+  const colors = useColors();
   return (
     <View className="flex-1 gap-1 rounded-2xl bg-surface p-4">
       <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
-      <Text variant="title2" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
+      <Text variant="title2" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
         {value}
       </Text>
-      <Text variant="footnote" style={{ color: colors.secondaryText }}>
+      <Text variant="footnote" style={{ color: colors.ink2 }}>
         {label}
       </Text>
     </View>
