@@ -1,3 +1,4 @@
+import { X } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, View, useWindowDimensions } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -5,6 +6,8 @@ import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanima
 import Svg, { Line } from 'react-native-svg';
 import { WebView } from 'react-native-webview';
 
+import { Icon } from '@/components/Icon';
+import { useColors, type Palette } from '@/design/colors';
 import { DESMOS_API_KEY } from '@/lib/config';
 
 type CalculatorWidgetProps = {
@@ -28,35 +31,35 @@ function clamp(value: number, min: number, max: number): number {
 // connection" hint. Loading keeps going; this only explains the wait.
 const SLOW_LOAD_HINT_MS = 6000;
 
-function buildCalculatorHtml(apiKey: string): string {
+function buildCalculatorHtml(apiKey: string, c: Palette): string {
   return `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <style>
-  html, body { margin: 0; padding: 0; height: 100%; background: #01000f; overflow: hidden; }
+  html, body { margin: 0; padding: 0; height: 100%; background: ${c.surface}; overflow: hidden; }
   #calculator { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
   .overlay {
     display: none;
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: #01000f; color: #ffffff;
+    background: ${c.surface}; color: ${c.ink};
     align-items: center; justify-content: center;
     flex-direction: column; gap: 16px; padding: 24px; text-align: center;
     font-family: -apple-system, Roboto, sans-serif;
   }
   .overlay.visible { display: flex; }
-  .overlay p { color: rgba(255,255,255,0.7); font-size: 15px; line-height: 1.5; margin: 0; }
+  .overlay p { color: ${c.ink2}; font-size: 15px; line-height: 1.5; margin: 0; }
   .spinner {
     width: 36px; height: 36px; box-sizing: border-box; border-radius: 50%;
-    border: 4px solid rgba(139,92,246,0.2); border-top-color: #8b5cf6;
+    border: 4px solid ${c.track}; border-top-color: ${c.ink};
     animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   #slow-hint { display: none; }
   #retry {
     border: 0; border-radius: 12px; padding: 10px 24px;
-    background: #8b5cf6; color: #ffffff; font-size: 15px; font-weight: 600;
+    background: ${c.primary}; color: ${c.onPrimary}; font-size: 15px; font-weight: 600;
     font-family: inherit;
   }
 </style>
@@ -139,25 +142,17 @@ function buildCalculatorHtml(apiKey: string): string {
 </html>`;
 }
 
-function ResizeGripIcon() {
+function ResizeGripIcon({ color }: { color: string }) {
   return (
     <Svg width={14} height={14} viewBox="0 0 14 14" fill="none">
-      <Line x1={12} y1={2} x2={2} y2={12} stroke="rgba(255,255,255,0.45)" strokeWidth={2} strokeLinecap="round" />
-      <Line x1={12} y1={7} x2={7} y2={12} stroke="rgba(255,255,255,0.45)" strokeWidth={2} strokeLinecap="round" />
-    </Svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <Svg width={14} height={14} viewBox="0 0 14 14" fill="none">
-      <Line x1={2} y1={2} x2={12} y2={12} stroke="#ffffff" strokeWidth={2} strokeLinecap="round" />
-      <Line x1={12} y1={2} x2={2} y2={12} stroke="#ffffff" strokeWidth={2} strokeLinecap="round" />
+      <Line x1={12} y1={2} x2={2} y2={12} stroke={color} strokeWidth={2} strokeLinecap="round" />
+      <Line x1={12} y1={7} x2={7} y2={12} stroke={color} strokeWidth={2} strokeLinecap="round" />
     </Svg>
   );
 }
 
 export function CalculatorWidget({ visible, onClose }: CalculatorWidgetProps) {
+  const colors = useColors();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const initialWidth = Math.min(DEFAULT_WIDTH, screenWidth - EDGE_MARGIN * 2);
@@ -226,20 +221,20 @@ export function CalculatorWidget({ visible, onClose }: CalculatorWidgetProps) {
         },
         animatedStyle,
       ]}
-      className="overflow-hidden rounded-2xl border border-white/10 bg-surface">
+      className="overflow-hidden rounded-2xl border border-line bg-surface">
       <GestureDetector gesture={dragGesture}>
         <View style={{ height: DRAG_HANDLE_HEIGHT }} className="items-center justify-center">
-          <View className="h-1 w-10 rounded-full bg-white/20" />
+          <View className="h-1 w-10 rounded-full bg-line-strong" />
         </View>
       </GestureDetector>
 
       <View className="flex-1">
         <WebView
           originWhitelist={['*']}
-          source={{ html: buildCalculatorHtml(DESMOS_API_KEY) }}
+          source={{ html: buildCalculatorHtml(DESMOS_API_KEY, colors) }}
           // Matches the page background so there's no white flash while the
           // WebView itself starts up, before the page's spinner is painted.
-          style={{ flex: 1, backgroundColor: '#01000f' }}
+          style={{ flex: 1, backgroundColor: colors.surface }}
           scrollEnabled={false}
           bounces={false}
           onShouldStartLoadWithRequest={(request) =>
@@ -252,15 +247,15 @@ export function CalculatorWidget({ visible, onClose }: CalculatorWidgetProps) {
         onPress={onClose}
         hitSlop={8}
         style={{ position: 'absolute', top: 4, right: 4 }}
-        className="h-7 w-7 items-center justify-center rounded-full bg-brand/70">
-        <CloseIcon />
+        className="h-7 w-7 items-center justify-center rounded-full bg-surface-2">
+        <Icon as={X} size={14} strokeWidth={2.25} />
       </Pressable>
 
       <GestureDetector gesture={resizeGesture}>
         <View
           style={{ position: 'absolute', right: 0, bottom: 0, width: 28, height: 28 }}
           className="items-end justify-end p-1.5">
-          <ResizeGripIcon />
+          <ResizeGripIcon color={colors.ink3} />
         </View>
       </GestureDetector>
     </Animated.View>

@@ -1,67 +1,73 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Users } from 'lucide-react-native';
+import { useState } from 'react';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ConnectionLine } from '@/components/ConnectionLine';
+import { EmptyState } from '@/components/States';
+import { groupTitle, TeacherGroupRow } from '@/components/TeacherGroupRow';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import { useMe } from '@/lib/api/queries';
 import type { Profile } from '@/lib/api/types';
+import { useVocabSummary } from '@/lib/vocab/summary';
 
-// The teacher's Words tab: their groups, each opening its students'
-// vocabulary progress.
+// The teacher's Words tab: each group with how many of its students studied
+// words this week, each opening the group's progress.
 export function TeacherWords() {
+  const colors = useColors();
   const insets = useSafeAreaInsets();
   const profile = useMe().data as Profile; // the signed-in layout only renders with a profile
+  const summary = useVocabSummary(profile.groups.map((g) => g.id));
+  const [pulling, setPulling] = useState(false);
 
   return (
     <ScrollView
       className="flex-1 bg-brand"
       contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: 32 }}
-      contentContainerClassName="gap-4 px-5">
-      <View className="gap-1 pb-2">
-        <Text variant="subhead" style={{ color: colors.secondaryText }}>
-          Your students’ vocabulary
-        </Text>
-        <Text variant="largeTitle" className="text-white" accessibilityRole="header">
-          Words
-        </Text>
-      </View>
+      contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 32, paddingHorizontal: 20 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={pulling}
+          onRefresh={() => {
+            setPulling(true);
+            summary.refetch().finally(() => setPulling(false));
+          }}
+          tintColor={colors.ink2}
+          colors={[colors.ink]}
+          progressBackgroundColor={colors.surface}
+        />
+      }>
+      <ConnectionLine style={{ marginBottom: 12 }} />
       {profile.groups.length === 0 ? (
-        <View className="items-center gap-2 px-4 py-16">
-          <Text variant="title3" className="text-white">
-            No groups yet
-          </Text>
-          <Text variant="subhead" style={{ color: colors.secondaryText, textAlign: 'center' }}>
-            Your groups appear here once you teach one in HolliHop.
-          </Text>
-        </View>
+        <EmptyState icon={Users} title="No groups yet" message="Your groups appear here once you teach one in HolliHop." />
       ) : (
-        <View className="overflow-hidden rounded-3xl bg-surface">
-          {profile.groups.map((g, i) => (
-            <Pressable
+        profile.groups.map((g, i) => {
+          const s = summary.groups[g.id];
+          return (
+            <TeacherGroupRow
               key={g.id}
-              onPress={() => router.push({ pathname: '/vocab/group/[id]', params: { id: String(g.id), name: g.name } })}
-              accessibilityRole="button"
-              style={({ pressed }) => ({ backgroundColor: pressed ? 'rgba(255, 255, 255, 0.06)' : 'transparent' })}>
-              <View className="ml-5" style={i ? { borderTopWidth: 1, borderTopColor: colors.separator } : undefined}>
-                <View className="min-h-[60px] flex-row items-center gap-3 py-3 pr-5">
-                  <View className="flex-1 gap-0.5">
-                    <Text variant="body" className="text-white">
-                      {g.name}
+              group={g}
+              first={i === 0}
+              onPress={() => router.push({ pathname: '/vocab/group/[id]', params: { id: String(g.id), name: groupTitle(g) } })}
+              details={s && s.studied > 0 && `${s.studied} of ${s.students} studied this week`}
+              right={
+                s &&
+                s.studied > 0 && (
+                  <View className="items-end">
+                    <Text variant="subhead" style={{ color: colors.ink, fontWeight: '600', fontVariant: ['tabular-nums'] }}>
+                      {s.studied}/{s.students}
                     </Text>
-                    <Text variant="footnote" style={{ color: colors.tertiaryText }}>
-                      {[g.discipline, g.office].filter(Boolean).join(' · ')}
+                    <Text variant="footnote" style={{ color: colors.ink3 }}>
+                      this week
                     </Text>
                   </View>
-                  <Text variant="body" style={{ color: colors.tertiaryText }}>
-                    ›
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
-          ))}
-        </View>
+                )
+              }
+            />
+          );
+        })
       )}
     </ScrollView>
   );

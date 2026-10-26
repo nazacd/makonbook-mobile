@@ -4,7 +4,7 @@ import { Platform, StyleSheet, TextInput, View } from 'react-native';
 import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { ApiError } from '@/lib/api/client';
 import { describeParentError } from '@/lib/parent/i18n';
@@ -16,6 +16,7 @@ const BOXES = Array.from({ length: LENGTH }, (_, i) => i);
 // A child's 5-digit parent code, one box per digit. It goes as soon as the
 // fifth digit is in.
 export function CodeForm({ onDone }: { onDone?: (kid: SavedChild) => void }) {
+  const colors = useColors();
   const { t, addChild } = useParent();
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
@@ -45,7 +46,7 @@ export function CodeForm({ onDone }: { onDone?: (kid: SavedChild) => void }) {
 
   return (
     <View className="gap-5">
-      <Text variant="body" style={{ color: colors.secondaryText }}>
+      <Text variant="body" style={{ color: colors.ink2 }}>
         {t.codeIntro}
       </Text>
       <View className="gap-2">
@@ -61,7 +62,7 @@ export function CodeForm({ onDone }: { onDone?: (kid: SavedChild) => void }) {
           onSubmit={() => submit(code)}
         />
         {wrong && (
-          <Text variant="footnote" accessibilityLiveRegion="polite" style={{ color: colors.danger, textAlign: 'center' }}>
+          <Text variant="footnote" accessibilityLiveRegion="polite" style={{ color: colors.bad, textAlign: 'center' }}>
             {t.wrongCode}
           </Text>
         )}
@@ -88,6 +89,7 @@ function CodeBoxes({
   onChange: (digits: string) => void;
   onSubmit: () => void;
 }) {
+  const colors = useColors();
   const input = useRef<TextInput>(null);
   const [focused, setFocused] = useState(false);
   const current = Math.min(value.length, LENGTH - 1);
@@ -101,9 +103,9 @@ function CodeBoxes({
             className="h-16 max-w-16 flex-1 items-center justify-center rounded-2xl bg-surface"
             style={{
               borderWidth: 1.5,
-              borderColor: error ? colors.danger : focused && i === current ? colors.accent : 'transparent',
+              borderColor: error ? colors.bad : focused && i === current ? colors.accent : 'transparent',
             }}>
-            <Text variant="title" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
+            <Text variant="title" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
               {value[i] ?? ''}
             </Text>
           </View>

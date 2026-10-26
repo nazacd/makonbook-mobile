@@ -1,16 +1,21 @@
+import { Bitter_600SemiBold, Bitter_700Bold } from '@expo-google-fonts/bitter';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Asset } from 'expo-asset';
-import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
+import { useFonts } from 'expo-font';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import * as SystemUI from 'expo-system-ui';
+import { useEffect, useState, type ReactNode } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { LaunchScreen, LAUNCH_LOGO } from '@/components/LaunchScreen';
+import { TextConfigEpoch } from '@/components/Text';
 import { UpdateRequired } from '@/components/UpdateRequired';
 import { placementImages } from '@/data/assetMap';
-import { colors } from '@/design/colors';
-import { headerOptions } from '@/design/navigation';
+import { useColors, useScheme } from '@/design/colors';
+import { useHeaderOptions } from '@/design/navigation';
+import { AppearanceProvider, useAppearance } from '@/lib/appearance';
 import { connectFocusManager, createQueryClient, useUpdateRequired } from '@/lib/api/queries';
 import { AuthProvider, useAuth } from '@/lib/auth/session';
 import { ParentProvider, useParent } from '@/lib/parent/session';
@@ -26,11 +31,6 @@ const PRELOAD_ASSETS = [LAUNCH_LOGO, ...Object.values(placementImages)];
 
 const queryClient = createQueryClient();
 
-const theme = {
-  ...DarkTheme,
-  colors: { ...DarkTheme.colors, background: colors.brand, card: colors.brand, primary: colors.accent },
-};
-
 export default function RootLayout() {
   const [assetsReady, setAssetsReady] = useState(false);
 
@@ -44,20 +44,50 @@ export default function RootLayout() {
 
   useEffect(connectFocusManager, []);
 
+  // Bitter for titles. A font that fails to load falls back to the system
+  // font; never block the app on it.
+  const [fontsLoaded, fontError] = useFonts({ Bitter_600SemiBold, Bitter_700Bold });
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <ParentProvider>
-            <ThemeProvider value={theme}>
-              <RootNavigator />
-              <Launch assetsReady={assetsReady} />
-              <StatusBar style="light" />
-            </ThemeProvider>
+            <AppearanceProvider>
+              <TextConfigEpoch>
+                <Themed>
+                  <RootNavigator />
+                  <Launch assetsReady={assetsReady && (fontsLoaded || !!fontError)} />
+                </Themed>
+              </TextConfigEpoch>
+            </AppearanceProvider>
           </ParentProvider>
         </AuthProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>
+  );
+}
+
+// Navigation colours, the status bar and the window behind every screen follow
+// the colour scheme (the phone's, or the Appearance choice in Profile).
+function Themed({ children }: { children: ReactNode }) {
+  const colors = useColors();
+  const scheme = useScheme();
+  const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
+  const theme = {
+    ...base,
+    colors: { ...base.colors, background: colors.bg, card: colors.bg, text: colors.ink, border: colors.line, primary: colors.accent },
+  };
+
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(colors.bg).catch(() => {});
+  }, [colors.bg]);
+
+  return (
+    <ThemeProvider value={theme}>
+      {children}
+      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+    </ThemeProvider>
   );
 }
 
@@ -68,11 +98,14 @@ export default function RootLayout() {
 function Launch({ assetsReady }: { assetsReady: boolean }) {
   const { status } = useAuth();
   const parent = useParent();
-  if (assetsReady && status !== 'loading' && parent.ready) return null;
+  const appearance = useAppearance();
+  if (assetsReady && status !== 'loading' && parent.ready && appearance.ready) return null;
   return <LaunchScreen onLayout={() => SplashScreen.hide()} />;
 }
 
 function RootNavigator() {
+  const colors = useColors();
+  const headerOptions = useHeaderOptions();
   const { status } = useAuth();
   const parent = useParent();
   const updateRequired = useUpdateRequired();
@@ -88,7 +121,7 @@ function RootNavigator() {
   if (status === 'loading' || !parent.ready) return null;
 
   return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.brand } }}>
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
       {/* "/" is the Classes tab inside (app). Signed out, that is guarded and
           the router falls back to the first screen available: welcome, or a
           parent's home on a parent's phone. */}

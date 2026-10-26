@@ -65,6 +65,35 @@ export function nextClass(groups: Group[], now: number): Occurrence | null {
   return null;
 }
 
+// The group's most recent class that has ended, looking a week back.
+export function lastClass(group: Group, now: number): Occurrence | null {
+  const today = schoolMidnight(now);
+  for (let offset = 0; offset < 8; offset++) {
+    const day = today - offset * DAY_MS;
+    const weekday = WEEKDAYS[new Date(day + SCHOOL_UTC_OFFSET_MS).getUTCDay()];
+    const key = dateKey(day);
+    let best: Occurrence | null = null;
+    for (const slot of group.schedule) {
+      if (!slot.weekdays.includes(weekday)) continue;
+      if (slot.begin_date && key < slot.begin_date) continue;
+      if (slot.end_date && key > slot.end_date) continue;
+      const start = day + minutes(slot.begin_time) * 60_000;
+      const end = day + minutes(slot.end_time) * 60_000;
+      if (end > now) continue;
+      if (!best || end > best.end) best = { group, slot, start, end };
+    }
+    if (best) return best;
+  }
+  return null;
+}
+
+/** "today", or the weekday of an instant in the past week ("Tue", or "Tuesday" when long). */
+export function pastDay(t: number, now: number, long = false): string {
+  if (schoolMidnight(t) === schoolMidnight(now)) return 'today';
+  const weekday = WEEKDAYS[new Date(t + SCHOOL_UTC_OFFSET_MS).getUTCDay()];
+  return long ? LONG[weekday] : SHORT[weekday];
+}
+
 /** "Now", "Today", "Tomorrow" or the weekday name. */
 export function describeDay(start: number, now: number): string {
   if (start <= now) return 'Now';
@@ -90,6 +119,14 @@ export function formatDate(date: string): string {
   const d = new Date(`${date}T00:00:00Z`);
   const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getUTCMonth()];
   return `${SHORT[WEEKDAYS[d.getUTCDay()]]}, ${d.getUTCDate()} ${month}`;
+}
+
+/** "today", "yesterday" or "12 Oct" for an instant in the past. */
+export function relativeDay(t: number, now: number): string {
+  const days = Math.round((schoolMidnight(now) - schoolMidnight(t)) / DAY_MS);
+  if (days === 0) return 'today';
+  if (days === 1) return 'yesterday';
+  return formatDate(schoolDate(t)).slice(5);
 }
 
 /** "14:05" at the school for an instant. */

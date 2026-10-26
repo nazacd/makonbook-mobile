@@ -9,7 +9,7 @@ import { Notice } from '@/components/Notice';
 import { LangSwitch } from '@/components/parent/LangSwitch';
 import { PressableScale } from '@/components/PressableScale';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { useNow } from '@/lib/clock';
 import { confirm } from '@/lib/confirm';
@@ -21,6 +21,7 @@ import { nextClass } from '@/lib/schedule';
 // A parent's home: the child's next class, their classes with schedule and
 // attendance, a way to tell the office about a problem, and the settings.
 export default function ParentHome() {
+  const colors = useColors();
   const insets = useSafeAreaInsets();
   const { t, lang, kids, selected: kid, select, removeChild } = useParent();
   const view = useChildView(kid);
@@ -62,12 +63,12 @@ export default function ParentHome() {
       }>
       <View className="gap-1 pb-2">
         <View className="flex-row items-center justify-between gap-3">
-          <Text variant="subhead" style={{ color: colors.secondaryText }}>
+          <Text variant="subhead" style={{ color: colors.ink2 }}>
             {t.parentMode}
           </Text>
           <LangSwitch />
         </View>
-        <Text variant="largeTitle" className="text-white" accessibilityRole="header">
+        <Text variant="largeTitle" className="text-ink" accessibilityRole="header">
           {child.first_name} {child.last_name}
         </Text>
       </View>
@@ -79,7 +80,7 @@ export default function ParentHome() {
             return (
               <PressableScale
                 key={k.client_id}
-                className={`h-9 items-center justify-center rounded-full px-4 ${on ? 'bg-accent' : 'bg-surface'}`}
+                className={`h-9 items-center justify-center rounded-full px-4 ${on ? 'bg-primary' : 'bg-surface'}`}
                 onPress={() => {
                   if (on) return;
                   haptics.selection();
@@ -87,7 +88,7 @@ export default function ParentHome() {
                 }}
                 accessibilityRole="tab"
                 accessibilityState={{ selected: on }}>
-                <Text variant="subhead" style={{ color: on ? colors.text : colors.secondaryText, fontWeight: '600' }}>
+                <Text variant="subhead" style={{ color: on ? colors.onPrimary : colors.ink2, fontWeight: '600' }}>
                   {k.first_name}
                 </Text>
               </PressableScale>
@@ -108,17 +109,17 @@ export default function ParentHome() {
           {next && (
             <View
               className="gap-1 rounded-3xl px-5 py-5"
-              style={{ backgroundColor: 'rgba(139, 92, 246, 0.16)' }}
+              style={{ backgroundColor: colors.accentTint }}
               accessibilityRole="summary">
               <Text variant="caption" style={{ color: colors.accent, textTransform: 'uppercase' }}>
                 {next.start <= now ? t.nowInClass : t.nextClass}
               </Text>
-              <Text variant="title2" className="text-white" style={{ fontVariant: ['tabular-nums'] }}>
+              <Text variant="title2" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
                 {next.start <= now
                   ? t.until(next.slot.end_time)
                   : `${dayIn(t, lang, next.start, now)}, ${next.slot.begin_time}`}
               </Text>
-              <Text variant="subhead" style={{ color: colors.secondaryText }}>
+              <Text variant="subhead" style={{ color: colors.ink2 }}>
                 {[next.group.name, next.slot.classroom && t.room(next.slot.classroom)].filter(Boolean).join(' · ')}
               </Text>
             </View>
@@ -126,10 +127,10 @@ export default function ParentHome() {
 
           {groups.length === 0 ? (
             <View className="items-center gap-2 px-4 py-12">
-              <Text variant="title3" className="text-white">
+              <Text variant="title3" className="text-ink">
                 {t.noClasses}
               </Text>
-              <Text variant="subhead" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+              <Text variant="subhead" style={{ color: colors.ink2, textAlign: 'center' }}>
                 {t.noClassesBody}
               </Text>
             </View>
@@ -160,7 +161,7 @@ export default function ParentHome() {
       />
 
       <View className="gap-2 pt-4">
-        <Text variant="footnote" className="px-5" style={{ color: colors.secondaryText, textTransform: 'uppercase' }}>
+        <Text variant="footnote" className="px-5" style={{ color: colors.ink2, textTransform: 'uppercase' }}>
           {t.settings}
         </Text>
         <View className="overflow-hidden rounded-2xl bg-surface">
@@ -182,7 +183,7 @@ export default function ParentHome() {
             }
           />
         </View>
-        <Text variant="footnote" className="px-5" style={{ color: colors.tertiaryText }}>
+        <Text variant="footnote" className="px-5" style={{ color: colors.ink3 }}>
           {t.readOnly}
         </Text>
       </View>

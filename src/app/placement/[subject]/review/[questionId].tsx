@@ -61,13 +61,13 @@ export default function QuestionReviewScreen() {
             <View className="gap-4 p-4">
               <QuestionCard question={question} />
 
-              <View className="gap-2 rounded-xl border border-white/10 bg-surface p-4">
-                <Text className="text-sm font-semibold text-white">
+              <View className="gap-2 rounded-xl border border-line bg-surface p-4">
+                <Text className="text-sm font-semibold text-ink">
                   Your answer: {chosen != null && chosen !== '' ? String(chosen) : '— (skipped)'}
                 </Text>
                 <Text
                   className={`text-sm font-medium ${
-                    outcome === 'correct' ? 'text-emerald-400' : outcome === 'incorrect' ? 'text-red-400' : 'text-white/50'
+                    outcome === 'correct' ? 'text-good' : outcome === 'incorrect' ? 'text-bad' : 'text-ink-3'
                   }`}>
                   {outcome === 'correct' ? 'Correct' : outcome === 'incorrect' ? 'Incorrect' : 'Skipped'}
                 </Text>
@@ -79,26 +79,26 @@ export default function QuestionReviewScreen() {
                     const isChosen = chosen === letter;
                     const isCorrect = question.correct === letter;
 
-                    let rowClass = 'border-white/10 bg-surface';
-                    let badgeClass = 'border-white/20';
+                    let rowClass = 'border-line bg-surface';
+                    let badgeClass = 'border-line-strong';
                     if (revealed && isCorrect) {
-                      rowClass = 'border-emerald-400 bg-emerald-400/10';
-                      badgeClass = 'border-emerald-400 bg-emerald-400';
+                      rowClass = 'border-good bg-good-tint';
+                      badgeClass = 'border-good bg-good';
                     } else if (revealed && isChosen) {
-                      rowClass = 'border-red-400 bg-red-400/10';
-                      badgeClass = 'border-red-400 bg-red-400';
+                      rowClass = 'border-bad bg-bad-tint';
+                      badgeClass = 'border-bad bg-bad';
                     } else if (isChosen) {
-                      rowClass = 'border-accent bg-accent/10';
+                      rowClass = 'border-accent bg-accent-tint';
                       badgeClass = 'border-accent bg-accent';
                     }
 
                     return (
                       <View key={letter} className={`flex-row items-center gap-3 rounded-xl border p-3 ${rowClass}`}>
                         <View className={`h-8 w-8 items-center justify-center rounded-full border ${badgeClass}`}>
-                          <MathText text={letter} className="font-semibold text-white" />
+                          <MathText text={letter} className="font-semibold text-ink" />
                         </View>
                         <View className="flex-1">
-                          <MathText text={question.options![letter]} className="text-base text-white" />
+                          <MathText text={question.options![letter]} className="text-base text-ink" />
                         </View>
                       </View>
                     );
@@ -108,21 +108,21 @@ export default function QuestionReviewScreen() {
 
               <Pressable
                 onPress={() => setRevealed((value) => !value)}
-                className="items-center rounded-xl border border-white/10 py-3">
-                <Text className="text-base font-medium text-white">{revealed ? 'Hide Answer' : 'Show Answer'}</Text>
+                className="items-center rounded-xl border border-line py-3">
+                <Text className="text-base font-medium text-ink">{revealed ? 'Hide Answer' : 'Show Answer'}</Text>
               </Pressable>
 
               {revealed ? (
                 <View className="gap-3">
                   {!question.options ? (
-                    <View className="rounded-xl border border-emerald-400 bg-emerald-400/10 p-4">
-                      <Text className="text-sm font-semibold text-emerald-400">
+                    <View className="rounded-xl border border-good bg-good-tint p-4">
+                      <Text className="text-sm font-semibold text-good">
                         Correct answer: {formatGridInAnswer(Number(question.correct))}
                       </Text>
                     </View>
                   ) : null}
                   <View className="rounded-xl bg-surface p-4">
-                    <MathText text={question.explanation} className="text-base text-white" looseLineHeight />
+                    <MathText text={question.explanation} className="text-base text-ink" looseLineHeight />
                   </View>
                 </View>
               ) : null}

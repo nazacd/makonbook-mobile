@@ -3,13 +3,16 @@ import { ActivityIndicator, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Notice } from '@/components/Notice';
-import { colors } from '@/design/colors';
-import { headerOptions, sheetOptions } from '@/design/navigation';
+import { useColors } from '@/design/colors';
+import { useHeaderOptions, useSheetOptions } from '@/design/navigation';
 import { describeError } from '@/lib/api/errors';
 import { useMe } from '@/lib/api/queries';
 import { useAuth } from '@/lib/auth/session';
 
 export default function SignedInLayout() {
+  const colors = useColors();
+  const headerOptions = useHeaderOptions();
+  const sheetOptions = useSheetOptions();
   const me = useMe();
   const { signOut } = useAuth();
 
@@ -41,7 +44,7 @@ export default function SignedInLayout() {
   const mustChange = me.data.must_change_password;
 
   return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.brand } }}>
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
       <Stack.Protected guard={!mustChange}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="password" options={{ ...sheetOptions, title: 'Change password' }} />
@@ -52,7 +55,10 @@ export default function SignedInLayout() {
         <Stack.Screen name="practice/result/[id]" options={{ ...headerOptions, title: 'Result' }} />
         <Stack.Screen name="practice/review/[id]/[slot]" options={{ ...headerOptions, title: 'Question' }} />
         <Stack.Screen name="practice/group/[id]" options={{ ...headerOptions, title: 'Practice' }} />
+        <Stack.Screen name="practice/new" options={{ ...headerOptions, title: 'New results' }} />
+        <Stack.Screen name="practice/history/[code]" options={{ ...headerOptions, title: 'History' }} />
         <Stack.Screen name="vocab/group/[id]" options={{ ...headerOptions, title: 'Words' }} />
+        <Stack.Screen name="vocab/list/[slug]" options={{ ...headerOptions, title: 'Words' }} />
         <Stack.Screen name="vocab/study" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
         {/* A test fills the screen; leaving goes through its Home button, which saves and pauses it. */}
         <Stack.Screen name="practice/run/[code]" options={{ presentation: 'fullScreenModal', gestureEnabled: false }} />

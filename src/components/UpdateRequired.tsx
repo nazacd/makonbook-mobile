@@ -4,12 +4,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/Button';
 import { Text } from '@/components/Text';
-import { colors } from '@/design/colors';
+import { useColors } from '@/design/colors';
 import { STORE_URL } from '@/lib/config';
 
 // Shown instead of the whole app when this build is older than the API
 // supports (spec D15). There is deliberately no way past it.
 export function UpdateRequired() {
+  const colors = useColors();
   const storeUrl = STORE_URL;
   const storeName = Platform.OS === 'ios' ? 'the App Store' : 'Google Play';
   return (
@@ -23,10 +24,10 @@ export function UpdateRequired() {
               resizeMode="contain"
             />
             <View className="items-center gap-2">
-              <Text variant="title" className="text-white" accessibilityRole="header">
+              <Text variant="title" className="text-ink" accessibilityRole="header">
                 Update MakonBook
               </Text>
-              <Text variant="body" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+              <Text variant="body" style={{ color: colors.ink2, textAlign: 'center' }}>
                 This version is no longer supported. Install the latest one from {storeName} to keep
                 using the app.
               </Text>

@@ -1,22 +1,24 @@
 import { Platform, TextInput } from "react-native";
 
+import { useColors } from "@/design/colors";
+
 type GridInInputProps = {
   value: string;
   onChange: (value: string) => void;
 };
 
 export function GridInInput({ value, onChange }: GridInInputProps) {
+  const colors = useColors();
   return (
     <TextInput
       value={value}
       onChangeText={onChange}
-      // Same reason as src/components/Text.tsx: avoid font-scale
-      // measure/draw mismatches after a configuration change.
+      // Part of the timed test, which is laid out for fixed sizes.
       allowFontScaling={false}
       placeholder="Enter a number or fraction (e.g. 1/2)"
-      placeholderTextColor="#6b7280"
+      placeholderTextColor={colors.ink3}
       keyboardType={Platform.OS === "ios" ? "numbers-and-punctuation" : "default"}
-      className="rounded-xl border border-white/10 bg-surface py-3 text-base text-white"
+      className="rounded-xl border border-line bg-surface py-3 text-base text-ink"
       style={{ paddingHorizontal: 15 }}
     />
   );

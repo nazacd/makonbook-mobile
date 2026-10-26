@@ -20,7 +20,7 @@ src/
       _layout.tsx                                loads /v1/me; guards choose-password vs everything else
       choose-password.tsx                        forced: the only screen until the temporary password is replaced
       password.tsx, username.tsx                 sheets from Profile
-      attendance/[id].tsx                        teacher: rotating QR + live list while open; results + corrections after
+      attendance/[id].tsx                        teacher: rotating QR (tap: full screen, full brightness) + live list while open; results + corrections after
       scan.tsx                                   student: camera scanner (full-screen modal from the tab bar's Scan button)
       att/[sessionId]/[window]/[sig].tsx         the QR's deep link (makonbookmobile://att/…): check in from the phone's camera
       my-attendance/[groupId].tsx                student: attendance in one group (opened from the group card on Classes)
@@ -57,7 +57,7 @@ src/
                                                    placement: session-context, scoring, gradeAnswer, timer, storage, types
   components/                                     Button, PressableScale, TextField, Notice, ListRow, GroupCard,
                                                    PasswordForm, UpdateRequired, StateChip; attendance: TeacherToday,
-                                                   StudentClasses, RotatingQR, MarkSheet, AppTabBar, TabIcons,
+                                                   StudentClasses, RotatingQR, FullScreenQR, MarkSheet, AppTabBar, TabIcons,
                                                    CheckInResult; placement: QuestionCard, AnswerChoice,
                                                    GridInInput, Timer, QuestionNavigatorGrid, BottomNavBar, MathText, …;
                                                    practice/: RichContent, StudentPractice, TeacherPractice; parent/: CodeForm (5 boxes), LangSwitch (flags), Flag;
@@ -70,16 +70,21 @@ Server state lives in React Query (`useMe` is the person, seeded by the login re
 
 ### Design system
 
-Fixed single dark theme — **no `dark:` NativeWind variants anywhere**, no light mode. Color tokens live in `src/global.css`'s `@theme` block:
-- `--color-brand: #01000f` — base app background, used everywhere.
-- `--color-surface: #16141d` — cards, panels, inputs (a lifted near-black, distinct from the base).
-- `--color-accent: #8b5cf6` — buttons, selected states, links, "current" nav cell. Kept deliberately separate from `brand`/`surface` because a near-black-on-near-black interactive element is invisible — always use `accent` for anything tappable that needs to stand out, never `brand`/`surface`.
+Two themes, light first and dark, built from the avatar palette (navy `#122D47`, off-white `#EDE2CC`, terracotta `#B65D3C`, mustard `#CB9725`, sage `#7D9B81`, sky `#97C1D5`, violet `#7A4590` as the accent). The full reads, principles and component rules are in `MOBILE-DESIGN.md`; read it before UI work.
+- **Tokens** live in `src/global.css`: light values on `@theme`, dark values under `@media (prefers-color-scheme: dark)`. A variable defined twice stays live at runtime (react-native-css), so `bg-brand`, `bg-surface`, `text-ink`… switch on their own. **Never use `dark:` variants.** `brand` is the background, `surface`/`surface-2` the lifted steps, `ink`/`ink-2`/`ink-3` text, `primary`/`on-primary` buttons (navy in light, off-white in dark), `accent`/`on-accent` the violet for selection, links and the Scan button, `good`/`watch`/`bad` states (+ `-tint`), `track` and `fill-*` for the attendance bar. Every text colour passes WCAG AA.
+- **Raw colour values** (headers, tab bar, ActivityIndicator, SVG, placeholders) come from `useColors()` in `src/design/colors.ts`, inside a component, never at module level; keep its palettes in step with `global.css`. Module-level maps hold token keys (`keyof Palette`), resolved with `colors[key]` at render.
+- **Appearance** (Profile: System / Light / Dark, `src/lib/appearance.tsx`, saved on the phone) sets react-native-css's `colorScheme` (classNames) and reaches `useScheme()` (raw values) through context. React Native's `Appearance` is never overridden, so `useColorScheme()` always reports the phone's own setting live; overriding it from JS makes switching back to System read a stale value.
+- **Text after a system theme or font-size change** is re-measured (`TextConfigEpoch` in `Text.tsx`): React Native caches text measurements by layout attributes only, and on some Android phones a label kept its old width and clipped ("Profile" → "Profil").
+- **Fonts**: Bitter (`Bitter_600SemiBold`, `Bitter_700Bold`, loaded with `useFonts` in the root layout) for titles and big numbers via the `largeTitle`/`title`/`title2`/`title3` variants; the system font for everything else. Each Bitter weight is its own family: set the family, never `fontWeight`, or Android synthesises a bold.
+- **Font scaling** follows the phone, capped (`Text`: 1.4×, 1.2× for display sizes); the timed test screens wrap themselves in `<FixedTextScale>`. Keep `fontFamily: 'sans-serif'` on Android (see the comment in `Text.tsx` for the clipping bug it prevents).
+- **Icons**: Lucide only, through `<Icon as={…}>` (1.75 stroke, `ink` by default). No hand-drawn SVG icons, no text glyphs (`› ✓ ✕`) as icons.
+- **Radius** 10 / 14 / 20 / full; hairlines (`line`) instead of shadows; touch targets ≥ 44 dp. Heights that must be exact are in dp (`style`), because NativeWind's rem is 14 px on native and 16 on web.
 
 Interaction and motion (the "apple-design" principles, applied to React Native):
 - **Respond on press-in, not release.** Tappable surfaces use `PressableScale` (sinks on press-in, springs back) or `ListRow` (highlight on press-in). Never feedback only on `onPress`.
 - **Springs, not durations**, via `src/design/motion.ts`: `spring(response, dampingRatio)` in Apple's terms. Default `springs.default` (critically damped, 0.35 s); bounce (`springs.momentum`) only after a gesture that carried momentum. Springs start from the current value, so everything stays interruptible.
 - **Reduce Motion**: springs use `ReduceMotion.System`; components swap movement for opacity (`useReducedMotion`).
-- **System chrome over custom**, with one deliberate exception: native-stack headers (`headerOptions`) are translucent on iOS (Liquid Glass on 26, blur material before), solid brand on Android. The tab bar is our own `AppTabBar` (JS tabs), because the student's raised centre Scan button can't live in a native tab bar. Scroll views under them use `contentInsetAdjustmentBehavior="automatic"`. Secondary tasks open with `sheetOptions` (iOS sheet, Android push).
+- **System chrome over custom**, with one deliberate exception: native-stack headers (`useHeaderOptions()`) are translucent on iOS (Liquid Glass on 26, blur material before), solid background on Android. The tab bar is our own `AppTabBar` (JS tabs), because the student's raised centre Scan button can't live in a native tab bar. Scroll views under them use `contentInsetAdjustmentBehavior="automatic"`. Secondary tasks open with `useSheetOptions()` (iOS sheet, Android push).
 - **Haptics only at meaningful moments** (`src/design/haptics.ts`: success, error, selection) — never on ordinary taps. Android uses `performAndroidHapticsAsync`, which needs no `VIBRATE` permission (it stays blocked in `app.json`).
 - **Type**: use `<Text variant="…">` from the scale in `src/design/typography.ts` (size, weight and leading as a set; Android gets hand-tuned tracking, iOS's system font does its own). Avoid mixing `text-*`/`font-*` size classes with a variant.
 - **Feedback**: validate inline as people type; put errors next to the field they're about; `Notice` for screen-level status. Every screen has a way out (the forced password screen has Sign out).
