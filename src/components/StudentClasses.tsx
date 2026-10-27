@@ -104,9 +104,16 @@ function NextClass({ next, now }: { next: Occurrence; now: number }) {
       </View>
       <View {...spill.keepOut('when')} className="flex-row flex-wrap items-baseline self-start" style={{ columnGap: 12, marginTop: 2 }}>
         {happening ? (
-          <Text variant="largeTitle" style={{ color: colors.ink, fontVariant: ['tabular-nums'] }}>
-            Until <Text style={{ color: colors.accent }}>{next.slot.end_time}</Text>
-          </Text>
+          // Two texts, not one nested in the other: a nested Text starts again
+          // from the system font on Android and would lose Bitter.
+          <>
+            <Text variant="largeTitle" style={{ color: colors.ink }}>
+              Until
+            </Text>
+            <Text variant="largeTitle" style={{ color: colors.accent, fontVariant: ['tabular-nums'] }}>
+              {next.slot.end_time}
+            </Text>
+          </>
         ) : (
           <>
             <Text variant="largeTitle" style={{ color: colors.ink }}>
