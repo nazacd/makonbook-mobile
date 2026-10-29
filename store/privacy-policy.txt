@@ -1,41 +1,74 @@
 MakonBook Privacy Policy
 
-Effective date: 3 October 2026
+Effective date: 29 October 2026
 
-This policy explains how the MakonBook app ("the app"), published by SAT MAKON ("we", "us"), handles information. The current version of the app is a timed placement test (Math or English) that recommends a starting class level.
+This policy explains how the MakonBook app ("the app"), published by SAT MAKON ("we", "us"), handles information. MakonBook is the app for SAT MAKON students, their parents and their teachers: class schedules, attendance, SAT practice tests and vocabulary study. It also has a free level check test that anyone can take without an account.
 
 Summary
 
-• The app has no accounts and no sign-in.
-• We do not collect, store on our servers, sell, or share any personal information.
+• Students and teachers sign in with an account that SAT MAKON creates when they join. There is no public sign-up in the app.
+• We use your information only to run your classes and studies at SAT MAKON. We do not sell it and do not use it for advertising.
 • The app contains no advertising and no analytics or tracking tools.
+• The level check test needs no account, and its answers never leave your device.
+
+Information we hold about you
+
+Account. When you join SAT MAKON, we create your account with your name, phone number, the groups you study in or teach, and their schedules. You sign in with your phone number or a username you choose, and a password. Your first password is temporary and the app asks you to replace it.
+
+Install identifier. The first time it opens, the app creates a random identifier for that installation. It is sent when you sign in, when you check in to a lesson, and when a parent adds a child. We use it to tell a person's devices apart and to stop one phone from checking in for several students. It is not your phone's hardware ID or advertising ID, and it changes if you reinstall the app.
+
+Attendance. When you scan your teacher's code in class, the app sends the code and the install identifier, and we record that you attended (on time or late). Teachers and the SAT MAKON office can see and correct attendance.
+
+Practice tests. When you finish a practice test, the app sends your answers, the time you spent on each question, and when you started and finished. We use them to calculate your scores and to show your results to you and your teachers.
+
+Vocabulary. Each time you rate a word while studying, the app records the word, your rating, the time, and the word's next review date, and uploads them so your progress is the same on every phone you use. Your teachers can see your progress.
+
+Parents. Your Profile shows a parent code. Anyone who enters it in the app can see your groups, schedule and attendance on their own phone, without being able to change anything. Share it only with your parents, and tell us if someone else has it. Parents can send a message to the SAT MAKON office from the app; we receive the message, the group it is about, and the language it was written in.
+
+Who can see your information
+
+• You.
+• Your teachers, for the groups they teach.
+• SAT MAKON office staff.
+• Parents who have your parent code (groups, schedule and attendance only).
+
+We do not sell or share your information with anyone else, except companies that host and run our servers for us, who may process it only to provide that service, or when the law requires it.
 
 Information stored on your device
 
-While you take a test, the app saves your progress on your own device (your answers, questions you marked for review or ruled out, the current question, and the time used) so you can resume if the app is closed. This information never leaves your device. It is deleted when you submit the test, and you can also remove it at any time by clearing the app's storage or uninstalling the app. Test results are shown on screen and are not saved after you leave the results screen.
+The app keeps your sign-in on your phone in the system's secure storage, along with practice tests you downloaded, your finished attempts and vocabulary progress (so they work without internet), the images for them, parents' saved children, and your appearance setting. Signing out ends your sign-in on that phone. Uninstalling the app, or clearing its storage, removes everything it saved.
 
-The app does not ask for your name, email address, phone number, location, contacts, or photos.
+Level check test
+
+While you take the level check test, the app saves your progress on your own device (your answers, questions you marked for review or ruled out, the current question, and the time used) so you can resume if the app is closed. This information never leaves your device. It is deleted when you submit the test. Results are shown on screen and are not saved after you leave the results screen.
 
 Graphing calculator (Desmos)
 
 Math questions include an optional graphing calculator provided by Desmos. When you open it, your device connects to Desmos's servers to load the calculator. As with any website, Desmos receives standard technical information from that connection, such as your IP address and device or browser type. The app does not send Desmos any information about you or your test. Desmos handles that information under its own privacy policy: https://www.desmos.com/privacy
 
-Everything else in the app works without an internet connection.
-
 Permissions
 
-The app requests only the Internet permission, which is used solely to load the graphing calculator.
+• Internet: to sign in, sync your studies and load the graphing calculator.
+• Camera: only to scan your teacher's attendance code, and only while the scanner is open. The app does not take, save or send photos.
+
+Security
+
+The app talks to our servers only over encrypted (HTTPS) connections, and keeps your sign-in in your phone's secure storage.
+
+Keeping and deleting your information
+
+We keep your information while you study or work at SAT MAKON, and as long as needed for our school records afterwards. To have your account and the information in it deleted, write to the address below or ask the SAT MAKON office. We will delete it within 30 days, except records the law requires us to keep.
 
 Children
 
-The app is intended for students preparing for the SAT and is not directed at children under 13. It does not knowingly collect personal information from anyone, including children.
+The app is for students preparing for the SAT and is not directed at children under 13.
 
 Changes to this policy
 
-Future versions of the app may add features such as user accounts. If that changes what information the app handles, we will update this policy before releasing that version and change the effective date above.
+If we change how the app handles information, we will update this policy and the effective date above.
 
 Contact
 
-Questions about this policy can be sent to CONTACT_EMAIL.
+Questions about this policy, or requests to see or delete your information, can be sent to asadbahtiyarov2002@gmail.com.
 
 SAT® is a trademark registered by the College Board, which is not affiliated with, and does not endorse, this app.
