@@ -48,3 +48,7 @@ example
 
 # design audit working folder (screenshots, notes)
 .design/
+
+# EAS local signing credentials (keystore passwords): never commit
+credentials.json
+credentials/
