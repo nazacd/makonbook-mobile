@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { ChevronRight, type LucideIcon } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 
@@ -13,12 +14,14 @@ type PageRowProps = {
   destructive?: boolean;
   /** Draws the hairline above this row (every row but the first in a run). */
   separator?: boolean;
+  /** Shown in place of the chevron (a "new" mark). */
+  accessory?: ReactNode;
 };
 
 // A row set straight on the page, no box: an icon, the label, an optional
 // value, and a chevron when it opens a screen. Highlights on press-in like a
 // system list row.
-export function PageRow({ icon, label, value, onPress, destructive = false, separator = false }: PageRowProps) {
+export function PageRow({ icon, label, value, onPress, destructive = false, separator = false, accessory }: PageRowProps) {
   const colors = useColors();
   const tint = destructive ? colors.bad : colors.ink;
   return (
@@ -44,7 +47,7 @@ export function PageRow({ icon, label, value, onPress, destructive = false, sepa
             {value}
           </Text>
         )}
-        {!destructive && <Icon as={ChevronRight} size={18} color={colors.ink3} />}
+        {accessory ?? (!destructive && <Icon as={ChevronRight} size={18} color={colors.ink3} />)}
       </View>
     </Pressable>
   );

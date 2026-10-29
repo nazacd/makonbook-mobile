@@ -63,11 +63,24 @@ export function EmptyState({
 }
 
 /** Content that failed to load: what went wrong, and a way to try again. */
-export function ErrorState({ title, message, onRetry, retrying = false }: { title: string; message: string; onRetry: () => void; retrying?: boolean }) {
+export function ErrorState({
+  title,
+  message,
+  onRetry,
+  retrying = false,
+  retryLabel = 'Try again',
+}: {
+  title: string;
+  message: string;
+  onRetry: () => void;
+  retrying?: boolean;
+  /** Parents read it in Uzbek or Russian. */
+  retryLabel?: string;
+}) {
   return (
     <View className="gap-3">
       <Notice tone="error" title={title} message={message} />
-      <Button label="Try again" variant="secondary" onPress={onRetry} loading={retrying} />
+      <Button label={retryLabel} variant="secondary" onPress={onRetry} loading={retrying} />
     </View>
   );
 }

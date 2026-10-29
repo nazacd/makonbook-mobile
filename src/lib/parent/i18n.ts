@@ -44,8 +44,7 @@ const uz = {
   absentTile: 'Kelmagan',
   noLessons: 'Hali darslar yo‘q',
   noLessonsBody: 'Bu guruhdagi darslar o‘tgandan keyin shu yerda ko‘rinadi.',
-  attendanceSource:
-    'Maktabning HolliHop yozuvlaridan, oxirgi to‘rt oy uchun. Biror narsa noto‘g‘ri bo‘lsa, ofisga xabar bering.',
+  attendanceSource: 'Xato bo‘lsa, ofisga xabar bering.',
 
   report: 'Muammo haqida xabar berish',
   reportTitle: 'Ofisga xabar',
@@ -69,7 +68,6 @@ const uz = {
   removeBody: 'Qayta qo‘shish uchun kod yana kerak bo‘ladi.',
   removeConfirm: 'Olib tashlash',
   cancel: 'Bekor qilish',
-  readOnly: 'Faqat ko‘rish rejimi. Ma’lumotlarni o‘zgartirib bo‘lmaydi.',
   studentSignIn: 'O‘quvchi sifatida kirish',
 
   errNetwork: 'Internet aloqasi yo‘q. Ulanishni tekshirib, qayta urinib ko‘ring.',
@@ -121,8 +119,7 @@ const ru: Strings = {
   absentTile: 'Пропусков',
   noLessons: 'Пока нет занятий',
   noLessonsBody: 'Занятия в этой группе появятся здесь, когда пройдут.',
-  attendanceSource:
-    'По записям школы в HolliHop, за последние четыре месяца. Если что-то не так, сообщите в офис.',
+  attendanceSource: 'Если что-то не так, сообщите в офис.',
 
   report: 'Сообщить о проблеме',
   reportTitle: 'Сообщение в офис',
@@ -146,7 +143,6 @@ const ru: Strings = {
   removeBody: 'Чтобы добавить снова, понадобится код.',
   removeConfirm: 'Убрать',
   cancel: 'Отмена',
-  readOnly: 'Только просмотр. Изменить данные нельзя.',
   studentSignIn: 'Войти как ученик',
 
   errNetwork: 'Нет соединения с интернетом. Проверьте подключение и попробуйте ещё раз.',
