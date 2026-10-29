@@ -110,6 +110,7 @@ export function useRefreshLocal() {
 export function useDownloadTest() {
   const person = usePerson();
   const refresh = useRefreshLocal();
+  const queryClient = useQueryClient();
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
   const mutation = useMutation({
     mutationFn: async (code: string) => {
@@ -123,9 +124,11 @@ export function useDownloadTest() {
       await saveDownload(person, { code, title: pkg.title, version: pkg.version, bytes, at: new Date().toISOString() });
       return pkg;
     },
-    onSettled: () => {
+    onSettled: (_pkg, _error, code) => {
       setProgress(null);
       refresh();
+      // A result opened before the download cached "not on the phone".
+      queryClient.invalidateQueries({ queryKey: ['practice-package', code] });
     },
   });
   return { ...mutation, progress };
@@ -134,12 +137,16 @@ export function useDownloadTest() {
 export function useRemoveDownload() {
   const person = usePerson();
   const refresh = useRefreshLocal();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (code: string) => {
       await forgetDownload(person, code);
       removePackages(code);
     },
-    onSettled: refresh,
+    onSettled: (_data, _error, code) => {
+      refresh();
+      queryClient.invalidateQueries({ queryKey: ['practice-package', code] });
+    },
   });
 }
 
