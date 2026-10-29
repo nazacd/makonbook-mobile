@@ -1,13 +1,18 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { ActivityIndicator, RefreshControl, ScrollView, View } from 'react-native';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { CalendarX, Check, Clock, X, type LucideIcon } from 'lucide-react-native';
+import { useState } from 'react';
+import { RefreshControl, ScrollView, View } from 'react-native';
 
-import { Notice } from '@/components/Notice';
-import { MARK_COLOR, StateChip } from '@/components/StateChip';
+import { attendanceBand } from '@/components/AttendanceBar';
+import { Icon } from '@/components/Icon';
+import { EmptyState, ErrorState, Skeleton } from '@/components/States';
 import { Text } from '@/components/Text';
-import { useColors } from '@/design/colors';
+import { useColors, type Palette } from '@/design/colors';
+import { fonts } from '@/design/typography';
 import type { GroupAttendance } from '@/lib/api/types';
+import { parseClassName } from '@/lib/groups';
 import { useChildAttendance } from '@/lib/parent/hooks';
-import { dateIn, describeParentError, monthIn, type Lang, type Strings } from '@/lib/parent/i18n';
+import { dateIn, describeParentError, monthIn, type Lang } from '@/lib/parent/i18n';
 import { useParent } from '@/lib/parent/session';
 
 function byMonth(lang: Lang, days: GroupAttendance['days']) {
@@ -20,14 +25,22 @@ function byMonth(lang: Lang, days: GroupAttendance['days']) {
   return out;
 }
 
+const MARK: Record<GroupAttendance['days'][number]['state'], { icon: LucideIcon; tone: keyof Palette }> = {
+  present: { icon: Check, tone: 'ink3' },
+  late: { icon: Clock, tone: 'watch' },
+  absent: { icon: X, tone: 'bad' },
+};
+
 // The child's attendance in one group, as the student sees their own
-// (my-attendance/[groupId]), in the parent's language.
+// (my-attendance/[groupId]), in the parent's language: the figure in its band
+// colour with the bar, then every lesson.
 export default function ChildAttendanceScreen() {
   const colors = useColors();
   const { groupId, child } = useLocalSearchParams<{ groupId: string; child: string }>();
   const { t, lang, kids } = useParent();
   const kid = kids.find((k) => String(k.client_id) === child);
   const query = useChildAttendance(kid);
+  const [pulling, setPulling] = useState(false);
   const group = query.data?.groups.find((g) => String(g.group_id) === groupId);
   const label = { present: t.present, late: t.late, absent: t.absent };
 
@@ -35,57 +48,68 @@ export default function ChildAttendanceScreen() {
     <ScrollView
       className="flex-1 bg-brand"
       contentInsetAdjustmentBehavior="automatic"
-      contentContainerClassName="gap-6 px-5 pb-12 pt-4"
+      contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: 48, gap: 36 }}
       refreshControl={
         <RefreshControl
-          refreshing={query.isRefetching}
-          onRefresh={() => query.refetch()}
-          tintColor={colors.accent}
-          colors={[colors.accent]}
+          refreshing={pulling}
+          onRefresh={() => {
+            setPulling(true);
+            query.refetch().finally(() => setPulling(false));
+          }}
+          tintColor={colors.ink2}
+          colors={[colors.ink]}
           progressBackgroundColor={colors.surface}
         />
       }>
-      <Stack.Screen options={{ title: group?.group_name ?? t.attendance }} />
+      <Stack.Screen options={{ title: group ? parseClassName(group.group_name, group.discipline).title : t.attendance }} />
 
       {query.isPending ? (
-        <ActivityIndicator color={colors.accent} style={{ marginTop: 48 }} />
-      ) : query.isError ? (
-        <Notice tone="error" title={t.loadFailed} message={describeParentError(t, query.error)} />
-      ) : !group || group.days.length === 0 ? (
-        <View className="items-center gap-2 px-4 py-16">
-          <Text variant="title3" className="text-ink">
-            {t.noLessons}
-          </Text>
-          <Text variant="subhead" style={{ color: colors.ink2, textAlign: 'center' }}>
-            {t.noLessonsBody}
-          </Text>
+        <View className="gap-3">
+          <Skeleton width={120} height={56} />
+          <Skeleton width={160} height={10} />
+          <View style={{ height: 24 }} />
+          {[0, 1, 2].map((i) => (
+            <Skeleton key={i} height={20} />
+          ))}
         </View>
+      ) : query.isError ? (
+        <ErrorState title={t.loadFailed} message={describeParentError(t, query.error)} onRetry={() => query.refetch()} retrying={query.isFetching} retryLabel={t.tryAgain} />
+      ) : !group || group.days.length === 0 ? (
+        <EmptyState icon={CalendarX} title={t.noLessons} message={t.noLessonsBody} />
       ) : (
         <>
-          <Overview group={group} t={t} />
+          <Overview group={group} label={t.attendance} />
           {byMonth(lang, group.days).map((month) => (
-            <View key={month.title} className="gap-2">
-              <Text variant="footnote" className="px-5" style={{ color: colors.ink2, textTransform: 'uppercase' }}>
+            <View key={month.title} className="gap-1">
+              <Text variant="title3" style={{ color: colors.ink, marginBottom: 6 }} accessibilityRole="header">
                 {month.title}
               </Text>
-              <View className="overflow-hidden rounded-2xl bg-surface">
-                {month.days.map((d, i) => (
+              {month.days.map((d, i) => {
+                const mark = MARK[d.state];
+                return (
                   <View
                     key={d.date}
-                    className="ml-5 min-h-[50px] flex-row items-center pr-4"
-                    style={i > 0 ? { borderTopWidth: 1, borderTopColor: colors.line } : undefined}
+                    className="flex-row items-center gap-3"
+                    style={{ minHeight: 48, borderTopWidth: i > 0 ? 1 : 0, borderTopColor: colors.line }}
                     accessible
                     accessibilityLabel={`${dateIn(lang, d.date)}: ${label[d.state]}`}>
-                    <Text variant="body" className="flex-1 text-ink">
+                    <Text variant="body" className="flex-1" style={{ color: colors.ink }}>
                       {dateIn(lang, d.date)}
                     </Text>
-                    <StateChip label={label[d.state]} color={colors[MARK_COLOR[d.state]]} />
+                    <Icon as={mark.icon} size={16} color={colors[mark.tone]} strokeWidth={2} />
+                    <Text variant="subhead" style={{ color: d.state === 'present' ? colors.ink2 : colors[mark.tone], fontWeight: d.state === 'present' ? '400' : '600' }}>
+                      {label[d.state]}
+                    </Text>
                   </View>
-                ))}
-              </View>
+                );
+              })}
             </View>
           ))}
-          <Text variant="footnote" style={{ color: colors.ink3 }}>
+          <Text
+            variant="footnote"
+            accessibilityRole="link"
+            onPress={() => router.push({ pathname: '/parent/report', params: { child: String(child) } })}
+            style={{ color: colors.accent, fontWeight: '600' }}>
             {t.attendanceSource}
           </Text>
         </>
@@ -94,40 +118,23 @@ export default function ChildAttendanceScreen() {
   );
 }
 
-function Overview({ group, t }: { group: GroupAttendance; t: Strings }) {
+// Only the figure, in its band colour, with a larger bar under it.
+function Overview({ group, label }: { group: GroupAttendance; label: string }) {
   const colors = useColors();
-  const { lessons, present, late, absent } = group.summary;
-  const rate = Math.round(((present + late) / Math.max(1, lessons)) * 100);
+  const { lessons, present, late } = group.summary;
+  const rate = (present + late) / Math.max(1, lessons);
+  const band = attendanceBand(rate);
+  const tone: keyof Palette = band === 'bad' ? 'bad' : band === 'watch' ? 'watch' : 'good';
+  const fill: keyof Palette = band === 'bad' ? 'fillBad' : band === 'watch' ? 'fillWatch' : 'fillGood';
+  const pct = Math.round(rate * 100);
   return (
-    <View className="gap-3">
-      <View>
-        <Text variant="largeTitle" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
-          {rate}%
-        </Text>
-        <Text variant="subhead" style={{ color: colors.ink2 }}>
-          {t.attendedLine(present + late, lessons)}
-        </Text>
-      </View>
-      <View className="flex-row gap-3">
-        <Tile label={t.presentTile} value={present} color={colors.good} />
-        <Tile label={t.lateTile} value={late} color={colors.watch} />
-        <Tile label={t.absentTile} value={absent} color={colors.bad} />
-      </View>
-    </View>
-  );
-}
-
-function Tile({ label, value, color }: { label: string; value: number; color: string }) {
-  const colors = useColors();
-  return (
-    <View className="flex-1 gap-1 rounded-2xl bg-surface p-4">
-      <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
-      <Text variant="title2" className="text-ink" style={{ fontVariant: ['tabular-nums'] }}>
-        {value}
+    <View accessible accessibilityLabel={`${label} ${pct}%`}>
+      <Text style={{ fontFamily: fonts.displayBold, fontSize: 56, lineHeight: 62, color: colors[tone], fontVariant: ['tabular-nums'] }} maxFontSizeMultiplier={1.2}>
+        {pct}%
       </Text>
-      <Text variant="footnote" style={{ color: colors.ink2 }}>
-        {label}
-      </Text>
+      <View style={{ width: 160, height: 10, borderRadius: 5, backgroundColor: colors.track, overflow: 'hidden', marginTop: 10 }}>
+        <View style={{ width: `${pct}%`, height: 10, borderRadius: 5, backgroundColor: colors[fill] }} />
+      </View>
     </View>
   );
 }

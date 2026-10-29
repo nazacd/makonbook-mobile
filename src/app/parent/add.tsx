@@ -1,5 +1,5 @@
 import { router, Stack } from 'expo-router';
-import { ScrollView } from 'react-native';
+import { View } from 'react-native';
 
 import { CodeForm } from '@/components/parent/CodeForm';
 import { useParent } from '@/lib/parent/session';
@@ -8,13 +8,9 @@ import { useParent } from '@/lib/parent/session';
 export default function AddChildScreen() {
   const { t } = useParent();
   return (
-    <ScrollView
-      className="flex-1 bg-brand"
-      contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps="handled"
-      contentContainerClassName="gap-6 px-5 pb-10 pt-4">
+    <View className="flex-1 bg-brand">
       <Stack.Screen options={{ title: t.addChildTitle }} />
       <CodeForm onDone={() => router.back()} />
-    </ScrollView>
+    </View>
   );
 }
