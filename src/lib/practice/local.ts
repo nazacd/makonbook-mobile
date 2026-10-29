@@ -123,32 +123,56 @@ export async function markUploaded(p: Person, server: ServerAttempt) {
   await saveAttempt(p, { ...a, uploaded: true, scores: server.scores, total: server.total });
 }
 
+const fromServer = (s: OwnAttempt): LocalAttempt => ({
+  id: s.id,
+  code: s.test,
+  title: s.title,
+  version: s.version,
+  sections: s.sections,
+  started_at: s.started_at,
+  finished_at: s.finished_at,
+  answers: s.answers,
+  scores: s.scores,
+  total: s.total,
+  uploaded: true,
+});
+
 /**
- * Keeps the student's attempts this phone doesn't have (taken on another
- * phone, or before the app was installed again). Returns how many it added.
+ * Brings the phone's attempts in line with the server's: keeps the ones this
+ * phone doesn't have (taken on another phone, or before the app was installed
+ * again), and for uploaded ones takes the server's copy, which is the record
+ * (the demo account's results, for one, are made again with new dates).
+ * Attempts not uploaded yet stay as they are. Returns how many changed.
  */
-export async function addFromServer(p: Person, server: OwnAttempt[]): Promise<number> {
+const sections: Subject[] = ['english', 'math'];
+
+export async function mergeFromServer(p: Person, server: OwnAttempt[]): Promise<number> {
   const all = await loadAttempts(p);
-  const have = new Set(all.map((a) => a.id));
-  const added: LocalAttempt[] = server
-    .filter((s) => !have.has(s.id))
-    .map((s) => ({
-      id: s.id,
-      code: s.test,
-      title: s.title,
-      version: s.version,
-      sections: s.sections,
-      started_at: s.started_at,
-      finished_at: s.finished_at,
-      answers: s.answers,
-      scores: s.scores,
-      total: s.total,
-      uploaded: true,
-    }));
-  if (added.length === 0) return 0;
-  const next = [...all, ...added].sort((a, b) => b.finished_at.localeCompare(a.finished_at));
+  const byId = new Map(server.map((s) => [s.id, fromServer(s)]));
+  let changed = 0;
+  const next = all.map((a) => {
+    const s = byId.get(a.id);
+    byId.delete(a.id);
+    const same =
+      s &&
+      s.finished_at === a.finished_at &&
+      s.started_at === a.started_at &&
+      s.version === a.version &&
+      s.total === a.total &&
+      s.answers.length === a.answers.length &&
+      sections.every((sub) => s.scores[sub]?.score === a.scores[sub]?.score);
+    if (!s || !a.uploaded || same) return a;
+    changed++;
+    return s;
+  });
+  for (const s of byId.values()) {
+    next.push(s);
+    changed++;
+  }
+  if (changed === 0) return 0;
+  next.sort((a, b) => b.finished_at.localeCompare(a.finished_at));
   await AsyncStorage.setItem(key(p, 'attempts'), JSON.stringify(next));
-  return added.length;
+  return changed;
 }
 
 export async function markRejected(p: Person, id: string, reason: string) {

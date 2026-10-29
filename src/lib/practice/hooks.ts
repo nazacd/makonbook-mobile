@@ -6,7 +6,6 @@ import { useMe } from '@/lib/api/queries';
 
 import { readPackage, removePackages, storeDownload } from './files';
 import {
-  addFromServer,
   clearRun,
   forgetDownload,
   loadAttempts,
@@ -15,6 +14,7 @@ import {
   loadRuns,
   markRejected,
   markUploaded,
+  mergeFromServer,
   saveDownload,
   saveRun,
   type Person,
@@ -144,9 +144,9 @@ export function useRemoveDownload() {
 }
 
 /**
- * Sends finished attempts the server doesn't have yet, then keeps the ones the
- * server has and this phone doesn't (another phone's, or from before a
- * reinstall). Runs when the Practice screens are shown and whenever the app
+ * Sends finished attempts the server doesn't have yet, then brings the phone's
+ * list in line with the server's (another phone's attempts, from before a
+ * reinstall, or changed there). Runs when the Practice screens are shown and whenever the app
  * comes back to the foreground; a refused attempt (it can't become valid) is
  * kept but not sent again.
  */
@@ -187,7 +187,7 @@ export function useUploadAttempts(enabled: boolean) {
       if (online) {
         try {
           const { attempts } = await api.get<{ attempts: OwnAttempt[] }>('/v1/me/practice/attempts');
-          added = await addFromServer(person, attempts);
+          added = await mergeFromServer(person, attempts);
           queryClient.setQueryData(['practice-mine'], attempts);
         } catch {
           // Offline: the phone's own attempts still show.
