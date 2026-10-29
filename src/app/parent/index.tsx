@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { CalendarX, LogIn, MessageSquareText, Moon, Plus, Smartphone, Sun, Trash2, UserPlus } from 'lucide-react-native';
+import { CalendarX, LogOut, MessageSquareText, Moon, Plus, Smartphone, Sun, UserPlus } from 'lucide-react-native';
 import { useState } from 'react';
 import { Image, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -153,7 +153,6 @@ export default function ParentHome() {
           }
         />
         <PageRow icon={UserPlus} label={t.addChild} separator onPress={() => router.push('/parent/add')} />
-        <PageRow icon={LogIn} label={t.studentSignIn} separator onPress={() => router.push('/sign-in')} />
         {/* The same setting as the student's Profile: saved on the phone, for everyone using it. */}
         <View style={{ paddingVertical: 16 }}>
           <SegmentedControl
@@ -168,7 +167,7 @@ export default function ParentHome() {
           />
         </View>
         <PageRow
-          icon={Trash2}
+          icon={LogOut}
           label={kids.length > 1 ? `${t.remove}: ${normalCase(kid.first_name)}` : t.remove}
           separator
           destructive
