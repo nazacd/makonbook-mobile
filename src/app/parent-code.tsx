@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { ScrollView } from 'react-native';
+import { View } from 'react-native';
 
 import { CodeForm } from '@/components/parent/CodeForm';
 import { LangSwitch } from '@/components/parent/LangSwitch';
@@ -10,13 +10,9 @@ import { useParent } from '@/lib/parent/session';
 export default function ParentCodeScreen() {
   const { t } = useParent();
   return (
-    <ScrollView
-      className="flex-1 bg-brand"
-      contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps="handled"
-      contentContainerClassName="gap-6 px-5 pb-10 pt-4">
+    <View className="flex-1 bg-brand">
       <Stack.Screen options={{ title: t.forParents, headerRight: () => <LangSwitch /> }} />
       <CodeForm />
-    </ScrollView>
+    </View>
   );
 }

@@ -3,11 +3,11 @@ import { CalendarX } from 'lucide-react-native';
 import { Image, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ConnectionLine } from '@/components/ConnectionLine';
 import { Avatar } from '@/components/Avatar';
 import { ClassBlock } from '@/components/ClassBlock';
+import { ConnectionLine } from '@/components/ConnectionLine';
+import { NextClass } from '@/components/NextClass';
 import { EmptyState } from '@/components/States';
-import { SubjectSpill, useSpillLayout } from '@/components/SubjectSpill';
 import { Text } from '@/components/Text';
 import { useColors } from '@/design/colors';
 import { fonts } from '@/design/typography';
@@ -15,8 +15,7 @@ import { useMyAttendance } from '@/lib/api/attendance';
 import { useMe } from '@/lib/api/queries';
 import type { Profile } from '@/lib/api/types';
 import { useNow } from '@/lib/clock';
-import { parseClassName, roomNumber } from '@/lib/groups';
-import { describeDay, nextClass, type Occurrence } from '@/lib/schedule';
+import { nextClass } from '@/lib/schedule';
 
 const LOGO = require('../../assets/makonbook-icon.png');
 
@@ -81,62 +80,5 @@ export function StudentClasses() {
         ))
       )}
     </ScrollView>
-  );
-}
-
-// Day and time set large, with the class and room beneath. The class's
-// objects drift in from the right edge behind it, larger and fainter.
-function NextClass({ next, now }: { next: Occurrence; now: number }) {
-  const colors = useColors();
-  const spill = useSpillLayout();
-  const name = parseClassName(next.group.name, next.group.discipline);
-  const happening = next.start <= now;
-  const what = [name.title, name.teacher].filter(Boolean).join(' · ');
-  const where = [next.slot.classroom && `Room ${roomNumber(next.slot.classroom)}`, `until ${next.slot.end_time}`].filter(Boolean).join(' · ');
-
-  return (
-    <View accessible accessibilityLabel={`${happening ? 'Happening now' : 'Next class'}: ${happening ? `until ${next.slot.end_time}` : `${describeDay(next.start, now)}, ${next.slot.begin_time}`}. ${what}. ${where}`}>
-      {name.subject && <SubjectSpill layout={spill} subject={name.subject} level={name.isPrivate ? 'foundation' : (name.level ?? 'foundation')} seed={next.group.id + 7} echo />}
-      <View {...spill.keepOut('kicker')} className="self-start">
-        <Text variant="subhead" style={{ color: colors.ink2, fontWeight: '500' }}>
-          {happening ? 'Happening now' : 'Next class'}
-        </Text>
-      </View>
-      <View {...spill.keepOut('when')} className="flex-row flex-wrap items-baseline self-start" style={{ columnGap: 12, marginTop: 2 }}>
-        {happening ? (
-          // Two texts, not one nested in the other: a nested Text starts again
-          // from the system font on Android and would lose Bitter.
-          <>
-            <Text variant="largeTitle" style={{ color: colors.ink }}>
-              Until
-            </Text>
-            <Text variant="largeTitle" style={{ color: colors.accent, fontVariant: ['tabular-nums'] }}>
-              {next.slot.end_time}
-            </Text>
-          </>
-        ) : (
-          <>
-            <Text variant="largeTitle" style={{ color: colors.ink }}>
-              {describeDay(next.start, now)}
-            </Text>
-            <Text variant="largeTitle" style={{ color: colors.accent, fontVariant: ['tabular-nums'] }}>
-              {next.slot.begin_time}
-            </Text>
-          </>
-        )}
-      </View>
-      <View {...spill.keepOut('what')} className="self-start" style={{ marginTop: 10 }}>
-        <Text variant="callout" style={{ color: colors.ink, fontWeight: '500' }}>
-          {what}
-        </Text>
-      </View>
-      {!happening && (
-        <View {...spill.keepOut('where')} className="self-start">
-          <Text variant="subhead" style={{ color: colors.ink2 }}>
-            {where}
-          </Text>
-        </View>
-      )}
-    </View>
   );
 }

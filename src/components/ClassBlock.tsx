@@ -16,6 +16,8 @@ export type ClassBlockLabels = {
   room: (room: string) => string;
   /** Spoken days for screen readers ("Tuesday, Thursday, Saturday"). */
   days: (days: Group['schedule'][number]['weekdays']) => string;
+  /** The days as shown, when not the letters ("Se · Pa · Sh" for parents). */
+  daysShown?: (days: Group['schedule'][number]['weekdays']) => string;
 };
 
 const ENGLISH: ClassBlockLabels = {
@@ -31,12 +33,14 @@ type ClassBlockProps = {
   attendance?: GroupAttendance;
   onAttendance?: () => void;
   labels?: ClassBlockLabels;
+  /** Parents see the attendance figure itself, not only the bar. */
+  showRate?: boolean;
 };
 
 // A class, set on the page as type: its name, then teacher, time with days,
 // and room, each on its own line. No card. The subject's objects spill in from
 // the screen's edge behind it; the attendance bar sits at its bottom right.
-export function ClassBlock({ group, attendance, onAttendance, labels = ENGLISH }: ClassBlockProps) {
+export function ClassBlock({ group, attendance, onAttendance, labels = ENGLISH, showRate = false }: ClassBlockProps) {
   const colors = useColors();
   const spill = useSpillLayout();
   const name = parseClassName(group.name, group.discipline);
@@ -76,9 +80,15 @@ export function ClassBlock({ group, attendance, onAttendance, labels = ENGLISH }
               <Text variant="subhead" style={{ color: colors.ink2, fontVariant: ['tabular-nums'] }}>
                 {slot.begin_time}
               </Text>
-              <Text variant="caption" style={{ color: colors.ink2, letterSpacing: 0.6 }}>
-                {dayLetters(slot.weekdays)}
-              </Text>
+              {labels.daysShown ? (
+                <Text variant="subhead" style={{ color: colors.ink2 }}>
+                  · {labels.daysShown(slot.weekdays)}
+                </Text>
+              ) : (
+                <Text variant="caption" style={{ color: colors.ink2, letterSpacing: 0.6 }}>
+                  {dayLetters(slot.weekdays)}
+                </Text>
+              )}
             </Line>
           ))}
           {rooms.length > 0 && (
@@ -92,7 +102,7 @@ export function ClassBlock({ group, attendance, onAttendance, labels = ENGLISH }
       </View>
       {rate !== null && onAttendance && (
         <View {...spill.keepOut('attendance', { toEdge: true })}>
-          <AttendanceBar rate={rate} onPress={onAttendance} label={labels.attendance} accessibilityLabel={labels.attendanceA11y} />
+          <AttendanceBar rate={rate} onPress={onAttendance} label={labels.attendance} accessibilityLabel={labels.attendanceA11y} showFigure={showRate} />
         </View>
       )}
     </View>
