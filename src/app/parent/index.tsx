@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { ActivityIndicator, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { roomNumber } from '@/lib/groups';
 
 import { Button } from '@/components/Button';
 import { GroupCard, type GroupCardLabels } from '@/components/GroupCard';
@@ -120,7 +121,7 @@ export default function ParentHome() {
                   : `${dayIn(t, lang, next.start, now)}, ${next.slot.begin_time}`}
               </Text>
               <Text variant="subhead" style={{ color: colors.ink2 }}>
-                {[next.group.name, next.slot.classroom && t.room(next.slot.classroom)].filter(Boolean).join(' · ')}
+                {[next.group.name, next.slot.classroom && t.room(roomNumber(next.slot.classroom))].filter(Boolean).join(' · ')}
               </Text>
             </View>
           )}

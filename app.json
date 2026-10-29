@@ -52,7 +52,15 @@
           "recordAudioAndroid": false
         }
       ],
-      "expo-font"
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "node_modules/@expo-google-fonts/bitter/600SemiBold/Bitter_600SemiBold.ttf",
+            "node_modules/@expo-google-fonts/bitter/700Bold/Bitter_700Bold.ttf"
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

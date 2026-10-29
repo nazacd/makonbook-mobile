@@ -1,5 +1,5 @@
 import { createContext, use, useEffect, useState } from 'react';
-import { Appearance, Dimensions, PixelRatio, Platform, Text as RNText, type TextProps as RNTextProps } from 'react-native';
+import { AppState, Appearance, Dimensions, PixelRatio, Platform, Text as RNText, type TextProps as RNTextProps } from 'react-native';
 
 import { type, type TypeVariant } from '@/design/typography';
 
@@ -31,7 +31,9 @@ const DISPLAY: TypeVariant[] = ['largeTitle', 'title', 'title2'];
 const FixedScale = createContext(false);
 
 // Bumped whenever the phone's colour scheme or font size changes while the app
-// is open. React Native caches text measurements by the attributes that affect
+// is open, and when the app comes back to the foreground (after a long while in
+// the background, Android may have measured text before Bitter was available
+// again: titles came back cut, "MakonBoo", "18:3"). React Native caches text measurements by the attributes that affect
 // layout (colour isn't one), so after such a change a label can keep a width
 // measured under the old configuration, even when remounted: the clipping
 // described above, seen on an Honor phone when the system theme switched.
@@ -51,6 +53,11 @@ export function TextConfigEpoch({ children }: { children: React.ReactNode }) {
       timer = setTimeout(() => setEpoch((e) => e + 1), 500);
     };
     const appearance = Appearance.addChangeListener(bump);
+    let wasActive = AppState.currentState === 'active';
+    const appState = AppState.addEventListener('change', (state) => {
+      if (state === 'active' && !wasActive) bump();
+      wasActive = state === 'active';
+    });
     let fontScale = PixelRatio.getFontScale();
     const dimensions = Dimensions.addEventListener('change', ({ window }) => {
       if (window.fontScale !== fontScale) {
@@ -61,6 +68,7 @@ export function TextConfigEpoch({ children }: { children: React.ReactNode }) {
     return () => {
       clearTimeout(timer);
       appearance.remove();
+      appState.remove();
       dimensions.remove();
     };
   }, []);
