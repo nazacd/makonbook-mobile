@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import type { AnswerInput, Score, ServerAttempt, Subject } from './types';
+import type { AnswerInput, OwnAttempt, Score, ServerAttempt, Subject } from './types';
 
 // What the phone keeps about practice tests, per person (a shared phone keeps
 // each student's tests and attempts apart): which versions are downloaded,
@@ -121,6 +121,34 @@ export async function markUploaded(p: Person, server: ServerAttempt) {
   const a = all.find((x) => x.id === server.id);
   if (!a) return;
   await saveAttempt(p, { ...a, uploaded: true, scores: server.scores, total: server.total });
+}
+
+/**
+ * Keeps the student's attempts this phone doesn't have (taken on another
+ * phone, or before the app was installed again). Returns how many it added.
+ */
+export async function addFromServer(p: Person, server: OwnAttempt[]): Promise<number> {
+  const all = await loadAttempts(p);
+  const have = new Set(all.map((a) => a.id));
+  const added: LocalAttempt[] = server
+    .filter((s) => !have.has(s.id))
+    .map((s) => ({
+      id: s.id,
+      code: s.test,
+      title: s.title,
+      version: s.version,
+      sections: s.sections,
+      started_at: s.started_at,
+      finished_at: s.finished_at,
+      answers: s.answers,
+      scores: s.scores,
+      total: s.total,
+      uploaded: true,
+    }));
+  if (added.length === 0) return 0;
+  const next = [...all, ...added].sort((a, b) => b.finished_at.localeCompare(a.finished_at));
+  await AsyncStorage.setItem(key(p, 'attempts'), JSON.stringify(next));
+  return added.length;
 }
 
 export async function markRejected(p: Person, id: string, reason: string) {
