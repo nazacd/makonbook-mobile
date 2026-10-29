@@ -144,7 +144,7 @@ export function TeacherToday() {
         <View>
           {list.map((lesson, i) => (
             <View key={lesson.group_id}>
-              {i === nowIndex && !inProgress && <NowMarker now={now} />}
+              {i === nowIndex && !inProgress && <NowMarker now={now} railAbove={i > 0} />}
               <Stop
                 lesson={lesson}
                 phase={phaseOf(lesson, now)}
@@ -191,15 +191,21 @@ function DayButton({ icon, label, hint, disabled, onPress }: { icon?: LucideIcon
   );
 }
 
-function NowMarker({ now }: { now: number }) {
+// Where now falls between two lessons: the time in the time column, a dot
+// on the rail (centred like the lessons' dots, the rail running through it),
+// and a line to the edge.
+function NowMarker({ now, railAbove }: { now: number; railAbove: boolean }) {
   const colors = useColors();
   return (
-    <View className="flex-row items-center" style={{ height: 28 }} accessible accessibilityLabel={`Now, ${schoolClock(now)}`}>
+    <View className="flex-row items-center" style={{ height: 32 }} accessible accessibilityLabel={`Now, ${schoolClock(now)}`}>
       <Text variant="caption" style={{ width: RAIL, color: colors.accent, fontWeight: '700', fontVariant: ['tabular-nums'] }}>
         {schoolClock(now)}
       </Text>
-      <View style={{ width: 9, height: 9, borderRadius: 5, backgroundColor: colors.accent, marginLeft: -4 }} />
-      <View style={{ flex: 1, height: 1.5, backgroundColor: colors.accent, opacity: 0.6 }} />
+      <View style={{ width: 20, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ position: 'absolute', top: railAbove ? 0 : 16, bottom: 0, width: 1.5, backgroundColor: colors.line }} />
+        <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: colors.accent }} />
+      </View>
+      <View style={{ flex: 1, height: 1.5, marginLeft: -5, backgroundColor: colors.accent, opacity: 0.6 }} />
     </View>
   );
 }
