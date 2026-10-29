@@ -69,6 +69,10 @@ const uz = {
   removeConfirm: 'Olib tashlash',
   cancel: 'Bekor qilish',
   studentSignIn: 'O‘quvchi sifatida kirish',
+  theme: 'Mavzu',
+  themeSystem: 'Tizim',
+  themeLight: 'Yorug‘',
+  themeDark: 'Qorong‘i',
 
   errNetwork: 'Internet aloqasi yo‘q. Ulanishni tekshirib, qayta urinib ko‘ring.',
   errTimeout: 'Server javob bermadi. Qayta urinib ko‘ring.',
@@ -144,6 +148,10 @@ const ru: Strings = {
   removeConfirm: 'Убрать',
   cancel: 'Отмена',
   studentSignIn: 'Войти как ученик',
+  theme: 'Тема',
+  themeSystem: 'Системная',
+  themeLight: 'Светлая',
+  themeDark: 'Тёмная',
 
   errNetwork: 'Нет соединения с интернетом. Проверьте подключение и попробуйте ещё раз.',
   errTimeout: 'Сервер не ответил. Попробуйте ещё раз.',
