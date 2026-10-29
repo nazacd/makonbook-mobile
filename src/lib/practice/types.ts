@@ -68,6 +68,9 @@ export type ServerAttempt = {
   total: number | null;
 };
 
+/** One of the student's own attempts, from GET /v1/me/practice/attempts. */
+export type OwnAttempt = ServerAttempt & { answers: AnswerInput[] };
+
 export type AnswerInput = {
   subject: Subject;
   module: number;

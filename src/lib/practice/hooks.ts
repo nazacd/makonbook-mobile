@@ -6,6 +6,7 @@ import { useMe } from '@/lib/api/queries';
 
 import { readPackage, removePackages, storeDownload } from './files';
 import {
+  addFromServer,
   clearRun,
   forgetDownload,
   loadAttempts,
@@ -19,7 +20,7 @@ import {
   type Person,
   type Run,
 } from './local';
-import type { CatalogTest, GroupStudent, Package, ServerAttempt } from './types';
+import type { CatalogTest, GroupStudent, OwnAttempt, Package, ServerAttempt } from './types';
 
 /** Whose practice this phone shows: the signed-in person. */
 export function usePerson(): Person {
@@ -143,9 +144,11 @@ export function useRemoveDownload() {
 }
 
 /**
- * Sends finished attempts the server doesn't have yet. Runs when the Practice
- * screens are shown and whenever the app comes back to the foreground; a
- * refused attempt (it can't become valid) is kept but not sent again.
+ * Sends finished attempts the server doesn't have yet, then keeps the ones the
+ * server has and this phone doesn't (another phone's, or from before a
+ * reinstall). Runs when the Practice screens are shown and whenever the app
+ * comes back to the foreground; a refused attempt (it can't become valid) is
+ * kept but not sent again.
  */
 export function useUploadAttempts(enabled: boolean) {
   const person = usePerson();
@@ -157,6 +160,7 @@ export function useUploadAttempts(enabled: boolean) {
     queryFn: async () => {
       const pending = (await loadAttempts(person)).filter((a) => !a.uploaded && !a.rejected);
       let sent = 0;
+      let online = true;
       for (const a of pending) {
         try {
           const server = await api.post<ServerAttempt>('/v1/practice/attempts', {
@@ -174,11 +178,22 @@ export function useUploadAttempts(enabled: boolean) {
           if (e instanceof ApiError && (e.code === 'invalid_attempt' || e.code === 'attempt_id_taken')) {
             await markRejected(person, a.id, e.message);
           } else {
-            break; // offline or the server is down: try again later
+            online = false; // offline or the server is down: try again later
+            break;
           }
         }
       }
-      if (sent > 0 || pending.length > 0) {
+      let added = 0;
+      if (online) {
+        try {
+          const { attempts } = await api.get<{ attempts: OwnAttempt[] }>('/v1/me/practice/attempts');
+          added = await addFromServer(person, attempts);
+          queryClient.setQueryData(['practice-mine'], attempts);
+        } catch {
+          // Offline: the phone's own attempts still show.
+        }
+      }
+      if (sent > 0 || pending.length > 0 || added > 0) {
         refresh();
         queryClient.invalidateQueries({ queryKey: ['practice-mine'] });
       }
