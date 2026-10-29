@@ -82,7 +82,7 @@ Any other information:
 Student account. On the welcome screen tap "Sign in". Tabs: Classes, Practice, Words, Profile. The raised Scan button in the middle checks in to a lesson by scanning the teacher's QR code (see the teacher account). Profile shows the parent code. Parent mode: sign out, tap "Ota-onalar uchun" on the welcome screen and enter 17110. The level check on the welcome screen needs no account.
 ```
 
-**2. Teacher**: username of the demo teacher, password: the demo teacher's.
+**2. Teacher**: username `demo.teacher`, password: the demo teacher's.
 Any other information:
 
 ```
