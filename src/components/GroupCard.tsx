@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { roomNumber } from '@/lib/groups';
 
 import { Icon } from '@/components/Icon';
 import { Text } from '@/components/Text';
@@ -67,7 +68,7 @@ export function GroupCard({ group, showTeachers, attendance, onAttendance, label
             </Text>
           </View>
           <Text variant="footnote" style={{ color: colors.ink2 }}>
-            {[slot.classroom && labels.room(slot.classroom), showTeachers && slot.teachers.join(', ')]
+            {[slot.classroom && labels.room(roomNumber(slot.classroom)), showTeachers && slot.teachers.join(', ')]
               .filter(Boolean)
               .join(' · ')}
           </Text>
