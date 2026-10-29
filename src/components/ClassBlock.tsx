@@ -7,7 +7,7 @@ import { SubjectSpill, useSpillLayout } from '@/components/SubjectSpill';
 import { Text } from '@/components/Text';
 import { useColors } from '@/design/colors';
 import type { Group, GroupAttendance } from '@/lib/api/types';
-import { dayLetters, daysSpoken, normalCase, parseClassName } from '@/lib/groups';
+import { dayLetters, daysSpoken, normalCase, parseClassName, roomNumber } from '@/lib/groups';
 
 /** The block's words; parents read them in Uzbek or Russian. */
 export type ClassBlockLabels = {
@@ -43,7 +43,7 @@ export function ClassBlock({ group, attendance, onAttendance, labels = ENGLISH }
   const teacher = name.teacher ?? (group.schedule[0]?.teachers[0] ? normalCase(group.schedule[0].teachers[0]) : null);
   // One time line per distinct slot; rooms listed once.
   const times = [...new Map(group.schedule.map((s) => [`${s.begin_time}|${s.weekdays.join()}`, s])).values()];
-  const rooms = [...new Set(group.schedule.map((s) => s.classroom).filter(Boolean))];
+  const rooms = [...new Set(group.schedule.map((s) => s.classroom).filter(Boolean).map(roomNumber))];
   const s = attendance?.summary;
   const rate = s && s.lessons > 0 ? (s.present + s.late) / s.lessons : null;
 

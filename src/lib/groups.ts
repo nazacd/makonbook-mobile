@@ -29,6 +29,11 @@ const LEVEL_NAME: Record<Level, string> = { foundation: 'Foundation', presat: 'P
 // Words that end a list of names: times ("17:00", "10;30") and day codes.
 const STOP = /^(\d{1,2}[:;.]\d{2}|TTS|MWF|TT|MW|SAT|SUN|DAILY)$/;
 
+/** "ROOM 11" -> "11": some rooms are stored with the word, most as just the number. Display only. */
+export function roomNumber(classroom: string): string {
+  return classroom.replace(/^(room|xona|kab\.?|каб\.?|кабинет)\s*/i, '').trim() || classroom;
+}
+
 /** A class as a teacher tells it apart: individual lessons by their students ("IV · Diyora Adilova"). */
 export function teacherTitle(name: ClassName): string {
   return name.isPrivate && name.students.length ? `IV · ${name.students.join(', ')}` : name.title;
