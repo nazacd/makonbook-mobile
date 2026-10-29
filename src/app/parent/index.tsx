@@ -108,7 +108,8 @@ export default function ParentHome() {
           </View>
         )}
 
-        {next && <NextClass next={next} now={now} labels={nextLabels} />}
+        {/* Keyed by child: switching shows the blocks afresh, so their objects come in again. */}
+        {next && <NextClass key={`next-${kid.client_id}`} next={next} now={now} labels={nextLabels} />}
       </View>
 
       {view.isPending ? (
@@ -124,7 +125,7 @@ export default function ParentHome() {
       ) : (
         groups.map((group) => (
           <ClassBlock
-            key={group.id}
+            key={`${kid.client_id}-${group.id}`}
             group={group}
             labels={classLabels}
             showRate
