@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { CalendarX, LogIn, MessageSquareText, Plus, Trash2, UserPlus } from 'lucide-react-native';
+import { CalendarX, LogIn, MessageSquareText, Moon, Plus, Smartphone, Sun, Trash2, UserPlus } from 'lucide-react-native';
 import { useState } from 'react';
 import { Image, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,12 +9,14 @@ import { ClassBlock, type ClassBlockLabels } from '@/components/ClassBlock';
 import { Icon } from '@/components/Icon';
 import { NextClass, type NextClassLabels } from '@/components/NextClass';
 import { PageRow } from '@/components/PageRow';
+import { SegmentedControl } from '@/components/SegmentedControl';
 import { LangSwitch } from '@/components/parent/LangSwitch';
 import { EmptyState, ErrorState, Skeleton } from '@/components/States';
 import { Text } from '@/components/Text';
 import { useColors } from '@/design/colors';
 import * as haptics from '@/design/haptics';
 import { fonts } from '@/design/typography';
+import { useAppearance } from '@/lib/appearance';
 import { useNow } from '@/lib/clock';
 import { confirm } from '@/lib/confirm';
 import { normalCase } from '@/lib/groups';
@@ -39,6 +41,7 @@ export default function ParentHome() {
   const unseen = useUnseenAnswers(kid, reports.data?.reports);
   const now = useNow();
   const [pulling, setPulling] = useState(false);
+  const appearance = useAppearance();
 
   if (!kid) return null; // the guard leaves this screen once no child is left
 
@@ -151,6 +154,19 @@ export default function ParentHome() {
         />
         <PageRow icon={UserPlus} label={t.addChild} separator onPress={() => router.push('/parent/add')} />
         <PageRow icon={LogIn} label={t.studentSignIn} separator onPress={() => router.push('/sign-in')} />
+        {/* The same setting as the student's Profile: saved on the phone, for everyone using it. */}
+        <View style={{ paddingVertical: 16 }}>
+          <SegmentedControl
+            accessibilityLabel={t.theme}
+            value={appearance.mode}
+            onChange={appearance.setMode}
+            options={[
+              { value: 'system', label: t.themeSystem, icon: Smartphone },
+              { value: 'light', label: t.themeLight, icon: Sun },
+              { value: 'dark', label: t.themeDark, icon: Moon },
+            ]}
+          />
+        </View>
         <PageRow
           icon={Trash2}
           label={kids.length > 1 ? `${t.remove}: ${normalCase(kid.first_name)}` : t.remove}
