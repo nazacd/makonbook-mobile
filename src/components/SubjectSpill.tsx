@@ -1,6 +1,6 @@
-import { useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { View } from 'react-native';
-import Animated, { FadeInRight, useReducedMotion } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
 import Svg, { Circle, G, Path, Text as SvgText } from 'react-native-svg';
 
 import { useColors } from '@/design/colors';
@@ -246,6 +246,19 @@ export function SubjectSpill({ layout, subject, level, seed, echo = false, bleed
   const tones = subject === 'Math' ? [colors.math, colors.math2] : [colors.english, colors.english2];
   const [start, end] = echo ? [0.12, 0.03] : [0.5, 0.06];
 
+  // The objects come in from the right once they are placed: driven here
+  // rather than by an entering animation, which didn't run when a block was
+  // shown afresh (a parent switching child). Once per placing; under Reduce
+  // Motion they are just there.
+  const shown = useSharedValue(0);
+  const placed = measured != null;
+  useEffect(() => {
+    if (!placed) return;
+    shown.set(0);
+    shown.set(reduceMotion ? 1 : withTiming(1, { duration: 450 }));
+  }, [placed, reduceMotion, shown]);
+  const enter = useAnimatedStyle(() => ({ opacity: shown.value, transform: [{ translateX: (1 - shown.value) * 28 }] }));
+
   const objects = measured
     ? place(measured.width, measured.height, measured.rects, subject, level, seed, echo ? 1.6 : 1, echo ? 0.6 : 1)
     : [];
@@ -259,7 +272,7 @@ export function SubjectSpill({ layout, subject, level, seed, echo = false, bleed
       importantForAccessibility="no-hide-descendants"
       style={{ position: 'absolute', top: echo ? 0 : -bleed, bottom: -bleed, left: 0, right: -gutter }}>
       {measured && (
-        <Animated.View entering={reduceMotion ? undefined : FadeInRight.duration(400)} style={{ flex: 1 }}>
+        <Animated.View style={[{ flex: 1 }, enter]}>
           <Svg width={measured.width} height={measured.height}>
             {objects.map((o, i) => (
               <G

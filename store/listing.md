@@ -1,40 +1,45 @@
 # Google Play listing: MakonBook
 
-Everything to paste into Play Console for the first release. Character
-limits are Google's; all text below fits.
+Everything to paste into Play Console for the sign-in release (1.1.0). Character
+limits are Google's; all text below fits. Demo passwords are not in this repo
+(it is public): type them into Play Console yourself.
 
-## Store listing (Grow users → Store presence → Main store listing)
+## Store listing (Grow users → Store listings → Default store listing)
 
-**App name** (26/30)
-
-```
-MakonBook: SAT Level Check
-```
-
-**Short description** (75/80)
+**App name** (9/30)
 
 ```
-Timed SAT-style Math and English placement tests that recommend your level.
+MakonBook
 ```
 
-**Full description** (1148/4000)
+**Short description** (72/80)
 
 ```
-MakonBook is SAT MAKON's level check app. Take a timed, SAT-style placement test in Math or English and get a recommended starting class: Foundation, Pre-SAT or Advanced.
+Classes, QR attendance, SAT practice tests and vocabulary for SAT MAKON.
+```
 
-The test is built to feel like the real digital SAT, right on your phone:
+**Full description** (1457/4000)
 
-• 50 questions and a 60-minute timer for each subject
-• Multiple-choice and student-produced (grid-in) Math questions
+```
+MakonBook is the app for SAT MAKON students, parents and teachers: your classes, attendance, SAT practice and vocabulary in one place.
+
+For students
+• Classes: your groups, schedule and next lesson at a glance
+• Attendance: check in by scanning your teacher's QR code, and see your attendance in every group
+• SAT practice tests: timed Reading and Writing and Math modules like the digital SAT, with your scores and an explanation for every question. Download a test once and take it without internet
+• Words: vocabulary lists with spaced repetition, which brings each word back just before you would forget it
 • Built-in Desmos graphing calculator for Math
-• Mark questions for review and rule out answer choices you've eliminated
-• Jump to any question from the question navigator
-• Review screen before you submit, showing answered, unanswered and marked questions
-• Leave and come back: your progress is saved on your phone and the timer pauses until you return
 
-After you submit, you'll see your recommended starting level and a color-coded question grid. Open any question to compare your answer with the correct one and read the explanation.
+For parents
+Enter your child's parent code to follow their classes and attendance, in Uzbek or Russian, and send a message to the SAT MAKON office. No account needed.
 
-No account or sign-in needed. Everything except the graphing calculator works offline, and your answers never leave your device.
+For teachers
+Take attendance with a rotating QR code, correct marks after class, and follow each group's practice test results and vocabulary progress.
+
+Level check
+New to SAT MAKON? Take the free level check: a timed, SAT-style placement test in Math or English (50 questions, 60 minutes) that recommends your starting class: Foundation, Pre-SAT or Advanced. No account needed, and it works offline.
+
+Student and teacher accounts are created by SAT MAKON when you join. Sign in with your phone number or username.
 
 SAT® is a trademark registered by the College Board, which is not affiliated with, and does not endorse, this app.
 ```
@@ -45,51 +50,111 @@ SAT® is a trademark registered by the College Board, which is not affiliated wi
 |---|---|---|
 | App icon | `store/icon-512.png` | 512×512 PNG |
 | Feature graphic | `store/feature-graphic.png` | 1024×500 PNG, no transparency |
-| Phone screenshots | take on a phone (see below) | 2–8 images, PNG/JPEG, 16:9 or 9:16 |
+| Phone screenshots | take on a phone | 2–8 images, PNG/JPEG, 16:9 or 9:16 |
 
-Suggested screenshots, in this order: Home (Math / English), a Math question
-with the calculator open, the question navigator, the review-before-submit
-screen, Results, and a reviewed question with its explanation shown.
+Replace the 5 level-check screenshots with, in this order: Classes (student),
+the Scan screen or a check-in result, Practice (a question with the calculator
+open), practice results, a Words study card, the teacher's QR screen, the
+parent screen, and the level check. Take them with the demo accounts, so no
+real student's name is visible.
 
-**Category:** Education
-**Tags:** Education, Test preparation (pick the closest available)
-**Contact email:** required, shown publicly on the listing
+**Store settings** (unchanged): App, Education; tags Education, Test
+preparation; contact nazabakhtiyorov@gmail.com, +998555111600,
+https://sat-makon.uz.
 
 ## App content (Policy → App content)
 
+### Privacy policy
+
+Replace the page at https://sites.google.com/view/makonbook-privacy-policy/
+with `store/privacy-policy.html` (the plain-text copy is
+`store/privacy-policy.txt`). The URL stays the same.
+
+### Sign in details
+
+"Is any part of your app restricted?" → **Yes**. Add two sets of
+instructions; leave "Allow Android to use the credentials…" unchecked.
+
+**1. Student**: username `demo.student`, password: the demo student's.
+Any other information:
+
+```
+Student account. On the welcome screen tap "Sign in". Tabs: Classes, Practice, Words, Profile. The raised Scan button in the middle checks in to a lesson by scanning the teacher's QR code (see the teacher account). Profile shows the parent code. Parent mode: sign out, tap "Ota-onalar uchun" on the welcome screen and enter 17110. The level check on the welcome screen needs no account.
+```
+
+**2. Teacher**: username of the demo teacher, password: the demo teacher's.
+Any other information:
+
+```
+Teacher account. The Classes tab lists today's lessons of the demo group. Open the lesson and start attendance to show a rotating QR code. To test check-in, sign in as demo.student on a second device and tap Scan. Without a second device, the student's attendance history is under Classes, on the group card. Practice and Words show the group's results.
+```
+
+Before submitting, on the API side:
+
+- The demo group must have a lesson running at any hour, every day:
+  attendance opens 15 minutes before a lesson and closes when it ends, and a
+  reviewer can test at any time.
+- Neither demo account may start on the forced password screen, and ideally
+  the API refuses password and username changes for them, so a reviewer can't
+  lock out the next one.
+- Seed demo.student with a finished practice test and some vocabulary
+  reviews, so Practice, Words and the teacher's group views aren't empty.
+
+### Data safety
+
+**Data collection and security**
+
+| Question | Answer |
+|---|---|
+| Does your app collect or share any of the required user data types? | Yes |
+| Is all of the user data collected by your app encrypted in transit? | Yes |
+| Which of the following methods of account creation does your app support? | My app does not allow users to create an account (SAT MAKON creates them; there is no sign-up in the app) |
+| Do you provide a way for users to request that their data is deleted? | Yes (email or the office, see the privacy policy) |
+
+**Data types**: all *collected*, none *shared* (parents' access is started
+by the student, and server hosting is a service provider; neither counts as
+sharing). None are processed ephemerally.
+
+| Category → type | What it is | Required? | Purposes |
+|---|---|---|---|
+| Personal info → Name | name on the account, shown to teachers | Required | App functionality, Account management |
+| Personal info → Phone number | used to sign in | Required | App functionality, Account management |
+| Personal info → User IDs | username, account id | Required | App functionality, Account management |
+| Messages → Other in-app messages | parents' messages to the office | Optional | App functionality |
+| App activity → Other user-generated content | practice answers and timings, vocabulary ratings | Optional | App functionality |
+| App activity → Other actions | attendance check-ins | Required | App functionality |
+| Device or other IDs → Device or other IDs | random install id | Required | App functionality, Fraud prevention, security, and compliance |
+
+Not collected: location, financial info, health, photos and videos (the
+camera only reads the QR code), audio, files, calendar, contacts, app info and
+performance (no crash or analytics SDK), web browsing, advertising ID.
+
+### Other declarations (unchanged since 1.0.0)
+
 | Section | Answer |
 |---|---|
-| Privacy policy | URL of `store/privacy-policy.html` once hosted (replace `CONTACT_EMAIL` first) |
-| App access | All functionality is available without special access |
-| Ads | No, the app does not contain ads |
-| Content rating | Category: Education/Reference. Answer "No" to violence, sexuality, language, controlled substances, gambling, user interaction/sharing, location sharing, purchases |
-| Target audience | 13–15, 16–17, 18 and over. Do **not** select any under-13 group |
-| Data safety | Data collection: **No**. "Does your app collect or share any of the required user data types?" → No |
-| Government app | No |
-| Financial features | None |
-| Health | None |
-| News app | No |
-
-Data safety note: the app stores test progress only on the device and sends
-nothing to any server. The Desmos calculator loads from desmos.com, but the app
-passes it no user data, so there is nothing to declare.
-
-When the login version ships, revisit App access (add a reviewer test
-account), Data safety, the privacy policy, and Google's account-deletion
-requirement before uploading it.
+| Ads | No |
+| Content rating | Education. "Users can interact or exchange content": No; parents' messages go to the school office, not to other users |
+| Target audience | 13–15, 16–17, 18 and over; no under-13 group |
+| Advertising ID, Government, Financial, Health | No / none |
 
 ## Release
 
-1. **Testing → Internal testing → Create new release**
-2. Accept **Play App Signing** (default).
-3. Upload the `.aab` from the EAS production build.
-4. Release name: `1.0.0 (2)`. Release notes:
+1. Bump `version` in `app.json` to `1.1.0` (the version code is managed by EAS).
+2. `eas build --platform android --profile production`, then
+   `eas submit --platform android --profile production` (goes to Closed
+   testing – Alpha).
+3. Release notes (en-US):
 
    ```
-   First release: Math and English level check tests.
+   Sign in for SAT MAKON students, parents and teachers:
+   • Classes and schedules
+   • Attendance check-in with a QR code
+   • SAT practice tests that work offline, with scores and explanations
+   • Vocabulary study with spaced repetition
+   • Parent mode with the child's parent code
+   The level check is still free and needs no account.
    ```
 
-5. Add testers (an email list), save, and share the opt-in link.
-6. Personal developer accounts created after Nov 2023: run a **closed test**
-   with at least 12 testers for 14 days in a row, then apply for production
-   access under **Dashboard**.
+4. Let testers use it for about a week, then **Dashboard → Apply for
+   production**.

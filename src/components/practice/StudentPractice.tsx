@@ -158,7 +158,7 @@ export function StudentPractice() {
               onToggleFold={() => setUnfolded((u) => !u)}
             />
           ))}
-          {locked.length > 0 && <LockedNode label={testRange(locked.map((t) => t.title))} first={nodes.length === 0} />}
+          {locked.length > 0 && <LockedTests tests={locked} first={nodes.length === 0} />}
         </View>
       )}
     </ScrollView>
@@ -373,17 +373,55 @@ function PathNode({
   );
 }
 
-function LockedNode({ label, first }: { label: string; first: boolean }) {
+// The tests not open yet: one faded line at the end of the path, opening in
+// place (like the finished tests' fold) to each test with a lock and a green
+// bar of how far its questions have been checked. No number, no way in yet.
+function LockedTests({ tests, first }: { tests: CatalogTest[]; first: boolean }) {
   const colors = useColors();
+  const [open, setOpen] = useState(false);
+  const label = testRange(tests.map((t) => t.title));
   return (
-    <View className="flex-row items-stretch gap-4" style={{ minHeight: 60, opacity: 0.55 }} accessible accessibilityLabel={`${label}, not open yet`}>
-      <Rail top={!first} faded bottom={false} dot={<Dot kind="locked" />} />
-      <View className="flex-1 justify-center">
-        <Text variant="callout" style={{ color: colors.ink2 }}>
-          {label}
-        </Text>
-      </View>
-    </View>
+    <>
+      <Pressable
+        onPress={() => setOpen((o) => !o)}
+        accessibilityRole="button"
+        accessibilityLabel={`${label}, not open yet`}
+        accessibilityState={{ expanded: open }}
+        style={({ pressed }) => ({ marginHorizontal: -20, paddingHorizontal: 20, backgroundColor: pressed ? colors.surface2 : 'transparent' })}>
+        <View className="flex-row items-stretch gap-4" style={{ minHeight: 60 }}>
+          <Rail top={!first} faded bottom={open} fadedBottom dot={<Dot kind="locked" />} />
+          <View className="flex-1 flex-row items-center gap-3" style={{ opacity: 0.55 }}>
+            <Text variant="callout" className="flex-1" style={{ color: colors.ink2 }}>
+              {label}
+            </Text>
+            <Icon as={open ? ChevronUp : ChevronDown} size={20} color={colors.ink3} />
+          </View>
+        </View>
+      </Pressable>
+      {open &&
+        tests.map((t, i) => {
+          const checked = t.questions ? Math.min(1, t.approved / t.questions) : 0;
+          return (
+            <View
+              key={t.code}
+              className="flex-row items-stretch gap-4"
+              style={{ minHeight: 56 }}
+              accessible
+              accessibilityLabel={`${testName(t.title)}, not open yet, being checked`}>
+              <Rail top faded bottom={i < tests.length - 1} fadedBottom dot={<Dot kind="lockedSmall" />} />
+              <View className="flex-1 flex-row items-center gap-3">
+                <Text variant="callout" className="flex-1" style={{ color: colors.ink2 }}>
+                  {testName(t.title)}
+                </Text>
+                <Icon as={Lock} size={15} color={colors.ink3} />
+                <View style={{ width: 56, height: 6, borderRadius: 3, backgroundColor: colors.track, overflow: 'hidden' }}>
+                  <View style={{ width: `${checked * 100}%`, height: 6, borderRadius: 3, backgroundColor: colors.fillGood }} />
+                </View>
+              </View>
+            </View>
+          );
+        })}
+    </>
   );
 }
 
@@ -440,7 +478,7 @@ function Rail({ top, bottom, dot, faded, fadedBottom }: { top: boolean; bottom: 
   );
 }
 
-type DotKind = 'done' | 'fold' | 'run' | 'open' | 'update' | 'updateDone' | 'locked';
+type DotKind = 'done' | 'fold' | 'run' | 'open' | 'update' | 'updateDone' | 'locked' | 'lockedSmall';
 
 function Dot({ kind }: { kind: DotKind }) {
   const colors = useColors();
@@ -472,6 +510,8 @@ function Dot({ kind }: { kind: DotKind }) {
           <Icon as={RefreshCw} size={11} strokeWidth={2.5} color={colors.bg} />
         </View>
       );
+    case 'lockedSmall':
+      return <View style={{ width: 12, height: 12, borderRadius: 6, borderWidth: 2, borderColor: colors.lineStrong, backgroundColor: colors.bg }} />;
     case 'locked':
       return (
         <View style={{ ...base, borderWidth: 2, borderColor: colors.lineStrong, backgroundColor: colors.bg }}>
