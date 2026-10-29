@@ -15,7 +15,7 @@ import { useMyAttendance } from '@/lib/api/attendance';
 import { useMe } from '@/lib/api/queries';
 import type { Profile } from '@/lib/api/types';
 import { useNow } from '@/lib/clock';
-import { parseClassName } from '@/lib/groups';
+import { parseClassName, roomNumber } from '@/lib/groups';
 import { describeDay, nextClass, type Occurrence } from '@/lib/schedule';
 
 const LOGO = require('../../assets/makonbook-icon.png');
@@ -92,7 +92,7 @@ function NextClass({ next, now }: { next: Occurrence; now: number }) {
   const name = parseClassName(next.group.name, next.group.discipline);
   const happening = next.start <= now;
   const what = [name.title, name.teacher].filter(Boolean).join(' · ');
-  const where = [next.slot.classroom && `Room ${next.slot.classroom}`, `until ${next.slot.end_time}`].filter(Boolean).join(' · ');
+  const where = [next.slot.classroom && `Room ${roomNumber(next.slot.classroom)}`, `until ${next.slot.end_time}`].filter(Boolean).join(' · ');
 
   return (
     <View accessible accessibilityLabel={`${happening ? 'Happening now' : 'Next class'}: ${happening ? `until ${next.slot.end_time}` : `${describeDay(next.start, now)}, ${next.slot.begin_time}`}. ${what}. ${where}`}>
@@ -104,9 +104,16 @@ function NextClass({ next, now }: { next: Occurrence; now: number }) {
       </View>
       <View {...spill.keepOut('when')} className="flex-row flex-wrap items-baseline self-start" style={{ columnGap: 12, marginTop: 2 }}>
         {happening ? (
-          <Text variant="largeTitle" style={{ color: colors.ink, fontVariant: ['tabular-nums'] }}>
-            Until <Text style={{ color: colors.accent }}>{next.slot.end_time}</Text>
-          </Text>
+          // Two texts, not one nested in the other: a nested Text starts again
+          // from the system font on Android and would lose Bitter.
+          <>
+            <Text variant="largeTitle" style={{ color: colors.ink }}>
+              Until
+            </Text>
+            <Text variant="largeTitle" style={{ color: colors.accent, fontVariant: ['tabular-nums'] }}>
+              {next.slot.end_time}
+            </Text>
+          </>
         ) : (
           <>
             <Text variant="largeTitle" style={{ color: colors.ink }}>

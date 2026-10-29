@@ -19,7 +19,7 @@ import { describeError } from '@/lib/api/errors';
 import { useMe } from '@/lib/api/queries';
 import type { Profile, TeacherLesson } from '@/lib/api/types';
 import { useNow } from '@/lib/clock';
-import { parseClassName, teacherTitle } from '@/lib/groups';
+import { parseClassName, roomNumber, teacherTitle } from '@/lib/groups';
 import { addDays, formatDate, schoolClock, schoolDate } from '@/lib/schedule';
 
 const LOGO = require('../../assets/makonbook-icon.png');
@@ -248,7 +248,7 @@ function Stop({
       </Text>
       <View className="flex-row flex-wrap items-center" style={{ columnGap: 14, rowGap: 4 }}>
         <Meta icon={Users} text={String(lesson.students)} label={`${lesson.students} ${lesson.students === 1 ? 'student' : 'students'}`} />
-        {lesson.classroom ? <Meta icon={DoorOpen} text={lesson.classroom} label={`Room ${lesson.classroom}`} /> : null}
+        {lesson.classroom ? <Meta icon={DoorOpen} text={roomNumber(lesson.classroom)} label={`Room ${roomNumber(lesson.classroom)}`} /> : null}
         {s && (
           <Text variant="subhead" style={{ color: colors[s.tone], fontWeight: s.tone === 'ink3' ? '400' : '600' }}>
             {s.text}
